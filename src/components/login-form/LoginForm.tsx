@@ -48,7 +48,7 @@ function LoginForm() {
             <Button.Label>Đăng nhập</Button.Label>
           </Button.Root>
           <SeparatorRoot />
-          <Button.Root variant="ghost" type="button" className="w-full">
+          <Button.Root variant="ghost" type="button" className="w-full" href="/register">
             <Button.Label>Đăng ký</Button.Label>
           </Button.Root>
         </div>

@@ -1,7 +1,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/tailus-ui/form/Form';
 import Select from '@components/tailus-ui/Select';
 import { cn } from '@lib/utils';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 interface SelectFormProps extends React.ComponentPropsWithoutRef<'select'> {
   control: any;
@@ -37,5 +37,18 @@ export function SelectForm({ control, className, name, placeholder, label, ...pr
         </FormItem>
       )}
     />
+  );
+}
+
+type SelectItemProps = {
+  value: string;
+  children: React.ReactNode;
+};
+export function SelectItem({ value, children }: SelectItemProps) {
+  return (
+    <Select.Item value={value} className="items-center">
+      <Select.ItemIndicator />
+      <Select.ItemText>{children}</Select.ItemText>
+    </Select.Item>
   );
 }
