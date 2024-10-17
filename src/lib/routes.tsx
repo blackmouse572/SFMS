@@ -1,5 +1,6 @@
 import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
+import LoginPage from '@pages/login.index';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -10,6 +11,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <App />,
+      },
+      {
+        element: <LoginPage />,
+        path: '/login',
       },
     ],
   },

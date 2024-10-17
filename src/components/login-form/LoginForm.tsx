@@ -1,0 +1,60 @@
+import { LoginSchema } from '@components/login-form/login.schema';
+import { useLogin } from '@components/login-form/useLogin';
+import Button from '@components/tailus-ui/Button';
+import { CheckboxForm, Form, InputForm } from '@components/tailus-ui/form';
+import SeparatorRoot from '@components/tailus-ui/Separator';
+import { Title } from '@components/tailus-ui/typography';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
+function LoginForm() {
+  const go = useNavigate();
+  const form = useForm<LoginSchema>({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+    resolver: zodResolver(LoginSchema),
+  });
+
+  const { handleSubmit } = form;
+  const { mutateAsync: login } = useLogin();
+
+  const onSubmit: SubmitHandler<LoginSchema> = (data, e) => {
+    e?.preventDefault();
+    toast.promise(login(data), {
+      loading: 'Đang đăng nhập...',
+      success: (data) => {
+        go('/dashboard');
+        return `Đăng nhập thành công với tên ${data.data.user.name}`;
+      },
+      error: 'Sai tên đăng nhập hoặc mật khẩu',
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+        <Title className="text-center">Đăng nhập</Title>
+        <div className="space-y-4">
+          <InputForm label="Tên đăng nhập" control={form.control} name="username" />
+          <InputForm label="Mật khẩu" control={form.control} name="password" type="password" />
+          <CheckboxForm label="Ghi nhớ tôi" control={form.control} name="save" className="justify-end" />
+        </div>
+        <div className="space-y-2">
+          <Button.Root type="submit" className="w-full">
+            <Button.Label>Đăng nhập</Button.Label>
+          </Button.Root>
+          <SeparatorRoot />
+          <Button.Root variant="ghost" type="button" className="w-full">
+            <Button.Label>Đăng ký</Button.Label>
+          </Button.Root>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+export default LoginForm;
