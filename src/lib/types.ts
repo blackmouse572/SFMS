@@ -18,3 +18,8 @@ export interface Permission {
   method: string;
   module: string;
 }
+
+export interface IResponse<T> {
+  message: string;
+  data: T;
+}
