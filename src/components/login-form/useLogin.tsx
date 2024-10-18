@@ -16,7 +16,7 @@ export function useLogin() {
   return useMutation<LoginRes, Error, LoginSchema>({
     mutationFn: async (data) => {
       const res = await axios.post<LoginRes>('/auth/login', data);
-      if (res.status === 200 && data.save) {
+      if ((res.status <= 299 || res.status >= 200) && data.save) {
         stateLogin(res.data.data);
       }
       return res.data;

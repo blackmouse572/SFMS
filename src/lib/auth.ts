@@ -21,14 +21,10 @@ export const useAuth = create(
       isAuthenticated: false,
       token: undefined,
       login: ({ user, access_token }: LoginRes['data']) => {
-        set({ user, isAuthenticated: true });
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token', access_token);
+        set({ user, isAuthenticated: true, token: access_token });
       },
       logout: () => {
-        set({ user: undefined, isAuthenticated: false });
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+        set({ user: undefined, isAuthenticated: false, token: undefined });
       },
     }),
     {

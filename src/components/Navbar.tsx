@@ -7,6 +7,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@components/tailus-ui/NavigationMenu';
+import { UserDropdown } from '@components/user-nav';
+import { useIsAuthenticated, useUser } from '@lib/auth';
 import { cn } from '@lib/utils';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -45,8 +47,10 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function Navbar() {
+  const isAuth = useIsAuthenticated();
+  const user = useUser();
   return (
-    <NavigationMenu>
+    <NavigationMenu className="flex justify-between w-full max-w-none">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
@@ -96,6 +100,8 @@ export function Navbar() {
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
+
+      {isAuth ? <UserDropdown user={user!} /> : <Link to="/login">Login</Link>}
     </NavigationMenu>
   );
 }

@@ -1,3 +1,4 @@
+import { useAuth } from '@lib/auth';
 import primativeAxios, { AxiosError } from 'axios';
 
 const axios = primativeAxios.create({
@@ -11,7 +12,7 @@ const axios = primativeAxios.create({
 axios.interceptors.request.use(
   (config) => {
     // Do something before request is sent
-    const token = localStorage.getItem('token');
+    const token = useAuth.getState().token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -32,7 +33,7 @@ axios.interceptors.response.use(
     // Do something with response error
     if (error instanceof AxiosError) {
       if (error.response?.status === 401 && error.response.config.url !== '/auth/login') {
-        localStorage.removeItem('token');
+        useAuth.getState().logout();
         window.location.href = '/login';
       }
     }
