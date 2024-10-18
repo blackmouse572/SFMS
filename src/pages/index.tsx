@@ -1,3 +1,4 @@
+import { Navbar } from '@components/Navbar';
 import {
   Command,
   CommandEmpty,
@@ -16,6 +17,8 @@ import { Display, Link, Text, Title } from '@tailus-ui/typography';
 function App() {
   return (
     <main>
+      <Navbar />
+      <Card variant="mixed">sadfsadf</Card>
       <div className="max-w-2xl mx-auto my-24 px-6 space-y-12">
         <div className="space-y-3">
           <Display size="4xl">How will you build it ?</Display>

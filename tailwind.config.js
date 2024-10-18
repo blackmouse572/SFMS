@@ -1,4 +1,5 @@
 import { animations, components, palettes, rounded, shade, visualizations } from '@tailus/themer';
+import tailwindAnimations from 'tailwindcss-animate';
 const defaultTheme = require('tailwindcss/defaultTheme');
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './node_modules/@tailus/themer/dist/**/*.{js,ts}'],
@@ -25,5 +26,5 @@ export default {
       },
     },
   },
-  plugins: [animations, components, rounded, shade, visualizations],
+  plugins: [animations, components, rounded, shade, visualizations, tailwindAnimations],
 };
