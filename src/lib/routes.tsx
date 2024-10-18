@@ -1,7 +1,9 @@
+import AuthLayout from '@pages/(auth)/auth.layout';
+import LoginPage from '@pages/(auth)/login.index';
+import RegisterPage from '@pages/(auth)/register.index';
 import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
-import LoginPage from '@pages/login.index';
-import RegisterPage from '@pages/register.index';
+import VerifyPage from '@pages/verify.index';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -13,13 +15,23 @@ export const router = createBrowserRouter([
         index: true,
         element: <App />,
       },
+
       {
-        element: <LoginPage />,
-        path: '/login',
-      },
-      {
-        element: <RegisterPage />,
-        path: '/register',
+        element: <AuthLayout />,
+        children: [
+          {
+            element: <LoginPage />,
+            path: '/login',
+          },
+          {
+            element: <RegisterPage />,
+            path: '/register',
+          },
+          {
+            element: <VerifyPage />,
+            path: '/verify',
+          },
+        ],
       },
     ],
   },

@@ -1,4 +1,3 @@
-import { LoginSchema } from '@components/login-form/login.schema';
 import { RegisterSchema } from '@components/register-form/register.schema';
 import { useRegister } from '@components/register-form/useRegister';
 import Button from '@components/tailus-ui/Button';
@@ -23,7 +22,7 @@ const GenderOptions = [
 function RegisterForm() {
   const go = useNavigate();
   const form = useForm<RegisterSchema>({
-    resolver: zodResolver(LoginSchema),
+    resolver: zodResolver(RegisterSchema),
   });
 
   const { handleSubmit } = form;
@@ -33,8 +32,8 @@ function RegisterForm() {
     e?.preventDefault();
     toast.promise(register(data), {
       loading: 'Đang đăng ký...',
-      success: () => {
-        go('/login');
+      success: ({ data: { _id } }) => {
+        go('/verify?id=' + _id + '&email=' + data.email);
         return `Đăng ký tài khoản thành công`;
       },
       error: (err) => err.message,
@@ -46,11 +45,13 @@ function RegisterForm() {
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
         <Title className="text-center">Đăng ký tài khoản mới</Title>
         <div className="space-y-4">
+          <InputForm label="Tên hiển thị" control={form.control} name="name" />
           <InputForm label="Tên đăng nhập" control={form.control} name="username" />
           <InputForm label="Email" control={form.control} name="email" />
-          <InputForm label="Mật khẩu" control={form.control} name="password" />
+          <InputForm label="Mật khẩu" control={form.control} name="password" type="password" />
+          <InputForm label="Nhập lại mật khẩu" control={form.control} name="repassword" type="password" />
           <InputForm label="Số điện thoại" control={form.control} name="phone" />
-          <InputForm label="Địa chỉ" control={form.control} name="phone" />
+          <InputForm label="Địa chỉ" control={form.control} name="address" />
           <div className="grid grid-cols-2 gap-2">
             <InputForm label="Tuổi" type="number" control={form.control} name="age" className="" />
             <SelectForm placeholder="Nam" label="Giới tính" control={form.control} name="gender" className="flex-1">

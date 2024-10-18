@@ -1,37 +1,39 @@
-import { LoginSchema } from '@components/login-form/login.schema';
-import { RegisterSchema } from '@components/register-form/register.schema';
-import { useRegister } from '@components/register-form/useRegister';
 import Button from '@components/tailus-ui/Button';
-import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form } from '@components/tailus-ui/form';
+import { OTPForm } from '@components/tailus-ui/form/OtpForm';
+import { InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@components/tailus-ui/OTP';
 import SeparatorRoot from '@components/tailus-ui/Separator';
-import { Title } from '@components/tailus-ui/typography';
+import { Caption, Text, Title } from '@components/tailus-ui/typography';
+import { useVerify } from '@components/verify-form/useVerify';
+import { VerifySchema } from '@components/verify-form/verify.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconArrowLeft } from '@tabler/icons-react';
+import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-const GenderOptions = [
-  {
-    label: '♂️ Nam',
-    value: 'Male',
-  },
-  {
-    label: '♀️ Nữ',
-    value: 'Female',
-  },
-];
-function RegisterForm() {
+type VerifyFormProps = {
+  data: {
+    _id: string;
+    email: string;
+  };
+};
+function VerifyForm(props: VerifyFormProps) {
+  const { data } = props;
   const go = useNavigate();
-  const form = useForm<RegisterSchema>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<VerifySchema>({
+    resolver: zodResolver(VerifySchema),
   });
 
   const { handleSubmit } = form;
-  const { mutateAsync: register } = useRegister();
+  const [verifyMut, retryMut] = useVerify();
+  const { mutateAsync: verify } = verifyMut;
+  const { mutateAsync: retry } = retryMut;
 
-  const onSubmit: SubmitHandler<RegisterSchema> = (data, e) => {
+  const onSubmit: SubmitHandler<VerifySchema> = (data, e) => {
     e?.preventDefault();
-    toast.promise(register(data), {
+    toast.promise(verify(data), {
       loading: 'Đang đăng ký...',
       success: () => {
         go('/login');
@@ -41,39 +43,98 @@ function RegisterForm() {
     });
   };
 
+  const onRetry = async () => {
+    toast.promise(retry({ email: data.email }), {
+      loading: 'Đang gửi mã xác nhận...',
+      success: 'Gửi mã xác nhận thành công',
+      error: (err) => {
+        Promise.reject(err.message);
+        return err.message;
+      },
+    });
+  };
+
   return (
     <Form {...form}>
+      <BackButton onBack={() => go('/register')} />
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-        <Title className="text-center">Đăng ký tài khoản mới</Title>
+        <Title className="text-center">Xác thực tài khoản</Title>
+        <Caption className="text-center">
+          Mã xác nhận đã được gửi đến email <b>{data.email}</b>
+        </Caption>
         <div className="space-y-4">
-          <InputForm label="Tên đăng nhập" control={form.control} name="username" />
-          <InputForm label="Email" control={form.control} name="email" />
-          <InputForm label="Mật khẩu" control={form.control} name="password" />
-          <InputForm label="Số điện thoại" control={form.control} name="phone" />
-          <InputForm label="Địa chỉ" control={form.control} name="phone" />
-          <div className="grid grid-cols-2 gap-2">
-            <InputForm label="Tuổi" type="number" control={form.control} name="age" className="" />
-            <SelectForm placeholder="Nam" label="Giới tính" control={form.control} name="gender" className="flex-1">
-              {GenderOptions.map((v) => (
-                <SelectItem key={v.value} value={v.value}>
-                  {v.label}
-                </SelectItem>
-              ))}
-            </SelectForm>
-          </div>
+          <input {...form.register('_id')} type="hidden" value={data._id} />
+          <OTPForm maxLength={6} name={'code'} control={form.control} className="mx-auto">
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </OTPForm>
         </div>
         <div className="space-y-2">
           <Button.Root type="submit" className="w-full">
             <Button.Label>Đăng ký</Button.Label>
           </Button.Root>
           <SeparatorRoot />
-          <Button.Root variant="ghost" type="button" className="w-full" href="/login">
-            <Button.Label>Đăng nhập</Button.Label>
-          </Button.Root>
+          <div className="flex gap-2">
+            <Text className="text-nowrap">Chưa nhận được mã xác nhận?</Text>
+            <ResendButton onRetry={onRetry} />
+          </div>
         </div>
       </form>
     </Form>
   );
 }
 
-export default RegisterForm;
+const ResendButton = ({ onRetry }: { onRetry: () => Promise<void> }) => {
+  const [isSent, setIsSent] = React.useState(false);
+  const [count, setCount] = React.useState(60);
+
+  const onSend = async () => {
+    setCount(60);
+    setIsSent(true);
+    try {
+      onRetry();
+      setTimeout(() => {
+        setIsSent(false);
+      }, 60000);
+    } catch (err) {
+      setIsSent(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isSent) {
+      const interval = setInterval(() => {
+        setCount((c) => c - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isSent]);
+
+  return (
+    <Button.Root disabled={isSent} variant="ghost" type="button" className="w-full hover:bg-transparent h-fit min-w-[100px]" onClick={onSend}>
+      <Button.Label>{isSent ? `(${count}s)` : 'Gửi lại'}</Button.Label>
+    </Button.Root>
+  );
+};
+
+const BackButton = ({ onBack }: { onBack: () => void }) => {
+  return (
+    <Button.Root size="sm" variant="ghost" type="button" className="absolute top-8 left-4" intent="gray" onClick={onBack}>
+      <Button.Icon>
+        <IconArrowLeft />
+      </Button.Icon>
+      <Button.Label>Quay lại</Button.Label>
+    </Button.Root>
+  );
+};
+
+export default VerifyForm;

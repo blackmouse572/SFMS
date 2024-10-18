@@ -1,4 +1,5 @@
 import { RegisterSchema } from '@components/register-form/register.schema';
+import { RetrySchema, VerifySchema } from '@components/verify-form/verify.schema';
 import axios from '@lib/axios';
 import { IResponse } from '@lib/types';
 import { useMutation } from '@tanstack/react-query';
@@ -11,13 +12,13 @@ export type RetryRes = IResponse<{
 }>;
 
 export function useVerify() {
-  const verify = useMutation<CheckcodeRes, Error, RegisterSchema>({
+  const verify = useMutation<CheckcodeRes, Error, VerifySchema>({
     mutationFn: async (data) => {
       const res = await axios.post<CheckcodeRes>('/auth/check-code', data);
       return res.data;
     },
   });
-  const retry = useMutation<RetryRes, Error, RegisterSchema>({
+  const retry = useMutation<RetryRes, Error, RetrySchema>({
     mutationFn: async (data) => {
       const res = await axios.post<RetryRes>('/auth/retry-active', data);
       return res.data;
