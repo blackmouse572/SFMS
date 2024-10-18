@@ -1,3 +1,4 @@
+import { usePromt } from '@components/ConfirmDialog';
 import { LoginSchema } from '@components/login-form/login.schema';
 import { useLogin } from '@components/login-form/useLogin';
 import Button from '@components/tailus-ui/Button';
@@ -5,12 +6,14 @@ import { CheckboxForm, Form, InputForm } from '@components/tailus-ui/form';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Title } from '@components/tailus-ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function LoginForm() {
   const go = useNavigate();
+  const { dialog } = usePromt();
   const form = useForm<LoginSchema>({
     defaultValues: {
       username: '',
@@ -30,7 +33,29 @@ function LoginForm() {
         go('/dashboard');
         return `Đăng nhập thành công với tên ${data.data.user.name}`;
       },
-      error: 'Sai tên đăng nhập hoặc mật khẩu',
+      error: async (e) => {
+        if (e instanceof AxiosError) {
+          if (e.response?.status === 401) {
+            return 'Sai tên đăng nhập hoặc mật khẩu';
+          }
+
+          if (e.response?.status === 400) {
+            // need to active account
+            dialog({
+              title: 'Tài khoản chưa được kích hoạt',
+              description: 'Vui lòng kích hoạt tài khoản trước khi đăng nhập',
+              confirmLabel: 'Kích hoạt',
+              cancelLabel: 'Hủy',
+            }).then((willVerify) => {
+              if (willVerify) {
+                go('/verify?email=' + data.username);
+              }
+            });
+          }
+
+          return e.message;
+        }
+      },
     });
   };
 
@@ -47,9 +72,12 @@ function LoginForm() {
           <Button.Root type="submit" className="w-full">
             <Button.Label>Đăng nhập</Button.Label>
           </Button.Root>
-          <SeparatorRoot />
           <Button.Root variant="ghost" type="button" className="w-full" href="/register">
             <Button.Label>Đăng ký</Button.Label>
+          </Button.Root>
+          <SeparatorRoot />
+          <Button.Root size="sm" variant="ghost" type="button" intent="gray" className="w-full" href="/forgot-password">
+            <Button.Label>Quên mật khẩu</Button.Label>
           </Button.Root>
         </div>
       </form>

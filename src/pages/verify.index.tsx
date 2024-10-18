@@ -4,10 +4,10 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 function VerifyPage() {
   const [search] = useSearchParams();
 
-  const id = search.get('id');
+  const id = search.get('id') ?? undefined;
   const email = search.get('email');
 
-  if (!id || !email) {
+  if (!email) {
     return <Navigate to="/register" />;
   }
 

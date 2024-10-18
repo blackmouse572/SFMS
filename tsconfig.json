@@ -27,7 +27,8 @@
       "@tailus-ui/*": ["components/tailus-ui/*"],
       "@constants/*": ["constants/*"],
       "@lib/*": ["lib/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": ["src"],

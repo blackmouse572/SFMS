@@ -1,4 +1,5 @@
 import AuthLayout from '@pages/(auth)/auth.layout';
+import ForgotPage from '@pages/(auth)/forgot.index';
 import LoginPage from '@pages/(auth)/login.index';
 import RegisterPage from '@pages/(auth)/register.index';
 import App from '@pages/index';
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
           {
             element: <VerifyPage />,
             path: '/verify',
+          },
+          {
+            element: <ForgotPage />,
+            path: '/forgot-password',
           },
         ],
       },

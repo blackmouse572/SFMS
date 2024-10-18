@@ -1,4 +1,3 @@
-import { RegisterSchema } from '@components/register-form/register.schema';
 import { RetrySchema, VerifySchema } from '@components/verify-form/verify.schema';
 import axios from '@lib/axios';
 import { IResponse } from '@lib/types';

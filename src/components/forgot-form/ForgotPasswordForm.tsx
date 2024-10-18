@@ -1,44 +1,53 @@
+import { ForgotPasswordSchema } from '@components/forgot-form/forgotPassword.schema';
+import { useForgotPassword } from '@components/forgot-form/useForgotPassword';
 import Button from '@components/tailus-ui/Button';
-import { Form } from '@components/tailus-ui/form';
+import { Form, InputForm } from '@components/tailus-ui/form';
 import { OTPForm } from '@components/tailus-ui/form/OtpForm';
 import { InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@components/tailus-ui/OTP';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Text, Title } from '@components/tailus-ui/typography';
-import { useVerify } from '@components/verify-form/useVerify';
-import { VerifySchema } from '@components/verify-form/verify.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffectOnce } from '@hooks/useEffectOnce';
 import { IconArrowLeft } from '@tabler/icons-react';
-import {} from '@uidotdev/usehooks';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-type VerifyFormProps = {
+type ForgotFormProps = {
   data: {
-    _id?: string;
     email: string;
   };
+  onBack: () => void;
 };
-function VerifyForm(props: VerifyFormProps) {
-  const { data } = props;
+function ForgotForm(props: ForgotFormProps) {
+  const { data, onBack } = props;
   const go = useNavigate();
-  const form = useForm<VerifySchema>({
-    resolver: zodResolver(VerifySchema),
-    defaultValues: {
-      _id: data._id,
-    },
+  const form = useForm<ForgotPasswordSchema>({
+    resolver: zodResolver(ForgotPasswordSchema),
   });
 
   const { handleSubmit } = form;
-  const [verifyMut, retryMut] = useVerify();
-  const { mutateAsync: verify } = verifyMut;
-  const { mutateAsync: retry } = retryMut;
+  const [resetMut, changePasswordMut] = useForgotPassword();
 
-  const onSubmit: SubmitHandler<VerifySchema> = (data, e) => {
+  const { mutateAsync: reset } = resetMut;
+  const { mutateAsync: changePassword } = changePasswordMut;
+
+  // useEffect(() => {
+  //   if (data.email) {
+  //     toast.promise(reset({ email: data.email }), {
+  //       loading: 'Đang gửi mã xác nhận...',
+  //       success: 'Gửi mã xác nhận thành công',
+  //       error: (err) => {
+  //         Promise.reject(err.message);
+  //         return err.message;
+  //       },
+  //     });
+  //   }
+  // }, []);
+
+  const onSubmit: SubmitHandler<ForgotPasswordSchema> = (data, e) => {
     e?.preventDefault();
-    toast.promise(verify(data), {
+    toast.promise(changePassword(data), {
       loading: 'Đang đăng ký...',
       success: () => {
         go('/login');
@@ -49,12 +58,9 @@ function VerifyForm(props: VerifyFormProps) {
   };
 
   const onRetry = async () => {
-    toast.promise(retry({ email: data.email }), {
+    toast.promise(reset({ email: data.email }), {
       loading: 'Đang gửi mã xác nhận...',
-      success: (v) => {
-        form.setValue('_id', v.data._id);
-        return 'Gửi mã xác nhận thành công';
-      },
+      success: 'Gửi mã xác nhận thành công',
       error: (err) => {
         Promise.reject(err.message);
         return err.message;
@@ -62,23 +68,16 @@ function VerifyForm(props: VerifyFormProps) {
     });
   };
 
-  useEffectOnce(() => {
-    const id = form.getValues('_id');
-    if (!id) {
-      onRetry();
-    }
-  });
-
   return (
     <Form {...form}>
-      <BackButton onBack={() => go('/register')} />
+      <BackButton onBack={onBack} />
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-        <Title className="text-center">Xác thực tài khoản</Title>
+        <Title className="text-center">Đặt lại mật khẩu</Title>
         <Caption className="text-center">
           Mã xác nhận đã được gửi đến email <b>{data.email}</b>
         </Caption>
         <div className="space-y-4">
-          <input {...form.register('_id')} type="hidden" value={data._id} />
+          <input {...form.register('email')} type="hidden" value={data.email} />
           <OTPForm maxLength={6} name={'code'} control={form.control} className="mx-auto">
             <InputOTPGroup>
               <InputOTPSlot index={0} />
@@ -92,10 +91,13 @@ function VerifyForm(props: VerifyFormProps) {
               <InputOTPSlot index={5} />
             </InputOTPGroup>
           </OTPForm>
+          <SeparatorRoot />
+          <InputForm label="Mật khẩu" type="password" control={form.control} name="password" />
+          <InputForm label="Nhập lại mật khẩu" type="password" control={form.control} name="confirmPassword" />
         </div>
         <div className="space-y-2">
           <Button.Root type="submit" className="w-full">
-            <Button.Label>Đăng ký</Button.Label>
+            <Button.Label>Đổi mật khẩu</Button.Label>
           </Button.Root>
           <SeparatorRoot />
           <div className="flex gap-2">
@@ -152,4 +154,4 @@ const BackButton = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-export default VerifyForm;
+export default ForgotForm;

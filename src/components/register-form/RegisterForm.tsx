@@ -2,9 +2,9 @@ import { RegisterSchema } from '@components/register-form/register.schema';
 import { useRegister } from '@components/register-form/useRegister';
 import Button from '@components/tailus-ui/Button';
 import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
-import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Title } from '@components/tailus-ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -43,6 +43,7 @@ function RegisterForm() {
   return (
     <Form {...form}>
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+        <BackButton onBack={() => go('/login')} />
         <Title className="text-center">Đăng ký tài khoản mới</Title>
         <div className="space-y-4">
           <InputForm label="Tên hiển thị" control={form.control} name="name" />
@@ -67,14 +68,19 @@ function RegisterForm() {
           <Button.Root type="submit" className="w-full">
             <Button.Label>Đăng ký</Button.Label>
           </Button.Root>
-          <SeparatorRoot />
-          <Button.Root variant="ghost" type="button" className="w-full" href="/login">
-            <Button.Label>Đăng nhập</Button.Label>
-          </Button.Root>
         </div>
       </form>
     </Form>
   );
 }
-
+const BackButton = ({ onBack }: { onBack: () => void }) => {
+  return (
+    <Button.Root size="sm" variant="ghost" type="button" className="absolute top-8 left-4" intent="gray" onClick={onBack}>
+      <Button.Icon>
+        <IconArrowLeft />
+      </Button.Icon>
+      <Button.Label>Đăng nhập</Button.Label>
+    </Button.Root>
+  );
+};
 export default RegisterForm;
