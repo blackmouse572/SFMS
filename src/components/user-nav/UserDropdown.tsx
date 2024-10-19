@@ -5,7 +5,7 @@ import { useAuth } from '@lib/auth';
 import { User } from '@lib/types';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { IconHelpCircle, IconLogout2, IconMessageCircleQuestion, IconSettings2, IconUser, IconWallpaper } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AdminAvatar } from './AdminAvatar';
 
@@ -14,13 +14,13 @@ type UserDropdownProps = {
 } & DropdownMenuProps;
 export const UserDropdown = ({ user, ...props }: UserDropdownProps) => {
   const logout = useAuth((s) => s.logout);
-  const go = useNavigate();
+  // const go = useNavigate();
   const handleLogout = () => {
     logout();
     toast.success('Đăng xuất thành công', {
       description: (
-        <Button.Root onClick={() => go('/login')} variant="outlined" size="xs" intent="gray">
-          <Button.Label>Đăng nhập</Button.Label>
+        <Button.Root href="/login" variant="outlined" size="xs" intent="info" className="w-full">
+          <Button.Label>Đăng nhập lại</Button.Label>
         </Button.Root>
       ),
     });

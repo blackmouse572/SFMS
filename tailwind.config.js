@@ -6,7 +6,10 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      colors: palettes.trust,
+      colors: {
+        ...palettes.trust,
+        'soft-bg': 'var(--ui-soft-bg)',
+      },
       fontFamily: {
         sans: ['Geist', 'Inter', ...defaultTheme.fontFamily.sans],
         mono: ['GeistMono', 'fira-code', ...defaultTheme.fontFamily.mono],
