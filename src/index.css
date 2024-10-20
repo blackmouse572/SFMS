@@ -60,6 +60,15 @@
     --feedback-shadow-opacity: 0.05;
     --menu-shadow-opacity: 0.05;
     --accordion-shadow-opacity: 0.05;
+    /* SIDEBAR */
+    --sidebar-background: theme(colors.soft-bg);
+    --sidebar-foreground: var(--display-text-color);
+    --sidebar-primary: theme(colors.primary.600);
+    --sidebar-primary-foreground: theme(colors.primary.50);
+    --sidebar-accent: theme(colors.accent.600);
+    --sidebar-accent-foreground: theme(colors.accent.50);
+    --sidebar-border: var(--ui-border-color);
+    --sidebar-ring: theme(colors.primary.500);
   }
 
   /* :root:where(.dark, .dark *) {

@@ -1,7 +1,7 @@
 import { useIsAuthenticated } from '@lib/auth';
 import { Navigate, Outlet } from 'react-router-dom';
 
-function AuthLayout() {
+function NotAuthLayout() {
   const isAuthed = useIsAuthenticated();
   if (isAuthed) {
     return <Navigate to="/user" />;
@@ -16,4 +16,4 @@ function AuthLayout() {
   );
 }
 
-export default AuthLayout;
+export default NotAuthLayout;

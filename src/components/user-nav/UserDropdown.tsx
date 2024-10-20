@@ -11,10 +11,10 @@ import { AdminAvatar } from './AdminAvatar';
 
 type UserDropdownProps = {
   user: User;
+  trigger?: React.ReactNode;
 } & DropdownMenuProps;
-export const UserDropdown = ({ user, ...props }: UserDropdownProps) => {
+export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => {
   const logout = useAuth((s) => s.logout);
-  // const go = useNavigate();
   const handleLogout = () => {
     logout();
     toast.success('Đăng xuất thành công', {
@@ -27,9 +27,7 @@ export const UserDropdown = ({ user, ...props }: UserDropdownProps) => {
   };
   return (
     <DropdownMenu.Root {...props}>
-      <DropdownMenu.Trigger className="rounded-[--avatar-radius] hover:ring ring-[--ui-soft-bg] data-[state=open]:ring">
-        <AdminAvatar />
-      </DropdownMenu.Trigger>
+      <DropdownMenu.Trigger asChild={!!trigger}>{trigger ?? <AdminAvatar />}</DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           side="bottom"
@@ -51,7 +49,7 @@ export const UserDropdown = ({ user, ...props }: UserDropdownProps) => {
               <div className="mt-4 grid grid-cols-2 gap-3" data-rounded="large">
                 {user.role.name === 'ADMIN' ||
                   (user.role.name === 'SUPER_ADMIN' && (
-                    <Button.Root className="bg-gray-50" variant="outlined" size="xs" intent="gray" href="/dashboard">
+                    <Button.Root className="bg-gray-50" variant="outlined" size="xs" intent="gray" href="/admin">
                       <Button.Icon size="xs" type="leading">
                         <IconSettings2 />
                       </Button.Icon>

@@ -9,6 +9,12 @@ export default {
       colors: {
         ...palettes.trust,
         'soft-bg': 'var(--ui-soft-bg)',
+        'sidebar-background': 'var(--sidebar-background)',
+        'sidebar-foreground': 'var(--sidebar-foreground)',
+        'sidebar-accent': 'var(--sidebar-accent)',
+        'sidebar-accent-foreground': 'var(--sidebar-accent-foreground)',
+        'sidebar-border': 'var(--sidebar-border)',
+        'sidebar-ring': 'var(--sidebar-ring)',
       },
       fontFamily: {
         sans: ['Geist', 'Inter', ...defaultTheme.fontFamily.sans],
