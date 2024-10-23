@@ -6,7 +6,7 @@ import { Text } from '@components/tailus-ui/typography';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Layout = ({ children }: React.PropsWithChildren<{}>) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{children}</div>;
 };
 
@@ -15,7 +15,9 @@ type SchoolarListProps = {
 };
 function SchoolarShipsList({ name }: SchoolarListProps) {
   const { isLoading, data } = useGetSchoolarShip({
-    name,
+    filter: {
+      name,
+    },
   });
 
   if (isLoading) {
@@ -46,7 +48,7 @@ function SchoolarShipsList({ name }: SchoolarListProps) {
               <Text size="lg" weight={'bold'}>
                 {s.name}
               </Text>
-              <Badge variant="soft">{s.type}</Badge>
+              <Badge variant="soft">{s.location}</Badge>
             </Card>
           </Link>
         ))
@@ -55,4 +57,4 @@ function SchoolarShipsList({ name }: SchoolarListProps) {
   );
 }
 
-export default SchoolarShipsList;
+export { SchoolarShipsList };

@@ -16,7 +16,7 @@ function TopBar<TData>(props: TopBarProps<TData>) {
 
   const renderItem = useCallback(({ ...item }: TopbarAction, i?: number) => {
     return (
-      <Button.Root key={i} {...item}>
+      <Button.Root key={i + item.label} {...item}>
         {item.icon && <Button.Icon type="leading">{item.icon}</Button.Icon>}
         <Button.Label>{item.label}</Button.Label>
       </Button.Root>

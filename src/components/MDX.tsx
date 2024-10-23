@@ -31,4 +31,5 @@ function MDX({ children, components, ...props }: React.ComponentPropsWithoutRef<
   );
 }
 
+export { defaultComponents as MDXComponents };
 export default MDX;

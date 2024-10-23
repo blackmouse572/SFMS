@@ -10,6 +10,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HT
   disabled?: boolean;
   href?: string;
   type?: 'button' | 'submit' | 'reset';
+  form?: string;
 }
 
 export interface IconProps extends React.HTMLAttributes<HTMLElement>, ButtonIconProps {}

@@ -49,17 +49,19 @@ export interface IPagedResponse<T> {
 export interface SchoolarShip {
   _id: string;
   name: string;
-  image: any[];
-  type: string;
-  level: any[];
-  subject: any[];
+  image: string[];
+  location: string;
+  continent: string;
+  level: string[];
+  major: string[];
+  quantity: number;
   description: string;
   isActive: boolean;
   createdBy: CreatedBy;
   isDeleted: boolean;
-  deletedAt: any;
+  deletedAt?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface CreatedBy {

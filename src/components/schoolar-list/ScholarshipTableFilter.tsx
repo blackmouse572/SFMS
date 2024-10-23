@@ -1,6 +1,6 @@
 import Button from '@components/tailus-ui/Button';
 import { Form, InputForm } from '@components/tailus-ui/form';
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { IconFilter } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
@@ -55,12 +55,13 @@ function ScholarTableFilter(props: ScholarshipTableFilterProps) {
               </SheetTitle>
               <SheetDescription>Tìm kiếm theo tên học bổng, tổ chức, chủ đề, và cấp</SheetDescription>
             </SheetHeader>
-            <section className="flex-1 space-y-4">
+
+            <SheetBody className="flex-1 space-y-4">
               <InputForm control={form.control} name="name" label="Tên học bổng" />
               <InputForm control={form.control} name="type" label="Loại học bổng" />
               <InputForm control={form.control} name="subject" label="Chủ đề" />
               <InputForm control={form.control} name="level" label="Cấp" />
-            </section>
+            </SheetBody>
             <SheetFooter className="">
               <Button.Root type="reset" intent="gray" variant="outlined" onClick={onReset}>
                 <Button.Label>Xóa</Button.Label>
@@ -76,4 +77,4 @@ function ScholarTableFilter(props: ScholarshipTableFilterProps) {
   );
 }
 
-export default ScholarTableFilter;
+export { ScholarTableFilter };

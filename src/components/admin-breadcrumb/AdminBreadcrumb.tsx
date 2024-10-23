@@ -56,15 +56,15 @@ export function AdminBreadcrumb({ ...props }: React.ComponentPropsWithoutRef<'na
   const { items } = useBreadcrumb();
   const renderItem = (item: BreadcrumbItem, i: number) => {
     if (i === items.length - 1) {
-      return <BreadcrumbPage>{item.title}</BreadcrumbPage>;
+      return <BreadcrumbPage key={item.href}>{item.title}</BreadcrumbPage>;
     }
 
     if (item.href) {
       return (
-        <>
+        <span key={item.href}>
           <BreadcrumbLink to={item.href}>{item.title}</BreadcrumbLink>
           <BreadcrumbSeparator></BreadcrumbSeparator>
-        </>
+        </span>
       );
     }
   };
