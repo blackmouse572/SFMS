@@ -1,3 +1,4 @@
+import { getScholarShipKey } from '@components/schoolar-list/constant';
 import { CreateScholarSchema } from '@components/schoolar-list/CreateScholarPanel';
 import { useUploadBatchImages } from '@components/upload/useUploadBatchImages';
 import axios from '@lib/axios';
@@ -17,7 +18,7 @@ export function useCreateScholarShip() {
       });
     },
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['schoolar-ship'] });
+      client.invalidateQueries({ queryKey: getScholarShipKey.list() });
     },
   });
 }

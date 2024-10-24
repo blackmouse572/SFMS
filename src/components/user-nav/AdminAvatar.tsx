@@ -15,7 +15,7 @@ export const AdminAvatar = ({
   const randomIntent = intents[Math.floor(Math.random() * intents.length)];
 
   return (
-    <Avatar.Root size={size}>
+    <Avatar.Root size={size ?? 'md'}>
       <Avatar.Image src={src} loading="lazy" alt="User Avatar" width={120} height={120} />
       <Avatar.Fallback intent={randomIntent} children={initial} />
     </Avatar.Root>

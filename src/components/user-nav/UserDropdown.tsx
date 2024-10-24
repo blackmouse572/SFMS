@@ -27,7 +27,7 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
   };
   return (
     <DropdownMenu.Root {...props}>
-      <DropdownMenu.Trigger asChild={!!trigger}>{trigger ?? <AdminAvatar />}</DropdownMenu.Trigger>
+      <DropdownMenu.Trigger asChild={!!trigger}>{trigger ?? <AdminAvatar size="md" />}</DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           side="bottom"

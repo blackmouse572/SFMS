@@ -1,6 +1,6 @@
 import Button, { ButtonProps } from '@components/tailus-ui/Button';
 import { cn } from '@lib/utils';
-import { IconFilter, IconTableAlias } from '@tabler/icons-react';
+import { IconFilter, IconPointFilled, IconTableAlias } from '@tabler/icons-react';
 import { useCallback } from 'react';
 export type TopbarAction = {
   label: string;
@@ -9,10 +9,11 @@ export type TopbarAction = {
 type TopBarProps<TData> = {
   selectedItems?: TData[];
   actions?: TopbarAction[][];
+  isFilterActive?: boolean;
   onFilterClick?: () => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 function TopBar<TData>(props: TopBarProps<TData>) {
-  const { actions, className, onFilterClick, ...rest } = props;
+  const { actions, className, onFilterClick, isFilterActive, ...rest } = props;
 
   const renderItem = useCallback(({ ...item }: TopbarAction, i?: number) => {
     return (
@@ -29,7 +30,8 @@ function TopBar<TData>(props: TopBarProps<TData>) {
         {actions?.map((action, i) => action.length > 0 && <div className="px-2 flex gap-2">{action.map((a) => renderItem(a, i))}</div>)}
       </div>
       <div className="mr-auto w-fit flex gap-2 pr-2">
-        <Button.Root size="sm" intent="gray" variant="outlined" onClick={() => onFilterClick?.()}>
+        <Button.Root size="sm" intent="gray" variant="outlined" className="relative" onClick={() => onFilterClick?.()}>
+          {isFilterActive && <IconPointFilled className="absolute -top-3 -right-3 size-6 origin-center text-primary-500" />}
           <Button.Icon type="only">
             <IconFilter />
           </Button.Icon>

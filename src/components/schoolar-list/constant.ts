@@ -1,3 +1,5 @@
+import { Filter } from '@components/schoolar-list/ScholarshipTableFilter';
+
 export const ContinentOptions = [
   {
     value: 'Châu Úc',
@@ -48,7 +50,7 @@ export const LocationOptions = [
 
 export const MajorOptions = [
   {
-    value: 'Công nghệ thông tin',
+    value: 'Công Nghệ Thông Tin',
   },
   {
     value: 'Kinh doanh',
@@ -68,6 +70,23 @@ export const MajorOptions = [
   {
     value: 'Luật',
   },
+  {
+    value: 'Ngôn Ngữ Anh',
+  },
+  { value: 'Ngôn Ngữ Nhật' },
+  { value: 'Ngôn Ngữ Hàn' },
+  { value: 'Ngôn Ngữ Trung' },
+  { value: 'Ngôn Ngữ Pháp' },
+  { value: 'Quản Trị Kinh Doanh' },
+  {
+    value: 'Du Lịch',
+  },
+  {
+    value: 'Y Học',
+  },
+  {
+    value: 'Khách Sạn',
+  },
 ];
 
 export const LevelOptions = [
@@ -81,3 +100,8 @@ export const LevelOptions = [
     value: 'Tiến sĩ',
   },
 ];
+
+export const getScholarShipKey = {
+  list: (filter?: Filter) => ['schoolar-ship', filter],
+  id: (id: string) => ['schoolar-ship', id],
+};

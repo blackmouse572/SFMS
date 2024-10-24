@@ -1,3 +1,4 @@
+import { getScholarShipKey } from '@components/schoolar-list/constant';
 import { Filter } from '@components/schoolar-list/ScholarshipTableFilter';
 import axios from '@lib/axios';
 import { IPagedRequest, IPagedResponse, SchoolarShip } from '@lib/types';
@@ -14,7 +15,7 @@ type UseGetSchoolarShip = {
 export function useGetSchoolarShip(props: UseGetSchoolarShip) {
   const { filter } = props;
   return useInfiniteQuery<IPagedResponse<SchoolarShip>>({
-    queryKey: ['schoolar-ship', filter],
+    queryKey: getScholarShipKey.list(filter),
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,

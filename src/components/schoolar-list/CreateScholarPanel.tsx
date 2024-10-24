@@ -1,8 +1,7 @@
-import { ContinentOptions, LevelOptions, LocationOptions, MajorOptions } from '@components/schoolar-list/constant';
+import { ContinentOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Editor from '@components/tailus-ui/editor/editor';
 import { Form, FormField, FormItem, FormLabel, InputForm, SelectForm } from '@components/tailus-ui/form';
-import { CheckboxGroupForm } from '@components/tailus-ui/form/CheckboxGroupForm';
 import { SwitchForm } from '@components/tailus-ui/form/SwitchForm';
 import Select from '@components/tailus-ui/Select';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
@@ -17,7 +16,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const CreateScholarSchema = z.object({
-  id: z.string().optional(),
+  _id: z.string().optional(),
   name: z.string().min(3).max(255),
   continent: z.string().min(3).max(255),
   major: z.array(z.string().min(3).max(255)).nonempty(),
@@ -104,19 +103,15 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                 <InputForm control={form.control} name="quantity" required label="Số lượng" />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <SelectForm control={form.control} name="location" label="Loại học bổng" required>
-                  {LocationOptions.map((country) => (
-                    <SelectItem entry={country} key={country.value} />
-                  ))}
-                </SelectForm>
+                <InputForm control={form.control} name="location" label="Loại học bổng" required />
                 <SelectForm control={form.control} name="continent" label="Khu vực" required>
                   {ContinentOptions.map((country) => (
                     <SelectItem entry={country} key={country.value} />
                   ))}
                 </SelectForm>
               </div>
-              <CheckboxGroupForm control={form.control} name="level" label="Cấp" values={LevelOptions} />
-              <CheckboxGroupForm control={form.control} name="major" label="Ngành học" values={MajorOptions} />
+              <InputForm control={form.control} name="level" label="Cấp" required />
+              <InputForm control={form.control} name="major" label="Ngành học" required />
 
               <SwitchForm control={form.control} name="isActive" label="Sử dụng học bổng" />
               <FormField
@@ -205,7 +200,7 @@ type Entry = {
 
 const SelectItem = ({ entry }: { entry: Entry }) => {
   return (
-    <Select.Item key={entry.key + entry.value} value={entry.key ?? entry.va} className="pl-7 items-center">
+    <Select.Item value={entry.key ?? entry.value} className="pl-7 items-center">
       <Select.ItemIndicator asChild>
         <IconCheck className="size-3.5 text-secondary-500" />
       </Select.ItemIndicator>

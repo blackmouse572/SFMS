@@ -61,10 +61,10 @@ export function AdminBreadcrumb({ ...props }: React.ComponentPropsWithoutRef<'na
 
     if (item.href) {
       return (
-        <span key={item.href}>
+        <React.Fragment key={item.href}>
           <BreadcrumbLink to={item.href}>{item.title}</BreadcrumbLink>
-          <BreadcrumbSeparator></BreadcrumbSeparator>
-        </span>
+          <BreadcrumbSeparator />
+        </React.Fragment>
       );
     }
   };

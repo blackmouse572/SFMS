@@ -4,22 +4,25 @@ import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { CreateScholarPanel, CreateScholarSchema, ScholarDetailPanel } from '@components/schoolar-list';
 import { ScholarTableFilter, type Filter as SchoolarFilter } from '@components/schoolar-list/ScholarshipTableFilter';
 import { useCreateScholarShip } from '@components/schoolar-list/useCreateScholarShip';
+import { useDeleteScholarship } from '@components/schoolar-list/useDeleteScholarship';
+import { useEditScholarship } from '@components/schoolar-list/useEditScholarShip';
 import { useGetSchoolarShip } from '@components/schoolar-list/useSchoolarShip';
 import Badge from '@components/tailus-ui/Badge';
 import { Caption, Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { SchoolarShip } from '@lib/types';
+import { cn } from '@lib/utils';
 import { IconEye, IconPencil, IconPlus, IconPointFilled, IconTrash } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
 function AdminScholarship() {
-  const { addItems } = useBreadcrumb();
+  const { setItems } = useBreadcrumb();
   useEffectOnce(() => {
-    addItems([
+    setItems([
       {
         title: 'Quản lý học bổng',
         href: '/admin/scholarship',
@@ -29,6 +32,8 @@ function AdminScholarship() {
   const [filter, setFilter] = useState<SchoolarFilter>();
   const { isLoading, data, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({ filter });
   const { mutateAsync: create } = useCreateScholarShip();
+  const { mutateAsync: deleteById } = useDeleteScholarship();
+  const { mutateAsync: edit } = useEditScholarship();
 
   const columns = useMemo<ColumnDef<SchoolarShip>[]>(
     () => [
@@ -42,7 +47,7 @@ function AdminScholarship() {
           const { name, isActive } = info.getValue() as { name: string; isActive: boolean };
           return (
             <div className="flex items-center gap-2">
-              <IconPointFilled className={isActive ? 'text-green-500' : 'text-red-500'} />
+              <IconPointFilled className={cn(isActive ? 'text-green-500' : 'text-red-500', 'shrink-0')} />
               <Text size="sm">{name}</Text>
             </div>
           );
@@ -114,6 +119,13 @@ function AdminScholarship() {
   );
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const isFilterActive = useMemo(() => {
+    if (filter && Object.values(filter).some((v) => v.length > 0)) {
+      return true;
+    }
+
+    return false;
+  }, [filter]);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
   const [isCreatePanelOpen, setIsCreatePanelOpen] = useState(false);
   const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
@@ -137,6 +149,44 @@ function AdminScholarship() {
       error: 'Tạo học bổng thất bại',
     });
   };
+
+  const onEdit = useCallback(
+    async (data: CreateScholarSchema, f: UseFormReturn<CreateScholarSchema>) => {
+      if (selectedScholar.length === 0) {
+        toast.error('Chưa chọn học bổng để cập nhật');
+      }
+      toast.promise(
+        edit({
+          data,
+          old: selectedScholar[0],
+        }),
+        {
+          loading: 'Đang cập nhật học bổng...',
+          success: () => {
+            f.reset();
+            setIsEditPanelOpen(false);
+            return 'Cập nhật học bổng thành công';
+          },
+          error: 'Cập nhật học bổng thất bại',
+        }
+      );
+    },
+    [edit, selectedScholar]
+  );
+
+  const onDelete = useCallback(() => {
+    if (selectedScholar.length === 0) {
+      return toast.error('Chưa chọn học bổng để xóa');
+    }
+    toast.promise(deleteById(selectedScholar[0]._id), {
+      loading: 'Đang xóa học bổng...',
+      success: () => {
+        setIsDetailPanelOpen(false);
+        return 'Xóa học bổng thành công';
+      },
+      error: 'Xóa học bổng thất bại',
+    });
+  }, [deleteById, selectedScholar]);
 
   const actions = useMemo<TopbarAction[][]>(() => {
     return [
@@ -181,19 +231,20 @@ function AdminScholarship() {
               intent: 'danger',
               variant: 'soft',
               mode: 'single',
+              onClick: onDelete,
             },
           ]
         : [],
     ];
-  }, [selectedScholar.length]);
+  }, [onDelete, selectedScholar.length]);
 
   return (
     <div className="space-y-2 mt-8">
-      <TopBar selectedItems={selectedScholar} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} />
+      <TopBar selectedItems={selectedScholar} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} isFilterActive={isFilterActive} />
       <ScholarTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <ScholarDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedScholar[0]} />
       <CreateScholarPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
-      <CreateScholarPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={() => {}} defaultValues={selectedScholar[0] as any} />
+      <CreateScholarPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={onEdit} defaultValues={selectedScholar[0] as any} />
       <DataTable
         data={items}
         columns={columns}

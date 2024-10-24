@@ -18,7 +18,7 @@ export default {
         'sidebar-ring': 'var(--sidebar-ring)',
       },
       fontFamily: {
-        sans: ['Geist', 'Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['Be Vietnam Pro', 'Geist', 'Inter', ...defaultTheme.fontFamily.sans],
         mono: ['GeistMono', 'fira-code', ...defaultTheme.fontFamily.mono],
       },
       rounded: {

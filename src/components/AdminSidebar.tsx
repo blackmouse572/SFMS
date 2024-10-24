@@ -16,6 +16,7 @@ import { AdminAvatar, UserDropdown } from '@components/user-nav';
 import { useUser } from '@lib/auth';
 import { User } from '@lib/types';
 import { IconChevronRight, IconDatabaseShare, IconSchool, IconUsersGroup } from '@tabler/icons-react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 type SidebarItem = {
@@ -34,7 +35,6 @@ const items: SidebarItem[] = [
   },
   {
     title: 'Quản lý',
-    href: '/admin',
     children: [
       {
         title: 'Quản lý học bổng',
@@ -52,39 +52,51 @@ const items: SidebarItem[] = [
   },
 ];
 
+const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  if (item.children) {
+    return (
+      <Collapsible key={item.title} className="group/collapsable" defaultOpen={true} onOpenChange={(isOpen) => setOpen(isOpen)} open={open}>
+        <SidebarMenuItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton
+              onClick={() => setOpen(!open)}
+              isActive={!open && item.children.some((child) => pathname === child.href)}
+              variant="outline"
+            >
+              {item.icon}
+              <span>{item.title}</span>
+              <IconChevronRight className="transition-transform ml-auto group-data-[state=open]/collapsable:rotate-90" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <ul className="border-l ml-2">
+              {item.children.map((item, i) => (
+                <CollapsibleItem item={item} />
+              ))}
+            </ul>
+          </CollapsibleContent>
+        </SidebarMenuItem>
+      </Collapsible>
+    );
+  }
+  return (
+    <SidebarMenuItem key={item.title}>
+      <SidebarMenuButton isActive={pathname === item.href} variant="outline" asChild>
+        <Link to={item.href ?? '/admin'}>
+          {item.icon}
+          <span>{item.title}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+};
+
 function AdminSidebar() {
   const user = useUser() as User;
-  const { pathname } = useLocation();
-  const renderItem = (item: SidebarItem, i: number) => {
-    if (item.children) {
-      return (
-        <Collapsible key={item.title} className="group/collapsable" defaultOpen={i === 0}>
-          <SidebarMenuItem>
-            <CollapsibleTrigger asChild>
-              <SidebarMenuButton isActive={pathname === item.href} variant="outline">
-                {item.icon}
-                <span>{item.title}</span>
-                <IconChevronRight className="transition-transform ml-auto group-data-[state=open]/collapsable:rotate-90" />
-              </SidebarMenuButton>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <ul className="border-l ml-2">{item.children.map((item, i) => renderItem(item, i))}</ul>
-            </CollapsibleContent>
-          </SidebarMenuItem>
-        </Collapsible>
-      );
-    }
-    return (
-      <SidebarMenuItem key={item.title}>
-        <SidebarMenuButton isActive={pathname === item.href} variant="outline" asChild>
-          <Link to={item.href ?? '/admin'}>
-            {item.icon}
-            <span>{item.title}</span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    );
-  };
+
   return (
     <Sidebar>
       <SidebarHeader className="flex-row items-center gap-2 p-2">
@@ -97,7 +109,11 @@ function AdminSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>{items.map((item, i) => renderItem(item, i))}</SidebarMenu>
+            <SidebarMenu>
+              {items.map((item, i) => (
+                <CollapsibleItem item={item} />
+              ))}
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
