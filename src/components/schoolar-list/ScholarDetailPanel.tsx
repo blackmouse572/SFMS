@@ -1,10 +1,12 @@
 import MdxPreview from '@components/MdxPreview';
+import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { Table, TableBody, TableCell, TableRow } from '@components/tailus-ui/Table';
-import { Text } from '@components/tailus-ui/typography';
+import { Caption, Text } from '@components/tailus-ui/typography';
 import { SchoolarShip } from '@lib/types';
 import { DialogProps } from '@radix-ui/react-dialog';
+import { IconImageInPicture } from '@tabler/icons-react';
 import { DialogProps as VariantProps } from '@tailus/themer';
 import { useMemo } from 'react';
 type ScholarDetailPaneProps = Omit<DialogProps, 'children'> & {
@@ -87,27 +89,34 @@ function ScholarDetailPanel(props: ScholarDetailPaneProps) {
           </Table>
           <div>
             <Text weight="semibold">Hình ảnh</Text>
-            <Carousel
-              opts={{
-                align: 'start',
-              }}
-            >
-              <CarouselContent>
-                {item.image.map((image, i) => (
-                  <CarouselItem key={image}>
-                    <img key={i} src={image} alt={item.name} className="w-full h-full object-cover mx-auto" />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-3" />
-              <CarouselNext className="right-3" />
-            </Carousel>
+            {item.image.length >= 1 ? (
+              <Carousel
+                opts={{
+                  align: 'start',
+                }}
+              >
+                <CarouselContent>
+                  {item.image.map((image, i) => (
+                    <CarouselItem key={image}>
+                      <img key={i} src={image} alt={item.name} className="w-full h-full object-cover mx-auto" />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-3" />
+                <CarouselNext className="right-3" />
+              </Carousel>
+            ) : (
+              <Card variant="outlined" className="rounded-card border px-2 py-4 flex items-center justify-center flex-col gap-4 ">
+                <IconImageInPicture className="size-12 text-caption opacity-70" />
+                <Caption className="">Không có hình ảnh</Caption>
+              </Card>
+            )}
           </div>
           <div className="h-max py-2">
             <Text weight="semibold">Mô tả</Text>
-            <div className="rounded-card border px-2 py-4">
+            <Card variant="outlined">
               <MdxPreview>{item.description}</MdxPreview>
-            </div>
+            </Card>
           </div>
         </SheetBody>
       </SheetContent>

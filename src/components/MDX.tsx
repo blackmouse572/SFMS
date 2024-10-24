@@ -7,7 +7,7 @@ const defaultComponents: MDXComponents = {
   h1: (props) => <Title as="h1" size="3xl" weight="bold" {...props} className={cn(props.className, 'mt-5')} />,
   h2: (props) => <Title as="h2" size="xl" weight="medium" {...props} className={cn(props.className, 'mt-5')} />,
   h3: (props) => <Title as="h3" size="base" weight="medium" {...props} className={cn(props.className, 'mt-5')} />,
-  p: (props) => <Text size="base" {...props} className={cn(props.className, 'mt-4')} />,
+  p: (props) => <Text size="base" {...props} className={cn(props.className, 'mt-4 first-of-type:mt-0')} />,
   b: (props) => <Text as="strong" weight="bold" {...props} />,
   i: (props) => <Text as="em" weight="medium" {...props} />,
   a: (props) => <Link {...props} />,

@@ -3,6 +3,7 @@ import Button from '@components/tailus-ui/Button';
 import Editor from '@components/tailus-ui/editor/editor';
 import { Form, FormField, FormItem, FormLabel, InputForm, SelectForm } from '@components/tailus-ui/form';
 import { SwitchForm } from '@components/tailus-ui/form/SwitchForm';
+import { TagInputForm } from '@components/tailus-ui/form/TagInput';
 import Select from '@components/tailus-ui/Select';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { useUploadImage } from '@components/upload/useUploadImage';
@@ -19,15 +20,32 @@ export const CreateScholarSchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(3).max(255),
   continent: z.string().min(3).max(255),
-  major: z.array(z.string().min(3).max(255)).nonempty(),
-  level: z.array(z.string().min(3).max(255)).nonempty(),
+  major: z
+    .array(
+      // serve for tag input
+      // it will be converted to string[]
+      z.object({
+        id: z.string().optional(),
+        text: z.string().min(1).max(255),
+      })
+    )
+    .nonempty(),
+  level: z
+    .array(
+      // serve for tag input
+      // it will be converted to string[]
+      z.object({
+        id: z.string().optional(),
+        text: z.string().min(1).max(255),
+      })
+    )
+    .nonempty(),
   location: z.string().min(3).max(255),
   description: z.string().min(3).max(5000),
   quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
   image: z
     .array(z.instanceof(File))
-    .nonempty()
     .refine((files) => files.every((file) => file.type.startsWith('image/')), {
       message: 'File không phải là ảnh',
     })
@@ -110,9 +128,8 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                   ))}
                 </SelectForm>
               </div>
-              <InputForm control={form.control} name="level" label="Cấp" required />
-              <InputForm control={form.control} name="major" label="Ngành học" required />
-
+              <TagInputForm control={form.control} name="level" label="Cấp" required />
+              <TagInputForm control={form.control} name="major" label="Ngành học" required />
               <SwitchForm control={form.control} name="isActive" label="Sử dụng học bổng" />
               <FormField
                 control={form.control}
