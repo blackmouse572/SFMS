@@ -12,6 +12,7 @@ import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
 import VerifyPage from '@pages/verify.index';
 import { createBrowserRouter } from 'react-router-dom';
+import AdminUsers from '../pages/(admin)/users.index';
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
           {
             element: <AdminScholarship />,
             path: '/admin/scholarship',
+          },
+          {
+            element: <AdminUsers />,
+            path: '/admin/users',
           },
         ],
       },

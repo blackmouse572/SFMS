@@ -1,34 +1,31 @@
-import { getScholarShipKey } from '@components/schoolar-list/constant';
-import { Filter } from '@components/schoolar-list/ScholarshipTableFilter';
+import { getUserKey } from '@components/user-list/constants';
 import axios from '@lib/axios';
-import { IPagedRequest, IPagedResponse, SchoolarShip } from '@lib/types';
+import { IPagedRequest, IPagedResponse, User } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
-
 const initialRequest: IPagedRequest = {
   current: 1,
   pageSize: 30,
 };
-type UseGetSchoolarShip = {
-  filter?: Filter;
+type UseUserListProps = {
+  filter?: Record<string, string>;
 };
-export function useGetSchoolarShip(props: UseGetSchoolarShip) {
-  const { filter } = props;
-  return useInfiniteQuery<IPagedResponse<SchoolarShip>>({
-    queryKey: getScholarShipKey.list(filter),
+export function useUserList({ filter }: UseUserListProps) {
+  return useInfiniteQuery({
+    queryKey: getUserKey.list(filter),
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,
         current: pageParam,
         name: filter?.name && new RegExp(filter.name, 'i'),
-        level: filter?.level && new RegExp(filter.level, 'i'),
-        location: filter?.location && new RegExp(filter.location, 'i'),
-        continent: filter?.continent && new RegExp(filter.continent, 'i'),
+        email: filter?.email && new RegExp(filter.email, 'i'),
+        phone: filter?.phone && new RegExp(filter.phone, 'i'),
+        address: filter?.address && new RegExp(filter.address, 'i'),
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
       });
-      return axios.get<IPagedResponse<SchoolarShip>>(`/scholarship?${qs}`).then((d) => d.data);
+      return axios.get<IPagedResponse<User>>(`/users?${qs}`).then((d) => d.data);
     },
     initialPageParam: initialRequest.current,
     getNextPageParam: (lastPage) => {

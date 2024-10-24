@@ -208,7 +208,6 @@ function AdminScholarship() {
               size: 'sm',
               intent: 'info',
               variant: 'soft',
-              mode: 'single',
               onClick: () => setIsDetailPanelOpen(true),
             },
             {

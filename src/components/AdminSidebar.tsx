@@ -15,8 +15,8 @@ import { Text } from '@components/tailus-ui/typography';
 import { AdminAvatar, UserDropdown } from '@components/user-nav';
 import { useUser } from '@lib/auth';
 import { User } from '@lib/types';
-import { IconChevronRight, IconDatabaseShare, IconSchool, IconUsersGroup } from '@tabler/icons-react';
-import { useState } from 'react';
+import { IconChevronRight, IconDatabaseShare, IconFileInvoice, IconSchool, IconUserScan, IconUsersGroup } from '@tabler/icons-react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 type SidebarItem = {
@@ -47,6 +47,18 @@ const items: SidebarItem[] = [
         href: '/admin/users',
         icon: <IconUsersGroup />,
         apiPath: '/api/v1/users',
+      },
+      {
+        title: 'Quản lý tư vấn',
+        href: '/admin/advisory',
+        icon: <IconFileInvoice />,
+        apiPath: '/api/v1/advisory',
+      },
+      {
+        title: 'Quản lý CV',
+        href: '/admin/resume',
+        icon: <IconUserScan />,
+        apiPath: '/api/v1/resumes',
       },
     ],
   },
@@ -96,7 +108,19 @@ const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
 
 function AdminSidebar() {
   const user = useUser() as User;
+  const filterItems = useMemo(() => {
+    const { permissions } = user;
 
+    return items.map((item) => {
+      if (item.children) {
+        return {
+          ...item,
+          children: item.children.filter((child) => permissions.some((p) => p.apiPath === child.apiPath)),
+        };
+      }
+      return item;
+    });
+  }, [user]);
   return (
     <Sidebar>
       <SidebarHeader className="flex-row items-center gap-2 p-2">
@@ -110,7 +134,7 @@ function AdminSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item, i) => (
+              {filterItems.map((item, i) => (
                 <CollapsibleItem item={item} />
               ))}
             </SidebarMenu>

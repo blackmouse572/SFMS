@@ -2,7 +2,17 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  role: Role;
+  avatar: string;
+  phone: string;
+  gender: 'male' | 'female';
+  address: string;
+  age: number;
+  isActive: boolean;
+  isDeleted: boolean;
+  role: Role | string;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: CreatedBy;
   permissions: Permission[];
 }
 
@@ -67,4 +77,34 @@ export interface SchoolarShip {
 export interface CreatedBy {
   _id: string;
   email: string;
+}
+
+export const ResumeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+};
+
+export interface Resume {
+  _id: string;
+  email: string;
+  userId: string;
+  urlCV: string;
+  status: keyof typeof ResumeStatus;
+  provider: string;
+  scholarship: string;
+  history: History[];
+  isDeleted: boolean;
+  deletedAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+  __v: number;
+  createdBy: CreatedBy;
+  updatedBy: CreatedBy;
+}
+
+export interface History {
+  status: string;
+  updatedAt: string;
+  updatedBy: CreatedBy;
 }
