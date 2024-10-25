@@ -3,8 +3,9 @@ import { LoginSchema } from '@components/login-form/login.schema';
 import { useLogin } from '@components/login-form/useLogin';
 import Button from '@components/tailus-ui/Button';
 import { CheckboxForm, Form, InputForm } from '@components/tailus-ui/form';
+import Label from '@components/tailus-ui/Label';
 import SeparatorRoot from '@components/tailus-ui/Separator';
-import { Title } from '@components/tailus-ui/typography';
+import { Link, Title } from '@components/tailus-ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -18,6 +19,7 @@ function LoginForm() {
     defaultValues: {
       username: '',
       password: '',
+      save: true,
     },
     resolver: zodResolver(LoginSchema),
   });
@@ -64,21 +66,30 @@ function LoginForm() {
     <Form {...form}>
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
         <Title className="text-center">Đăng nhập</Title>
-        <div className="space-y-4">
-          <InputForm label="Tên đăng nhập" control={form.control} name="username" />
-          <InputForm label="Mật khẩu" control={form.control} name="password" type="password" />
+        <div className="space-y-4 min-w-[400px]">
+          <InputForm label="Email" control={form.control} name="username" />
+          <InputForm
+            label={
+              <div className="flex justify-between items-center">
+                <Label>Mật khẩu</Label>
+                <Link variant="ghost" size="sm" intent="gray" href="/forgot-password">
+                  Quên mật khẩu
+                </Link>
+              </div>
+            }
+            control={form.control}
+            name="password"
+            type="password"
+          />
           <CheckboxForm label="Ghi nhớ tôi" control={form.control} name="save" className="justify-end" />
         </div>
         <div className="space-y-2">
-          <Button.Root type="submit" className="w-full">
+          <Button.Root type="submit" size="sm" className="w-full">
             <Button.Label>Đăng nhập</Button.Label>
           </Button.Root>
-          <Button.Root variant="ghost" type="button" className="w-full" href="/register">
-            <Button.Label>Đăng ký</Button.Label>
-          </Button.Root>
           <SeparatorRoot />
-          <Button.Root size="sm" variant="ghost" type="button" intent="gray" className="w-full" href="/forgot-password">
-            <Button.Label>Quên mật khẩu</Button.Label>
+          <Button.Root variant="ghost" size="sm" type="button" className="w-full" href="/register">
+            <Button.Label>Đăng ký</Button.Label>
           </Button.Root>
         </div>
       </form>

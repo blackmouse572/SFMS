@@ -1,24 +1,43 @@
 import { useGetSchoolarShip } from '@components/schoolar-list/useSchoolarShip';
 import { Skeleton } from '@components/Skeleton';
-import Badge from '@components/tailus-ui/Badge';
 import Card from '@components/tailus-ui/Card';
-import { Text } from '@components/tailus-ui/typography';
-import React from 'react';
+import SeparatorRoot from '@components/tailus-ui/Separator';
+import { Caption, Text } from '@components/tailus-ui/typography';
+import { SchoolarShip } from '@lib/types';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-
+import strip from 'remove-markdown';
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  return <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{children}</div>;
+  return <div className="grid grid-cols-2 gap-4">{children}</div>;
 };
 
 type SchoolarListProps = {
-  name?: string;
+  filter: Partial<Pick<SchoolarShip, 'name' | 'location'>>;
 };
-function SchoolarShipsList({ name }: SchoolarListProps) {
+function SchoolarShipsList({ filter }: SchoolarListProps) {
   const { isLoading, data } = useGetSchoolarShip({
-    filter: {
-      name,
-    },
+    filter,
   });
+
+  const renderItem = useCallback((s: SchoolarShip) => {
+    return (
+      <Link to={`/hoc-bong/${s._id}`} key={s._id}>
+        <Card variant="outlined" className="space-y-2 flex gap-2 hover:bg-soft-bg cursor-pointer transition-[background]">
+          <img src={s.image[0]} alt={s.name} className="h-40 rounded-btn aspect-square object-cover" />
+          <div className="w-full">
+            <Text weight={'bold'} className="line-clamp-2">
+              {s.name}
+            </Text>
+            <Caption>
+              {s.createdBy?.email} - {new Date(s.createdAt).toLocaleDateString()}
+            </Caption>
+            <SeparatorRoot className="mb-4 mt-2 w-full" />
+            <Caption className="line-clamp-3">{strip(s.description.slice(0, 100), { useImgAltText: true })}</Caption>
+          </div>
+        </Card>
+      </Link>
+    );
+  }, []);
 
   if (isLoading) {
     return (
@@ -39,22 +58,7 @@ function SchoolarShipsList({ name }: SchoolarListProps) {
 
   if (data?.pages.length === 0) return <div>No data</div>;
 
-  return (
-    <Layout>
-      {data?.pages.map((p) =>
-        p.data.result.map((s) => (
-          <Link to={`/hoc-bong/${s._id}`} key={s._id}>
-            <Card variant="outlined" className="cursor-default space-y-2">
-              <Text size="lg" weight={'bold'}>
-                {s.name}
-              </Text>
-              <Badge variant="soft">{s.location}</Badge>
-            </Card>
-          </Link>
-        ))
-      )}
-    </Layout>
-  );
+  return <Layout>{data?.pages.map((p) => p.data.result.map((s) => renderItem(s)))}</Layout>;
 }
 
 export { SchoolarShipsList };

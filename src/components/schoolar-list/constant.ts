@@ -1,5 +1,3 @@
-import { Filter } from '@components/schoolar-list/ScholarshipTableFilter';
-
 export const ContinentOptions = [
   {
     value: 'Châu Úc',
@@ -8,19 +6,10 @@ export const ContinentOptions = [
     value: 'Châu Âu',
   },
   {
-    value: 'Bắc Mỹ',
-  },
-  {
-    value: 'Nam Mỹ',
+    value: 'Châu Mỹ',
   },
   {
     value: 'Châu Á',
-  },
-  {
-    value: 'Châu Phi',
-  },
-  {
-    value: 'Châu Nam Cực',
   },
 ];
 
@@ -102,6 +91,6 @@ export const LevelOptions = [
 ];
 
 export const getScholarShipKey = {
-  list: (filter?: Filter) => ['schoolar-ship', filter],
+  list: (filter?: Record<string, any>) => ['schoolar-ship', filter],
   id: (id: string) => ['schoolar-ship', id],
 };

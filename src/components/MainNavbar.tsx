@@ -1,4 +1,4 @@
-import Button from '@components/tailus-ui/Button';
+import AdvisorContactDialog from '@components/AdvisorContactDialog';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,10 +9,11 @@ import {
   navigationMenuTriggerStyle,
 } from '@components/tailus-ui/NavigationMenu';
 import { Text } from '@components/tailus-ui/typography';
-import { UserDropdown } from '@components/user-nav';
-import { useIsAuthenticated, useUser } from '@lib/auth';
+import axios from '@lib/axios';
+import { IResponse } from '@lib/types';
 import { cn } from '@lib/utils';
 import { Root as NavigationMenuPrimitiveRoot } from '@radix-ui/react-navigation-menu';
+import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -39,9 +40,17 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
+function useGetListLocation() {
+  return useQuery({
+    queryKey: ['listLocation'],
+    queryFn: async () => {
+      return axios.get<IResponse<Record<string, string[]>>>('/scholarship/list-location').then((res) => res.data.data);
+    },
+  });
+}
+
 export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitiveRoot>) {
-  const isAuth = useIsAuthenticated();
-  const user = useUser();
+  const { isLoading, data } = useGetListLocation();
   return (
     <NavigationMenu {...props} className={cn('flex justify-between w-full max-w-none [&>.viewport]:left-48', className)}>
       <NavigationMenuList>
@@ -91,23 +100,20 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
           <NavigationMenuTrigger>Học bổng</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-4 w-[50vw] lg:grid-cols-[.75fr_1fr_1fr]">
-              <li>
-                <Text weight={'bold'}>Học bổng Úc</Text>
-                <ListItem href="/about-us" title="Học bổng Úc" />
-                <ListItem href="/about-us" title="Học bổng New Zealand" />
-              </li>
-              <li>
-                <Text weight={'bold'}>Học bổng Châu Mỹ</Text>
-                <ListItem href="/about-us" title="Học bổng Mỹ" />
-                <ListItem href="/about-us" title="Học bổng Canada" />
-              </li>
-              <li>
-                <Text weight={'bold'}>Học bổng Châu Á</Text>
-                <ListItem href="/about-us" title="Học bổng Trung Quốc" />
-                <ListItem href="/about-us" title="Học bổng Hàn Quốc" />
-                <ListItem href="/about-us" title="Học bổng Singapore" />
-                <ListItem href="/about-us" title="Học bổng Philippines" />
-              </li>
+              {isLoading && (
+                <li>
+                  <Text>Loading...</Text>
+                </li>
+              )}
+              {data &&
+                Object.entries(data ?? {}).map(([continent, countries]) => (
+                  <div key={continent}>
+                    <Text weight={'bold'}>{continent}</Text>
+                    {countries.map((country) => (
+                      <ListItem key={country} title={country} href={`/hoc-bong?location=${country}`} />
+                    ))}
+                  </div>
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -129,14 +135,7 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
-
-      {isAuth ? (
-        <UserDropdown user={user!} />
-      ) : (
-        <Button.Root intent="secondary" href="/login" size="lg">
-          <Button.Label>Đăng ký tư vấn</Button.Label>
-        </Button.Root>
-      )}
+      <AdvisorContactDialog />
     </NavigationMenu>
   );
 }

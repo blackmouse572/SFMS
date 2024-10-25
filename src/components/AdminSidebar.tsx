@@ -66,7 +66,7 @@ const items: SidebarItem[] = [
 
 const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   if (item.children) {
     return (

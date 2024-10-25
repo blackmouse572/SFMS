@@ -30,7 +30,7 @@ function AdminScholarship() {
     ]);
   });
   const [filter, setFilter] = useState<SchoolarFilter>();
-  const { isLoading, data, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({ filter });
+  const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({ filter });
   const { mutateAsync: create } = useCreateScholarShip();
   const { mutateAsync: deleteById } = useDeleteScholarship();
   const { mutateAsync: edit } = useEditScholarship();
@@ -250,6 +250,7 @@ function AdminScholarship() {
         isLoading={isLoading}
         isLoadingMore={isFetchingNextPage}
         onLoadMore={fetchNextPage}
+        hasMore={hasNextPage}
         selectionMode="single"
         onSelectionChange={onSelect}
         getRowId={(row) => row._id}

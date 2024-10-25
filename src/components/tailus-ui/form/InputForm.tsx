@@ -6,7 +6,7 @@ export interface InputProps extends PIProps {
   control: any;
   name: string;
   required?: boolean;
-  label: string;
+  label: React.ReactNode;
 }
 
 const InputForm = React.forwardRef<HTMLInputElement, InputProps>(({ className, type, control, name, label, required, ...props }, ref) => {

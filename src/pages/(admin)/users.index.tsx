@@ -24,14 +24,14 @@ function AdminUsers() {
       },
     ]);
   });
-  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useUserList({ filter: {} });
+  const [filter, setFilter] = useState<UserFilter>();
+  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useUserList({ filter });
 
   const { mutateAsync: deleteUser } = useDeleteUser();
 
   const [selectedItems, setSelectedItems] = useState<User[]>();
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
-  const [filter, setFilter] = useState<UserFilter>();
 
   const onSelect = (ids: string[]) => {
     const filtered = items.filter((item) => ids.includes(item._id)) ?? [];

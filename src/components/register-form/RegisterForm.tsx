@@ -42,12 +42,11 @@ function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-8" onSubmit={handleSubmit(onSubmit, (e) => console.error(e))}>
         <BackButton onBack={() => go('/login')} />
         <Title className="text-center">Đăng ký tài khoản mới</Title>
         <div className="space-y-4">
           <InputForm label="Tên hiển thị" control={form.control} name="name" />
-          <InputForm label="Tên đăng nhập" control={form.control} name="username" />
           <InputForm label="Email" control={form.control} name="email" />
           <InputForm label="Mật khẩu" control={form.control} name="password" type="password" />
           <InputForm label="Nhập lại mật khẩu" control={form.control} name="repassword" type="password" />

@@ -1,5 +1,6 @@
 import { FocusCard } from '@components/FocusCard';
-import { Navbar } from '@components/Navbar';
+import { Navbar } from '@components/MainNavbar';
+import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import InfiniteScroll from '@components/tailus-ui/InfiniteScroll';
 import { cn } from '@lib/utils';
@@ -11,6 +12,7 @@ import ReactCountryFlag from 'react-country-flag';
 function App() {
   return (
     <main>
+      <SecondaryNavbar className="" />
       <Navbar className="px-8 min-h-16 border-b shadow-lg" />
       <div className="snap-mandatory snap-y">
         <HeaderSection className="" />

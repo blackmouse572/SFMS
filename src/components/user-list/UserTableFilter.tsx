@@ -23,7 +23,14 @@ export type UserFilter = z.infer<typeof FilterSchema>;
 
 function UserTableFilter(props: UserListFilterProps) {
   const { onSubmit, ...rest } = props;
-  const form = useForm<UserFilter>({});
+  const form = useForm<UserFilter>({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+    },
+  });
 
   const onFormSubmit = (data: UserFilter) => {
     onSubmit(data);

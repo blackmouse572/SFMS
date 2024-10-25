@@ -4,8 +4,9 @@ import { Caption, Title } from '@components/tailus-ui/typography';
 import { useAuth } from '@lib/auth';
 import { User } from '@lib/types';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import { IconHelpCircle, IconLogout2, IconMessageCircleQuestion, IconSettings2, IconUser, IconWallpaper } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconHelpCircle, IconLogout2, IconMessageCircleQuestion, IconSettings2, IconUser, IconWallpaper, IconWorld } from '@tabler/icons-react';
+import { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AdminAvatar } from './AdminAvatar';
 
@@ -15,6 +16,7 @@ type UserDropdownProps = {
 } & DropdownMenuProps;
 export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => {
   const logout = useAuth((s) => s.logout);
+  const path = useLocation().pathname;
   const handleLogout = () => {
     logout();
     toast.success('Đăng xuất thành công', {
@@ -25,6 +27,30 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
       ),
     });
   };
+  const renderAction = useMemo(() => {
+    if (!user || typeof user.role === 'string') return null;
+    if (path.startsWith('/admin')) {
+      return (
+        <Button.Root className="bg-soft-bg" variant="outlined" size="xs" intent="gray" href="/">
+          <Button.Icon size="xs" type="leading">
+            <IconWorld />
+          </Button.Icon>
+          <Button.Label>Website</Button.Label>
+        </Button.Root>
+      );
+    }
+    return (
+      user.role.name === 'ADMIN' ||
+      (user.role.name === 'SUPER_ADMIN' && (
+        <Button.Root className="bg-soft-bg" variant="outlined" size="xs" intent="gray" href="/admin">
+          <Button.Icon size="xs" type="leading">
+            <IconSettings2 />
+          </Button.Icon>
+          <Button.Label>Quản lý</Button.Label>
+        </Button.Root>
+      ))
+    );
+  }, [path, user]);
   return (
     <DropdownMenu.Root {...props}>
       <DropdownMenu.Trigger asChild={!!trigger}>{trigger ?? <AdminAvatar size="md" />}</DropdownMenu.Trigger>
@@ -47,15 +73,7 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
               <Caption>{user.email}</Caption>
 
               <div className="mt-4 grid grid-cols-2 gap-3" data-rounded="large">
-                {user.role.name === 'ADMIN' ||
-                  (user.role.name === 'SUPER_ADMIN' && (
-                    <Button.Root className="bg-gray-50" variant="outlined" size="xs" intent="gray" href="/admin">
-                      <Button.Icon size="xs" type="leading">
-                        <IconSettings2 />
-                      </Button.Icon>
-                      <Button.Label>Quản lý</Button.Label>
-                    </Button.Root>
-                  ))}
+                {renderAction}
                 <Button.Root onClick={handleLogout} className="bg-gray-50" variant="outlined" size="xs" intent="gray">
                   <Button.Icon size="xs" type="leading">
                     <IconLogout2 />

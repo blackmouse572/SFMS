@@ -11,7 +11,7 @@ import TuVanPage from '@pages/(content)/tu-van';
 import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
 import VerifyPage from '@pages/verify.index';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, defer } from 'react-router-dom';
 import AdminUsers from '../pages/(admin)/users.index';
 
 export const router = createBrowserRouter([
@@ -39,6 +39,20 @@ export const router = createBrowserRouter([
               },
               {
                 path: '/hoc-bong/:id',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { getScholarshipDetails, getRelatedScholarships } = await import('@pages/(content)/hoc-bong/[id].loader');
+                  const scholarship = await getScholarshipDetails(id);
+                  const { major, level, continent } = scholarship;
+                  const majorRelated = getRelatedScholarships({ major });
+                  const levelRelated = getRelatedScholarships({ level });
+                  const continentRelated = getRelatedScholarships({ continent });
+
+                  return defer({
+                    data: scholarship,
+                    related: [majorRelated, levelRelated, continentRelated],
+                  });
+                },
                 element: <SchoolarshipDetails />,
               },
             ],

@@ -1,6 +1,6 @@
 import Footer from '@components/Footer';
 import MDX from '@components/MDX';
-import { Navbar } from '@components/Navbar';
+import { Navbar } from '@components/MainNavbar';
 import { Outlet } from 'react-router-dom';
 function ContentLayout() {
   return (

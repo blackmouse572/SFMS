@@ -116,15 +116,15 @@ function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       </TableHeader>
       <TableBody>
         {isLoading && renderLoading()}
-        {table.getRowModel().rows?.length ? (
+        {table.getRowModel().rows?.length > 0 &&
           table.getRowModel().rows.map((row) => (
             <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
               ))}
             </TableRow>
-          ))
-        ) : (
+          ))}
+        {table.getRowModel().rows?.length === 0 && (
           <TableRow>
             <TableCell colSpan={columns.length} className="h-24 text-center">
               {renderEmpty ? renderEmpty() : 'Không có dữ liệu'}
@@ -132,7 +132,7 @@ function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           </TableRow>
         )}
         {isLoadingMore && renderLoading()}
-        <LoadMoreTrigger hasMore={hasMore} isLoading={isLoadingMore ?? true} onLoadMore={() => onLoadMore} />
+        <LoadMoreTrigger hasMore={hasMore} isLoading={isLoadingMore ?? true} onLoadMore={() => onLoadMore?.()} />
       </TableBody>
     </Table>
   );

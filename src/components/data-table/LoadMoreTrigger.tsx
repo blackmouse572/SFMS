@@ -17,7 +17,7 @@ function LoadMoreTrigger({ isLoading, hasMore, onLoadMore, threshold = 0, rootMa
     if (entry?.isIntersecting && !isLoading) {
       onLoadMore();
     }
-  }, [entry?.isIntersecting, isLoading, onLoadMore]);
+  }, [entry?.isIntersecting, hasMore, isLoading, onLoadMore]);
 
   return <div ref={ref} />;
 }

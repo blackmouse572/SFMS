@@ -13,7 +13,7 @@ type TopBarProps<TData> = {
   onFilterClick?: () => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 function TopBar<TData>(props: TopBarProps<TData>) {
-  const { actions, className, onFilterClick, isFilterActive, ...rest } = props;
+  const { actions, className, onFilterClick, selectedItems, isFilterActive, ...rest } = props;
 
   const renderItem = useCallback(({ ...item }: TopbarAction, i?: number) => {
     return (

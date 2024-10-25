@@ -76,7 +76,7 @@ function ForgotForm(props: ForgotFormProps) {
         <Caption className="text-center">
           Mã xác nhận đã được gửi đến email <b>{data.email}</b>
         </Caption>
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-[400px]">
           <input {...form.register('email')} type="hidden" value={data.email} />
           <OTPForm maxLength={6} name={'code'} control={form.control} className="mx-auto">
             <InputOTPGroup>

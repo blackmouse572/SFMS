@@ -8186,6 +8186,7 @@ __metadata:
     react-markdown: "npm:^9.0.1"
     react-router-dom: "npm:^6.27.0"
     recharts: "npm:^2.13.0"
+    remove-markdown: "npm:^0.5.5"
     slate-react: "npm:^0.110.2"
     sonner: "npm:^1.5.0"
     tailwind-merge: "npm:^2.2.0"
@@ -8637,6 +8638,13 @@ __metadata:
     unified: "npm:^11.0.0"
     vfile: "npm:^6.0.0"
   checksum: 10c0/68f986e8ee758d415e93babda2a0d89477c15b7c200edc23b8b1d914dd6e963c5fc151a11cbbbcfa7dd237367ff3ef86e302be90f31f37a17b0748668bd8c65b
+  languageName: node
+  linkType: hard
+
+"remove-markdown@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "remove-markdown@npm:0.5.5"
+  checksum: 10c0/f120f9c7742f7d5724bc07be2b1ab73830afd44ed9afc622256862a71fdbc6b117baac6e5ecbed381d47ca47c1b41ebf524439cdcf119ca70a6d0321f719099c
   languageName: node
   linkType: hard
 
