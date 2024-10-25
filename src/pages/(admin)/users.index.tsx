@@ -9,7 +9,7 @@ import { UserFilter, UserTableFilter } from '@components/user-list/UserTableFilt
 import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { User } from '@lib/types';
-import { IconEye, IconMan, IconTrash, IconWoman } from '@tabler/icons-react';
+import { IconEye, IconGenderFemale, IconGenderMale, IconTrash } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -93,7 +93,11 @@ function AdminUsers() {
               <AdminAvatar src={value.avatar} />
               <div>
                 <Text>
-                  {value.gender === 'male' ? <IconMan className="size-4 inline-block" /> : <IconWoman className="size-4 inline-block" />}
+                  {value.gender === 'male' ? (
+                    <IconGenderMale className="size-4 inline-block text-sky-500" />
+                  ) : (
+                    <IconGenderFemale className="size-4 inline-block text-pink-500" />
+                  )}
                   {value.name}
                 </Text>
                 <Caption>{value.email}</Caption>
