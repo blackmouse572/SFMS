@@ -7,7 +7,7 @@ import queryString from 'query-string';
 
 const initialRequest: IPagedRequest = {
   current: 1,
-  pageSize: 5,
+  pageSize: 30,
 };
 type UseGetSchoolarShip = {
   filter?: Filter;
@@ -28,15 +28,8 @@ export function useGetSchoolarShip(props: UseGetSchoolarShip) {
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
       });
-      return axios
-        .get<IPagedResponse<SchoolarShip>>(`/scholarship?${qs}`)
-        .then((d) => d.data)
-        .then((d) => ({ ...d, result: d.data.result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) }));
+      return axios.get<IPagedResponse<SchoolarShip>>(`/scholarship?${qs}`).then((d) => d.data);
     },
-    select: (data) => ({
-      pages: [...data.pages].reverse(),
-      pageParams: [...data.pageParams].reverse(),
-    }),
     initialPageParam: initialRequest.current,
     getNextPageParam: (lastPage) => {
       if (lastPage.data.meta.current >= lastPage.data.meta.pages) {
