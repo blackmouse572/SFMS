@@ -1,10 +1,14 @@
+import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import MdxPreview from '@components/MdxPreview';
 import { Skeleton } from '@components/Skeleton';
 import Badge from '@components/tailus-ui/Badge';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
+import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text } from '@components/tailus-ui/typography';
+import UploadCVDialog from '@components/upload-cv/UploadCVDialog';
+import { useEffectOnce } from '@hooks/useEffectOnce';
 import { SchoolarShip } from '@lib/types';
 import { IconImageInPicture } from '@tabler/icons-react';
 import _ from 'lodash';
@@ -18,14 +22,24 @@ function SchoolarshipDetails() {
     data: SchoolarShip;
     related: [majorRelated: Promise<SchoolarShip[]>, levelRelated: Promise<SchoolarShip[]>, continentRelated: Promise<SchoolarShip[]>];
   };
+  const { setItems } = useBreadcrumb();
+  useEffectOnce(() => {
+    setItems([
+      {
+        title: 'Học bổng',
+        href: '/hoc-bong',
+      },
+      {
+        title: data.name,
+        href: `/hoc-bong/${data._id}`,
+      },
+    ]);
+  });
   return (
     <div className="grid grid-cols-[1fr_0.3fr] gap-16">
       <section className="space-y-8 py-6">
         <div className="space-y-4">
           <Display size="5xl">{data?.name}</Display>
-          <Caption size="base">
-            {data?.location} - {data?.level}
-          </Caption>
         </div>
         <div>
           {data.image.length >= 1 ? (
@@ -67,7 +81,10 @@ function SchoolarshipDetails() {
           </Button.Root>
         </div>
       </section>
-      <section className="sticky top-10 py-3 h-fit space-y-5 bg-soft-bg p-3">
+      <section className="sticky top-0 py-3 h-fit space-y-5 bg-soft-bg p-3 min-h-screen">
+        <Text className="text-lg font-bold">Bạn muốn học bổng tại đây?</Text>
+        <UploadCVDialog scholarship={data} />
+        <SeparatorRoot />
         <Text className="text-lg font-bold">Học bổng liên quan</Text>
         <div className="space-y-4">
           <React.Suspense

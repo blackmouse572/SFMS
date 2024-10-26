@@ -1,6 +1,8 @@
+import { LinkProps as LinkVariant } from '@components/tailus-ui/typography/Link';
 import { cn } from '@lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { IconChevronRight, IconDots } from '@tabler/icons-react';
+import { link } from '@tailus/themer';
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 
@@ -26,17 +28,46 @@ const BreadcrumbLink = React.forwardRef<
   HTMLAnchorElement,
   LinkProps & {
     asChild?: boolean;
-  }
->(({ asChild, className, ...props }, ref) => {
+  } & LinkVariant
+>(({ asChild, size = 'sm', variant = 'plain', intent = 'gray', align = 'left', visited = false, weight, className, ...props }, ref) => {
   const Comp = asChild ? Slot : Link;
+  const classes = link({
+    size,
+    variant,
+    intent,
+    align,
+    visited,
+    weight,
+    className,
+  });
 
-  return <Comp ref={ref} className={cn('transition-colors hover:text-body', className)} {...props} />;
+  return <Comp ref={ref} className={cn('transition-colors', classes)} {...props} />;
 });
 BreadcrumbLink.displayName = 'BreadcrumbLink';
 
-const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<'span'>>(({ className, ...props }, ref) => (
-  <span ref={ref} role="link" aria-disabled="true" aria-current="page" className={cn('font-normal text-foreground', className)} {...props} />
-));
+const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<'span'> & LinkVariant>(
+  ({ className, size = 'sm', variant = 'plain', intent = 'gray', align = 'left', visited = false, weight, ...props }, ref) => {
+    const classes = link({
+      size,
+      variant,
+      intent,
+      align,
+      visited,
+      weight,
+    });
+
+    return (
+      <span
+        ref={ref}
+        role="link"
+        aria-disabled="true"
+        aria-current="page"
+        className={cn(classes, 'text-gray-950 dark:text-white', className)}
+        {...props}
+      />
+    );
+  }
+);
 BreadcrumbPage.displayName = 'BreadcrumbPage';
 
 const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'li'>) => (

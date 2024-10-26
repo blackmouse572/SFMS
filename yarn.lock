@@ -7670,6 +7670,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"payos-checkout@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "payos-checkout@npm:1.0.9"
+  checksum: 10c0/bc45f59f494947c29fd7c14a65965fe172c1b98d6b3d3cacd545291124c6c71c4673f0273e1461b4767aa42ddd4be0ac3796863e8d9fc3a084352c32e18eea68
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^1.0.0, picocolors@npm:^1.0.1, picocolors@npm:^1.1.0":
   version: 1.1.1
   resolution: "picocolors@npm:1.1.1"
@@ -8173,6 +8180,7 @@ __metadata:
     input-otp: "npm:^1.2.4"
     lodash: "npm:^4.17.21"
     path: "npm:^0.12.7"
+    payos-checkout: "npm:^1.0.9"
     postcss: "npm:^8.4.32"
     prettier: "npm:^3.1.1"
     qs: "npm:^6.13.0"

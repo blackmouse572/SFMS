@@ -4,6 +4,8 @@ import NotAuthLayout from '@pages/(auth)/auth.layout';
 import ForgotPage from '@pages/(auth)/forgot.index';
 import LoginPage from '@pages/(auth)/login.index';
 import RegisterPage from '@pages/(auth)/register.index';
+import PaymentCancelPage from '@pages/(content)/(payment)/cancel.index';
+import PaymentSuccessPage from '@pages/(content)/(payment)/success.index';
 import HocBongPage from '@pages/(content)/hoc-bong';
 import SchoolarshipDetails from '@pages/(content)/hoc-bong/[id].index';
 import ContentLayout from '@pages/(content)/layout';
@@ -54,6 +56,19 @@ export const router = createBrowserRouter([
                   });
                 },
                 element: <SchoolarshipDetails />,
+              },
+            ],
+          },
+          {
+            path: '/payment',
+            children: [
+              {
+                path: '/payment/success',
+                element: <PaymentSuccessPage />,
+              },
+              {
+                path: '/payment/cancel',
+                element: <PaymentCancelPage />,
               },
             ],
           },
