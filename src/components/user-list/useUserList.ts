@@ -8,7 +8,7 @@ const initialRequest: IPagedRequest = {
   pageSize: 30,
 };
 type UseUserListProps = {
-  filter?: Record<string, string>;
+  filter?: Record<string, any>;
 };
 export function useUserList({ filter }: UseUserListProps) {
   return useInfiniteQuery({
@@ -16,6 +16,7 @@ export function useUserList({ filter }: UseUserListProps) {
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,
+        ...filter,
         current: pageParam,
         name: filter?.name && new RegExp(filter.name, 'i'),
         email: filter?.email && new RegExp(filter.email, 'i'),
@@ -24,6 +25,7 @@ export function useUserList({ filter }: UseUserListProps) {
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
+        arrayFormat: 'separator',
       });
       return axios.get<IPagedResponse<User>>(`/users?${qs}`).then((d) => d.data);
     },

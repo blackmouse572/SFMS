@@ -25,7 +25,13 @@ function AdminUsers() {
     ]);
   });
   const [filter, setFilter] = useState<UserFilter>();
-  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useUserList({ filter });
+  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useUserList({
+    filter: {
+      ...filter,
+      populate: 'role',
+      fields: ['name', '_id'],
+    },
+  });
 
   const { mutateAsync: deleteUser } = useDeleteUser();
 
@@ -90,9 +96,9 @@ function AdminUsers() {
 
           return (
             <div className="flex gap-2 items-center">
-              <AdminAvatar src={value.avatar} />
+              <AdminAvatar size="sm" src={value.avatar} />
               <div>
-                <Text>
+                <Text weight={'medium'}>
                   {value.gender === 'male' ? (
                     <IconGenderMale className="size-4 inline-block text-sky-500" />
                   ) : (
@@ -107,8 +113,20 @@ function AdminUsers() {
         },
       },
       {
+        accessorKey: 'role',
+        header: 'Vai trò',
+        cell: (cell) => {
+          const value = cell.getValue() as { name: string };
+          return <Text>{value.name}</Text>;
+        },
+      },
+      {
         accessorKey: 'phone',
         header: 'Số điện thoại',
+        cell: (cell) => {
+          const value = cell.getValue() as string;
+          return <Caption className="text-ellipsis">{value}</Caption>;
+        },
       },
       {
         accessorKey: 'address',
