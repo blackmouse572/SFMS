@@ -1,8 +1,11 @@
+import { useGetSchoolarShip } from '@components/schoolar-list';
 import Button from '@components/tailus-ui/Button';
 import { Form, InputForm } from '@components/tailus-ui/form';
+import { ComboBoxForm } from '@components/tailus-ui/form/ComboBoxForm';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { IconFilter } from '@tabler/icons-react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -12,16 +15,28 @@ type UserListFilterProps = Omit<DialogProps, 'children'> & {
 
 export const FilterSchema = z
   .object({
-    email: z.string().min(3),
     status: z.string().min(3),
+    scholarship: z.string().min(3),
   })
   .partial();
 
 export type UserFilter = z.infer<typeof FilterSchema>;
 
-function UserTableFilter(props: UserListFilterProps) {
+function ResumeTableFilter(props: UserListFilterProps) {
   const { onSubmit, ...rest } = props;
-  const form = useForm<UserFilter>({});
+  const form = useForm<UserFilter>({
+    defaultValues: {
+      status: '',
+      scholarship: '',
+    },
+  });
+  const [scholarship, setScholarship] = useState<string>('');
+  const { isLoading, data } = useGetSchoolarShip({
+    filter: {
+      name: scholarship,
+    },
+  });
+  const items = useMemo(() => data?.pages.flatMap((d) => d.data.result).map((a) => ({ id: a._id, text: a.name })) ?? [], [data]);
 
   const onFormSubmit = (data: UserFilter) => {
     onSubmit(data);
@@ -48,7 +63,22 @@ function UserTableFilter(props: UserListFilterProps) {
 
             <SheetBody className="flex-1 space-y-4">
               <InputForm control={form.control} name="email" label="Tên" />
-              <InputForm control={form.control} name="status" label="Status" />
+              <ComboBoxForm
+                options={items}
+                control={form.control}
+                name="scholarship"
+                label="Học bổng"
+                onSearch={(value) => setScholarship(value)}
+                debounce={500}
+              />
+              {/* <SelectForm control={form.control} name="scholarship" label="Học bổng">
+                <SelectItem key={1} value="1">
+                  Học bổng 1
+                </SelectItem>
+                <SelectItem key={2} value="2">
+                  Học bổng 2
+                </SelectItem>
+              </SelectForm> */}
             </SheetBody>
             <SheetFooter className="">
               <Button.Root type="reset" intent="gray" variant="outlined" onClick={onReset}>
@@ -65,4 +95,4 @@ function UserTableFilter(props: UserListFilterProps) {
   );
 }
 
-export { UserTableFilter };
+export { ResumeTableFilter };

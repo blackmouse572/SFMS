@@ -28,6 +28,7 @@ function UserDetailsPanel(props: UserDetailPanel) {
         label: 'Role',
         value: typeof data.role === 'string' ? data.role : data.role.name,
       },
+
       {
         label: 'Số điện thoại',
         value: data.phone,
@@ -82,7 +83,7 @@ function UserDetailsPanel(props: UserDetailPanel) {
                   <Caption>{data.email}</Caption>
                 </div>
               </div>
-              <Table>
+              <Table className="border-separate border-spacing-y-2">
                 <TableBody className="gap-1 space-y-3">
                   {table.map(({ label, value }) => (
                     <TableRow key={label} className="border-none">

@@ -1,4 +1,5 @@
 import AdminLayout from '@pages/(admin)/admin.layout';
+import AdminResume from '@pages/(admin)/resume.index';
 import AdminScholarship from '@pages/(admin)/scholarship.index';
 import NotAuthLayout from '@pages/(auth)/auth.layout';
 import ForgotPage from '@pages/(auth)/forgot.index';
@@ -106,6 +107,10 @@ export const router = createBrowserRouter([
           {
             element: <AdminUsers />,
             path: '/admin/users',
+          },
+          {
+            element: <AdminResume />,
+            path: '/admin/resume',
           },
         ],
       },

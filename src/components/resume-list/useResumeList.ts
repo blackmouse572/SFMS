@@ -1,6 +1,6 @@
 import { getResumeKey } from '@components/resume-list/constants';
 import axios from '@lib/axios';
-import { IPagedRequest, IPagedResponse, User } from '@lib/types';
+import { IPagedRequest, IPagedResponse, Resume, SchoolarShip } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
 const initialRequest: IPagedRequest = {
@@ -19,11 +19,22 @@ export function useResumeList({ filter }: UseUserListProps) {
         current: pageParam,
         status: filter?.name && new RegExp(filter.status, 'i'),
         email: filter?.email && new RegExp(filter.email, 'i'),
+        populate: 'scholarship',
+        fields: ['scholarship.name'],
+        'scholarship._id': filter?.scholarship,
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
       });
-      return axios.get<IPagedResponse<User>>(`/resumes?${qs}`).then((d) => d.data);
+      return axios
+        .get<
+          IPagedResponse<
+            Resume & {
+              scholarship: Pick<SchoolarShip, '_id' | 'name'>;
+            }
+          >
+        >(`/resumes?${qs}`)
+        .then((d) => d.data);
     },
     initialPageParam: initialRequest.current,
     getNextPageParam: (lastPage) => {

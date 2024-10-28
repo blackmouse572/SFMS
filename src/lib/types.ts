@@ -80,9 +80,11 @@ export interface CreatedBy {
 }
 
 export const ResumeStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
+  PENDING: 'PENDING', // Waiting for payment
+  PAID: 'PAID', // Payment received, waiting for approval
+  APPROVED: 'APPROVED', // Approved
+  REJECTED: 'REJECTED', // Rejected
+  DELETED: 'DELETED', // Rejected by admin or deleted by user
 };
 
 export interface Resume {
@@ -92,8 +94,9 @@ export interface Resume {
   urlCV: string;
   status: keyof typeof ResumeStatus;
   provider: string;
-  scholarship: string;
+  scholarship: Pick<SchoolarShip, '_id' | 'name'>;
   history: History[];
+  orderCode: string;
   isDeleted: boolean;
   deletedAt?: string;
   createdAt: string;

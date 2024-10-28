@@ -77,7 +77,7 @@ function ScholarDetailPanel(props: ScholarDetailPaneProps) {
           <SheetDescription>{item._id}</SheetDescription>
         </SheetHeader>
         <SheetBody className="flex-1 space-y-8">
-          <Table>
+          <Table className="border-separate border-spacing-y-2">
             <TableBody className="gap-1 space-y-3">
               {table.map(({ label, value }) => (
                 <TableRow key={label} className="border-none">

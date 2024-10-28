@@ -3,17 +3,17 @@ import { DialogContent, DialogRoot } from '@components/tailus-ui/Dialog';
 import { cn } from '@lib/utils';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { card } from '@tailus/themer';
 import { Command as CommandPrimitive } from 'cmdk';
 import * as React from 'react';
 
 const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, React.ComponentPropsWithoutRef<typeof CommandPrimitive>>(
-  ({ className, ...props }, ref) => (
-    <CommandPrimitive
-      ref={ref}
-      className={cn('flex h-full w-full flex-col overflow-hidden rounded-md bg-[--ui-soft-bg] text-caption', className)}
-      {...props}
-    />
-  )
+  ({ className, ...props }, ref) => {
+    const classes = card();
+    return (
+      <CommandPrimitive ref={ref} className={cn('flex h-full w-full flex-col overflow-hidden rounded-md', classes, 'p-0', className)} {...props} />
+    );
+  }
 );
 Command.displayName = CommandPrimitive.displayName;
 
@@ -89,7 +89,7 @@ const CommandItem = React.forwardRef<React.ElementRef<typeof CommandPrimitive.It
     <CommandPrimitive.Item
       ref={ref}
       className={cn(
-        'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent-400/20 dark:data-[selected=true]:bg-accent-600/20 data-[selected=true]:text-accent-400 text-body transition-[background] duration-100 ease-linear data-[disabled=true]:opacity-50',
+        'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-gray-500/20 dark:data-[selected=true]:bg-soft-bg data-[selected=true]:text-body text-body transition-[background] duration-100 ease-linear data-[disabled=true]:opacity-50',
         className
       )}
       {...props}

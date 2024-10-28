@@ -1,11 +1,16 @@
+import CopyButton from '@components/CopyButton';
+import StatusBadge from '@components/resume-details/StatusBadge';
 import { useGetResumeDetails } from '@components/resume-details/useGetResumeDetails';
 import { Skeleton } from '@components/Skeleton';
-import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
+import Button from '@components/tailus-ui/Button';
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { Table, TableBody, TableCell, TableRow } from '@components/tailus-ui/Table';
-import { Caption, Text } from '@components/tailus-ui/typography';
+import { Tooltip } from '@components/tailus-ui/Tooltip';
+import { Caption, Link, Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
 import { Resume } from '@lib/types';
 import { type DialogProps } from '@radix-ui/react-dialog';
+import { IconArrowRight } from '@tabler/icons-react';
 import { useMemo } from 'react';
 
 type ResumeDetailPanel = {
@@ -21,26 +26,49 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
     if (!data) return [];
     return [
       {
-        label: 'Giới tính',
-        value: data.gender.toLowerCase() === 'male' ? 'Nam' : 'Nữ',
+        label: 'Email',
+        value: data.email,
+        action: <CopyButton intent="gray" size="xs" variant="soft" content={data.orderCode} />,
       },
       {
-        label: 'Role',
-        value: typeof data.role === 'string' ? data.role : data.role.name,
+        label: 'User id',
+        value: data.userId,
+        action: <CopyButton intent="gray" size="xs" variant="soft" content={data.orderCode} />,
       },
       {
-        label: 'Số điện thoại',
-        value: data.phone,
+        label: 'Học bổng',
+        value: data.scholarship.name,
+        action: (
+          <Tooltip tooltip="Xem chi tiết học bổng">
+            <Button.Root size="xs" intent="gray" variant="soft" href={`/hoc-bong/${data.scholarship._id}`}>
+              <Button.Icon type="only">
+                <IconArrowRight />
+              </Button.Icon>
+            </Button.Root>
+          </Tooltip>
+        ),
       },
       {
-        label: 'Hoạt động',
-        value: data.isActive ? 'Đang hoạt động' : 'Không hoạt động',
+        label: 'Mã đơn hàng',
+        value: data.orderCode,
+        action: <CopyButton intent="gray" size="xs" variant="soft" content={data.orderCode} />,
+      },
+      {
+        label: 'CV File',
+        value: (
+          <Link href={data.urlCV} size={'sm'} target="_blank">
+            {data.urlCV.split('/').pop()}
+          </Link>
+        ),
+      },
+      {
+        label: 'Trạng thái',
+        value: <StatusBadge status={data.status} />,
       },
       {
         label: 'Ngày tạo',
         value: Intl.DateTimeFormat('vi-VN').format(new Date(data.createdAt)),
       },
-
       data.createdBy
         ? {
             label: 'Tạo bởi',
@@ -59,11 +87,12 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
   }, [data]);
   return (
     <Sheet {...rest}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Chi tiết người dùng</SheetTitle>
+      <SheetContent size="lg" className="flex h-full flex-col gap-4 overflow-auto">
+        <SheetHeader className="sticky top-0 z-[51] bg-white border-b py-7">
+          <SheetTitle>Chi tiết hồ sơ</SheetTitle>
+          <SheetDescription>{item?._id}</SheetDescription>
         </SheetHeader>
-        <SheetBody>
+        <SheetBody className="flex-1">
           {isLoading && (
             <div className="space-y-4">
               <Skeleton className="w-full h-20 rounded-full" />
@@ -75,23 +104,94 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
           )}
           {data && (
             <div className="space-y-8">
-              <div className="flex gap-2 items-center">
-                <AdminAvatar src={data.avatar} size="lg" />
-                <div>
-                  <Text weight="bold">{data.name}</Text>
-                  <Caption>{data.email}</Caption>
-                </div>
-              </div>
-              <Table>
+              <Table className="border-separate border-spacing-y-2">
                 <TableBody className="gap-1 space-y-3">
-                  {table.map(({ label, value }) => (
-                    <TableRow key={label} className="border-none">
+                  {table.map(({ label, value, action }) => (
+                    <TableRow key={label} className="border-none group [&>td]:py-2 relative">
                       <TableCell className="bg-soft-bg font-medium text-nowrap">{label}</TableCell>
                       <TableCell className="font-normal">{value}</TableCell>
+                      {action && <div className="absolute top-1/2 right-0 hidden group-hover:inline-block -translate-y-1/2">{action}</div>}
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+              <div className="space-y-2">
+                <Text weight={'bold'}>Lịch sử</Text>
+                <div className="space-y-4">
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                  {data.history.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                      <div>
+                        <Text size="sm">{h.updatedBy.email}</Text>
+                        <StatusBadge status={h.status} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </SheetBody>

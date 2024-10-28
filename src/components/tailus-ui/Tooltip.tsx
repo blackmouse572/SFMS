@@ -80,7 +80,7 @@ export const Tooltip = (props: React.ComponentProps<typeof TooltipRoot> & { chil
         <TooltipTrigger asChild>{props.children}</TooltipTrigger>
 
         <TooltipPortal>
-          <TooltipContent>{props.tooltip}</TooltipContent>
+          <TooltipContent className="z-[12]">{props.tooltip}</TooltipContent>
         </TooltipPortal>
       </TooltipRoot>
     </TooltipProvider>

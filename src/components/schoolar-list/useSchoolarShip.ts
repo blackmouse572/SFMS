@@ -11,9 +11,10 @@ const initialRequest: IPagedRequest = {
 };
 type UseGetSchoolarShip = {
   filter?: Filter;
+  request?: IPagedRequest;
 };
 export function useGetSchoolarShip(props: UseGetSchoolarShip) {
-  const { filter } = props;
+  const { filter, request } = props;
   return useInfiniteQuery<IPagedResponse<SchoolarShip>>({
     queryKey: getScholarShipKey.list(filter),
     queryFn: ({ pageParam }) => {
@@ -30,7 +31,7 @@ export function useGetSchoolarShip(props: UseGetSchoolarShip) {
       });
       return axios.get<IPagedResponse<SchoolarShip>>(`/scholarship?${qs}`).then((d) => d.data);
     },
-    initialPageParam: initialRequest.current,
+    initialPageParam: request ?? initialRequest.current,
     getNextPageParam: (lastPage) => {
       if (lastPage.data.meta.current >= lastPage.data.meta.pages) {
         return undefined;
