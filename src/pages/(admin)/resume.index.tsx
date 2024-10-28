@@ -2,15 +2,17 @@ import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import ResumeDetailPanel from '@components/resume-details/ResumeDetailPanel';
+import { ResumeUpdateStatusPanel, UpdateResumeStatusSchema } from '@components/resume-details/ResumeUpdateStatusPanel';
 import StatusBadge from '@components/resume-details/StatusBadge';
+import { useUpdateResumeStatus } from '@components/resume-details/useUpdateResumeStatus';
 import { ResumeTableFilter, useResumeList } from '@components/resume-list';
 import { Text } from '@components/tailus-ui/typography';
-import { UserFilter } from '@components/user-list/UserTableFilter';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Resume, SchoolarShip } from '@lib/types';
-import { IconEye } from '@tabler/icons-react';
+import { IconAbacus, IconEye } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 function AdminResume() {
   const { setItems } = useBreadcrumb();
@@ -26,12 +28,26 @@ function AdminResume() {
   const [selectedItems, setSelectedItems] = useState<Resume[]>();
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
-  const [filter, setFilter] = useState<UserFilter>();
+  const [isUpdateStatusPanelOpen, setIsUpdateStatusPanelOpen] = useState(false);
+  const [filter, setFilter] = useState<Record<string, any>>();
+
   const { data, isFetchingNextPage, fetchNextPage, isLoading } = useResumeList({ filter });
+  const { mutateAsync: updateStatus } = useUpdateResumeStatus();
 
   const onSelect = (ids: string[]) => {
     const filtered = items.filter((item) => ids.includes(item._id)) ?? [];
     setSelectedItems(filtered);
+  };
+
+  const onStatusUpdate = async (data: UpdateResumeStatusSchema) => {
+    toast.promise(updateStatus(data), {
+      loading: 'Đang cập nhật trạng thái...',
+      success: () => {
+        setIsUpdateStatusPanelOpen(false);
+        return 'Cập nhật trạng thái thành công';
+      },
+      error: (err) => err.message,
+    });
   };
 
   const actions = useMemo<TopbarAction[][]>(
@@ -44,6 +60,14 @@ function AdminResume() {
               size: 'sm',
               variant: 'soft',
               onClick: () => setIsDetailPanelOpen(true),
+            },
+            {
+              label: 'Cập nhật trạng thái',
+              size: 'sm',
+              variant: 'soft',
+              intent: 'secondary',
+              onClick: () => setIsUpdateStatusPanelOpen(true),
+              icon: <IconAbacus />,
             },
           ]
         : [],
@@ -99,6 +123,14 @@ function AdminResume() {
       <TopBar selectedItems={selectedItems} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} isFilterActive={isFilterActive} />
       <ResumeTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <ResumeDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems?.[0]} />
+      <ResumeUpdateStatusPanel
+        open={isUpdateStatusPanelOpen}
+        onOpenChange={setIsUpdateStatusPanelOpen}
+        item={selectedItems?.[0]}
+        onSubmit={(data) => {
+          onStatusUpdate(data);
+        }}
+      />
       <DataTable
         data={items}
         columns={columns}

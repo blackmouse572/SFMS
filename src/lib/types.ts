@@ -79,20 +79,20 @@ export interface CreatedBy {
   email: string;
 }
 
-export const ResumeStatus = {
-  PENDING: 'PENDING', // Waiting for payment
-  PAID: 'PAID', // Payment received, waiting for approval
-  APPROVED: 'APPROVED', // Approved
-  REJECTED: 'REJECTED', // Rejected
-  DELETED: 'DELETED', // Rejected by admin or deleted by user
-};
+export enum ResumeStatus {
+  PENDING = 'PENDING', // Waiting for payment
+  PAID = 'PAID', // Payment received, waiting for approval
+  REJECTED = 'REJECTED', // Rejected
+  REVIEWING = 'REVIEWING', // In reviewing
+  DONE = 'DONE', // Approved
+}
 
 export interface Resume {
   _id: string;
   email: string;
   userId: string;
   urlCV: string;
-  status: keyof typeof ResumeStatus;
+  status: ResumeStatus;
   provider: string;
   scholarship: Pick<SchoolarShip, '_id' | 'name'>;
   history: History[];

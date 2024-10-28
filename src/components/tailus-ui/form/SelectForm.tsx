@@ -26,7 +26,7 @@ export function SelectForm({ control, required, className, name, placeholder, la
             {required && <span className="text-danger-500 ml-1">*</span>}
           </FormLabel>
 
-          <Select.Root onValueChange={(v) => field.onChange(v)} value={field.value} required={required}>
+          <Select.Root onValueChange={(v) => field.onChange(v)} value={field.value} required={required} disabled={props.disabled}>
             <Select.Trigger>
               <Select.Value placeholder={placeholder} />
               <Select.Icon asChild>
