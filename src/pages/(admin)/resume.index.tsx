@@ -5,7 +5,7 @@ import ResumeDetailPanel from '@components/resume-details/ResumeDetailPanel';
 import { ResumeUpdateStatusPanel, UpdateResumeStatusSchema } from '@components/resume-details/ResumeUpdateStatusPanel';
 import StatusBadge from '@components/resume-details/StatusBadge';
 import { useUpdateResumeStatus } from '@components/resume-details/useUpdateResumeStatus';
-import { ResumeTableFilter, useResumeList } from '@components/resume-list';
+import { ResumeTableFilter, useDeleteResume, useResumeList } from '@components/resume-list';
 import { Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Resume, SchoolarShip } from '@lib/types';
@@ -33,6 +33,7 @@ function AdminResume() {
 
   const { data, isFetchingNextPage, fetchNextPage, isLoading } = useResumeList({ filter });
   const { mutateAsync: updateStatus } = useUpdateResumeStatus();
+  const { mutateAsync: deleteResume } = useDeleteResume();
 
   const onSelect = (ids: string[]) => {
     const filtered = items.filter((item) => ids.includes(item._id)) ?? [];
@@ -48,6 +49,19 @@ function AdminResume() {
       },
       error: (err) => err.message,
     });
+  };
+
+  const onDelete = async () => {
+    if (selectedItems?.length === 1) {
+      toast.promise(deleteResume(selectedItems[0]._id), {
+        loading: 'Đang xóa...',
+        success: () => {
+          setSelectedItems([]);
+          return 'Xóa thành công';
+        },
+        error: (err) => err.message,
+      });
+    }
   };
 
   const actions = useMemo<TopbarAction[][]>(
@@ -69,10 +83,19 @@ function AdminResume() {
               onClick: () => setIsUpdateStatusPanelOpen(true),
               icon: <IconAbacus />,
             },
+            {
+              label: 'Xóa',
+              size: 'sm',
+              variant: 'soft',
+              intent: 'danger',
+              onClick: () => {
+                onDelete();
+              },
+            },
           ]
         : [],
     ],
-    [selectedItems]
+    [onDelete, selectedItems?.length]
   );
 
   const columns = useMemo<ColumnDef<Resume>[]>(
