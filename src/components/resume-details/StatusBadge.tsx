@@ -11,11 +11,11 @@ function StatusBadge({ status, className }: { status: string; className?: string
 }
 
 const ColorMap: Record<keyof typeof ResumeStatus, BadgeProps['intent']> = {
-  APPROVED: 'success',
   PAID: 'info',
-  DELETED: 'danger',
   PENDING: 'gray',
   REJECTED: 'warning',
+  DONE: 'success',
+  REVIEWING: 'primary',
 };
 
 export default StatusBadge;

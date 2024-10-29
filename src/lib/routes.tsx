@@ -11,6 +11,9 @@ import HocBongPage from '@pages/(content)/hoc-bong';
 import SchoolarshipDetails from '@pages/(content)/hoc-bong/[id].index';
 import ContentLayout from '@pages/(content)/layout';
 import TuVanPage from '@pages/(content)/tu-van';
+import CvProfile from '@pages/(profile)/cv.profile.index';
+import ProfileLayout from '@pages/(profile)/layout';
+import ProfilePage from '@pages/(profile)/profile.index';
 import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
 import VerifyPage from '@pages/verify.index';
@@ -29,6 +32,20 @@ export const router = createBrowserRouter([
       {
         element: <ContentLayout />,
         children: [
+          {
+            element: <ProfileLayout />,
+            path: '/profile',
+            children: [
+              {
+                element: <ProfilePage />,
+                index: true,
+              },
+              {
+                path: '/profile/cv',
+                element: <CvProfile />,
+              },
+            ],
+          },
           {
             path: '/tu-van-du-hoc',
             element: <TuVanPage />,
@@ -75,6 +92,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+
       {
         element: <NotAuthLayout />,
         children: [

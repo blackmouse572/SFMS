@@ -7,29 +7,27 @@ import { Caption, Link, Text } from '@components/tailus-ui/typography';
 import { useUploadCV } from '@components/upload-cv/useUploadCV';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SchoolarShip } from '@lib/types';
-import { IconCloudUpload, IconFileTypePdf, IconLoader2, IconSend } from '@tabler/icons-react';
+import { IconCloudUpload, IconFileTypePdf, IconLoader2, IconSend, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 3MB
+const ACCEPTED_FILE_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
 
 export const UploadCVSchema = z.object({
   scholarship: z.string().min(3),
   urlCv: z
     .instanceof(File, {
-      message: 'File không đúng định dạng, vui lòng chọn file pdf, doc, docx',
+      message: 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg',
     })
     .refine((file) => {
-      const maxSize = 1024 * 1024 * 5; // 5MB
-      if (file.size > maxSize) {
-        return 'File quá lớn, vui lòng chọn file nhỏ hơn 5MB';
-      }
-
-      const fileExtension = file.name.split('.').pop();
-      const allowedExtensions = ['pdf', 'doc', 'docx'];
-      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
-        return 'File không đúng định dạng, vui lòng chọn file pdf, doc, docx';
-      }
-    }),
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, 'File quá lớn, vui lòng chọn file nhỏ hơn 5MB')
+    .refine((file) => {
+      console.log(file?.type);
+      return ACCEPTED_FILE_TYPES.includes(file?.type);
+    }, 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg'),
 });
 export type UploadCVSchema = z.infer<typeof UploadCVSchema>;
 
@@ -46,7 +44,13 @@ function UploadCVDialog({ scholarship }: { scholarship: SchoolarShip }) {
       const url = uploadData.payment.checkoutUrl;
       return window.open(url, '_blank');
     }
-    const result = await upLoadResume(data);
+    const result = await upLoadResume(data).catch((err) => {
+      form.setError('urlCv', {
+        type: 'validate',
+        message: err.message,
+      });
+    });
+    console.log(result);
     if (result) {
       const url = result.payment.checkoutUrl;
       return window.open(url, '_blank');
@@ -71,7 +75,7 @@ function UploadCVDialog({ scholarship }: { scholarship: SchoolarShip }) {
             Bạn muốn xem xét hồ sơ của mình có phù hợp với học bổng này không? Hãy gửi CV của bạn cho chúng tôi để nhận tư vấn từ chuyên gia
           </Dialog.Description>
           <Form {...form}>
-            <form className="mt-4 space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="mt-4 space-y-4" onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}>
               <input type="hidden" {...form.register('scholarship')} value={scholarship._id} />
               <FormField
                 control={form.control}
@@ -82,11 +86,22 @@ function UploadCVDialog({ scholarship }: { scholarship: SchoolarShip }) {
                     <FormLabel htmlFor={field.name}>CV của bạn</FormLabel>
                     <div className="flex flex-wrap gap-2">
                       {field.value.name ? (
-                        <Card variant="outlined" className="flex gap-3 items-center">
+                        <Card variant="outlined" className="flex gap-3 items-center w-full relative">
                           <div className="rounded-full bg-soft-bg aspect-square w-14 flex items-center justify-center">
                             <IconFileTypePdf className="size-6 opacity-35" />
                           </div>
                           <Text>{field.value.name}</Text>
+                          <Button.Root
+                            size={'xs'}
+                            className="absolute top-0 right-0"
+                            intent="gray"
+                            variant="ghost"
+                            onClick={() => field.onChange(undefined)}
+                          >
+                            <Button.Icon type="only">
+                              <IconX />
+                            </Button.Icon>
+                          </Button.Root>
                         </Card>
                       ) : (
                         <label
@@ -102,7 +117,7 @@ function UploadCVDialog({ scholarship }: { scholarship: SchoolarShip }) {
                       hidden
                       id="cv"
                       type="file"
-                      accept=".pdf,.doc,.docx"
+                      accept=".pdf,image/*"
                       onChange={(e) => {
                         if (e.target.files) {
                           field.onChange(e.target.files[0]);

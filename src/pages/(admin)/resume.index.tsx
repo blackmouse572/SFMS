@@ -11,7 +11,7 @@ import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Resume, SchoolarShip } from '@lib/types';
 import { IconAbacus, IconEye } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 function AdminResume() {
@@ -51,7 +51,7 @@ function AdminResume() {
     });
   };
 
-  const onDelete = async () => {
+  const onDelete = useCallback(async () => {
     if (selectedItems?.length === 1) {
       toast.promise(deleteResume(selectedItems[0]._id), {
         loading: 'Đang xóa...',
@@ -62,7 +62,7 @@ function AdminResume() {
         error: (err) => err.message,
       });
     }
-  };
+  }, [deleteResume, selectedItems]);
 
   const actions = useMemo<TopbarAction[][]>(
     () => [
@@ -119,13 +119,17 @@ function AdminResume() {
         header: 'Học bổng',
         cell: (row) => {
           const scholarship = row.getValue() as Pick<SchoolarShip, '_id' | 'name'>;
-          return <Text className="max-w-[400px] ">{scholarship?.name}</Text>;
+          return (
+            <Text size="sm" className="max-w-[400px] ">
+              {scholarship?.name}
+            </Text>
+          );
         },
       },
       {
         accessorKey: 'orderCode',
         header: 'Mã đơn hàng',
-        cell: (row) => <Text>{row.getValue() as string}</Text>,
+        cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,
       },
     ],
     []

@@ -21,6 +21,7 @@ export function useResumeList({ filter }: UseUserListProps) {
         email: filter?.email && new RegExp(filter.email, 'i'),
         populate: 'scholarship',
         fields: ['scholarship.name'],
+        ...filter,
         'scholarship._id': filter?.scholarship,
       };
       const qs = queryString.stringify(paramsObj, {

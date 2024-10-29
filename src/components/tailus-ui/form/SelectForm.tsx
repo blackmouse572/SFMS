@@ -14,7 +14,7 @@ interface SelectFormProps extends React.ComponentPropsWithoutRef<'select'> {
   required?: boolean;
 }
 
-export function SelectForm({ control, required, className, name, placeholder, label, ...props }: SelectFormProps) {
+export function SelectForm({ control, required, className, name, placeholder = 'Lựa chọn giá trị', label, ...props }: SelectFormProps) {
   return (
     <FormField
       control={control}
@@ -27,8 +27,8 @@ export function SelectForm({ control, required, className, name, placeholder, la
           </FormLabel>
 
           <Select.Root onValueChange={(v) => field.onChange(v)} value={field.value} required={required} disabled={props.disabled}>
-            <Select.Trigger>
-              <Select.Value placeholder={placeholder} />
+            <Select.Trigger className="[&>span]:data-[placeholder]:text-caption">
+              <Select.Value placeholder={placeholder} data-placeholder={!!field.value} className="[&>span]:text-caption" />
               <Select.Icon asChild>
                 <IconChevronDown className="size-4 opacity-50 ml-auto" />
               </Select.Icon>

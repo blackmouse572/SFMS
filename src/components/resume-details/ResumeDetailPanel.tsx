@@ -127,69 +127,6 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
                       </div>
                     </div>
                   ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
-                  {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

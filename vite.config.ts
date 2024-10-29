@@ -11,7 +11,7 @@ export default defineConfig({
         providerImportSource: '@mdx-js/react',
       }),
     },
-    react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
+    react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/, exclude: /node_modules/ }),
   ],
   resolve: {
     alias: {

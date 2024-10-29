@@ -1,8 +1,9 @@
 import { useGetSchoolarShip } from '@components/schoolar-list';
 import Button from '@components/tailus-ui/Button';
-import { Form, InputForm } from '@components/tailus-ui/form';
+import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { ComboBoxForm } from '@components/tailus-ui/form/ComboBoxForm';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
+import { ResumeStatus } from '@lib/types';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { IconFilter } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
@@ -15,8 +16,8 @@ type UserListFilterProps = Omit<DialogProps, 'children'> & {
 
 export const FilterSchema = z
   .object({
-    status: z.string().min(3),
     scholarship: z.string().min(3),
+    status: z.nativeEnum(ResumeStatus),
   })
   .partial();
 
@@ -26,7 +27,6 @@ function ResumeTableFilter(props: UserListFilterProps) {
   const { onSubmit, ...rest } = props;
   const form = useForm<UserFilter>({
     defaultValues: {
-      status: '',
       scholarship: '',
     },
   });
@@ -71,14 +71,13 @@ function ResumeTableFilter(props: UserListFilterProps) {
                 onSearch={(value) => setScholarship(value)}
                 debounce={500}
               />
-              {/* <SelectForm control={form.control} name="scholarship" label="Học bổng">
-                <SelectItem key={1} value="1">
-                  Học bổng 1
-                </SelectItem>
-                <SelectItem key={2} value="2">
-                  Học bổng 2
-                </SelectItem>
-              </SelectForm> */}
+              <SelectForm control={form.control} name="status" label="Trạng thái">
+                {Object.values(ResumeStatus).map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status}
+                  </SelectItem>
+                ))}
+              </SelectForm>
             </SheetBody>
             <SheetFooter className="">
               <Button.Root type="reset" intent="gray" variant="outlined" onClick={onReset}>
