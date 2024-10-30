@@ -79,7 +79,7 @@ function CvProfile() {
     <div>
       <ResumeDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems?.[0]} />
       <div className="min-h-12">
-        <TopBar selectedItems={selectedItems} actions={actions} />
+        <TopBar selectedItems={selectedItems} actions={actions} totalItems={data?.data.length} />
       </div>
       <DataTable
         columns={columns}

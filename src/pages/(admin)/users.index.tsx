@@ -156,7 +156,13 @@ function AdminUsers() {
 
   return (
     <div className="space-y-2 mt-8">
-      <TopBar selectedItems={selectedItems} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} isFilterActive={isFilterActive} />
+      <TopBar
+        selectedItems={selectedItems}
+        actions={actions}
+        onFilterClick={() => setIsFilterPanelOpen(true)}
+        isFilterActive={isFilterActive}
+        totalItems={data?.pages?.[0].data.meta.total}
+      />
       <UserTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <UserDetailsPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} user={selectedItems?.[0]} />
       <DataTable

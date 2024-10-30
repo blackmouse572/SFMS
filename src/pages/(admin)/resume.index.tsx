@@ -147,7 +147,13 @@ function AdminResume() {
 
   return (
     <div className="space-y-2 mt-8">
-      <TopBar selectedItems={selectedItems} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} isFilterActive={isFilterActive} />
+      <TopBar
+        selectedItems={selectedItems}
+        actions={actions}
+        onFilterClick={() => setIsFilterPanelOpen(true)}
+        isFilterActive={isFilterActive}
+        totalItems={data?.pages?.[0].data.meta.total}
+      />
       <ResumeTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <ResumeDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems?.[0]} />
       <ResumeUpdateStatusPanel

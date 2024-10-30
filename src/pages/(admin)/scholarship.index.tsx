@@ -239,7 +239,13 @@ function AdminScholarship() {
 
   return (
     <div className="space-y-2 mt-8">
-      <TopBar selectedItems={selectedScholar} actions={actions} onFilterClick={() => setIsFilterPanelOpen(true)} isFilterActive={isFilterActive} />
+      <TopBar
+        selectedItems={selectedScholar}
+        actions={actions}
+        onFilterClick={() => setIsFilterPanelOpen(true)}
+        isFilterActive={isFilterActive}
+        totalItems={data?.pages?.[0].data.meta.total}
+      />
       <ScholarTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <ScholarDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedScholar[0]} />
       <CreateScholarPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
