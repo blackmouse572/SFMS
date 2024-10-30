@@ -16,13 +16,12 @@ export function useResumeList({ filter }: UseUserListProps) {
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,
+        ...filter,
         current: pageParam,
-        status: filter?.name && new RegExp(filter.status, 'i'),
-        email: filter?.email && new RegExp(filter.email, 'i'),
+        status: filter?.status && new RegExp(filter.status, 'i'),
+        'scholarship._id': filter?.scholarship,
         populate: 'scholarship',
         fields: ['scholarship.name'],
-        ...filter,
-        'scholarship._id': filter?.scholarship,
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,

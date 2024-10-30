@@ -25,6 +25,10 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
   const { item, ...rest } = props;
   const form = useForm<UpdateResumeStatusSchema>({
     resolver: zodResolver(UpdateResumeStatusSchema),
+    defaultValues: {
+      id: item?._id,
+      status: ResumeStatus.REVIEWING,
+    },
   });
 
   useEffect(() => {
