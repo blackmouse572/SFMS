@@ -12,11 +12,12 @@ export interface IAuthState {
 export interface IAuthAction {
   login: (user: LoginRes['data']) => void;
   logout: () => void;
+  setUser: (user: Partial<User>) => void;
 }
 
 export const useAuth = create(
   persist<IAuthState & IAuthAction>(
-    (set) => ({
+    (set, get) => ({
       user: undefined,
       isAuthenticated: false,
       token: undefined,
@@ -25,6 +26,16 @@ export const useAuth = create(
       },
       logout: () => {
         set({ user: undefined, isAuthenticated: false, token: undefined });
+      },
+      setUser: (user) => {
+        const currentUser = get().user;
+        if (!currentUser) return;
+        set({
+          user: {
+            ...currentUser,
+            ...user,
+          },
+        });
       },
     }),
     {
@@ -47,4 +58,9 @@ export const useUser = () => {
 export const useStateLogin = () => {
   const { login } = useAuth();
   return login;
+};
+
+export const useUpdateUser = () => {
+  const { setUser } = useAuth();
+  return setUser;
 };

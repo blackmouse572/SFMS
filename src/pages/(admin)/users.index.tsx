@@ -99,7 +99,7 @@ function AdminUsers() {
               <AdminAvatar size="sm" src={value.avatar} />
               <div>
                 <Text weight={'medium'}>
-                  {value.gender === 'male' ? (
+                  {value.gender.toLowerCase() === 'male' ? (
                     <IconGenderMale className="size-4 inline-block text-sky-500" />
                   ) : (
                     <IconGenderFemale className="size-4 inline-block text-pink-500" />

@@ -4,7 +4,7 @@ export interface User {
   email: string;
   avatar: string;
   phone: string;
-  gender: 'male' | 'female';
+  gender: 'MALE' | 'FEMALE';
   address: string;
   age: number;
   isActive: boolean;
