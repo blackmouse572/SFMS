@@ -1,11 +1,13 @@
 import { Conversation } from '@lib/types';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Socket } from 'socket.io-client';
 type UseNewConversationProps = {
   socket: Socket | null;
   key: string;
+  onSuccess?: (newConversation: Conversation) => void;
 };
-export function useNewConversation({ socket, key }: UseNewConversationProps) {
+export function useNewConversation({ socket, key, onSuccess }: UseNewConversationProps) {
+  const client = useQueryClient();
   return useMutation({
     mutationFn: async () => {
       return new Promise<Conversation | undefined>((resolve, reject) => {
@@ -23,6 +25,14 @@ export function useNewConversation({ socket, key }: UseNewConversationProps) {
           reject('Error while creating new conversation');
         });
       });
+    },
+    onSuccess: (data) => {
+      if (data) {
+        client.invalidateQueries({
+          queryKey: ['conversations'],
+        });
+        onSuccess?.(data);
+      }
     },
   });
 }

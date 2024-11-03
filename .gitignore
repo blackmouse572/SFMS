@@ -35,3 +35,4 @@ dist-ssr
 .pnp.*
 
 .yarn/install-state.gz
+.yarn/install-state.gz

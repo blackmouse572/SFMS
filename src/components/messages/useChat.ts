@@ -2,8 +2,8 @@ import { useGetCurrentConversation } from '@components/messages/useGetCurrentCon
 import { useGetMessages } from '@components/messages/useGetMessages';
 import { useNewConversation } from '@components/messages/useNewConversation';
 import { useToken, useUser } from '@lib/auth';
-import { Message } from '@lib/types';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Conversation, Message } from '@lib/types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
 import { useImmer } from 'use-immer';
@@ -42,7 +42,7 @@ export function useChat({ onSuccess }: UseChatProps) {
     currentConversation?._id ?? '',
     {},
     {
-      enabled: currentConversation !== undefined,
+      enabled: !!currentConversation,
       onSuccess,
     }
   );
@@ -57,18 +57,47 @@ export function useChat({ onSuccess }: UseChatProps) {
     isConnecting: true,
   });
 
-  const socketInstance = useRef<Socket | null>(null);
+  const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
+
+  const reconnect = useCallback(
+    (conversation?: Conversation) => {
+      if (!socketInstance) return;
+      socketInstance.disconnect();
+
+      const newSocket = io(import.meta.env.VITE_API_URL as string, {
+        auth: {
+          token,
+        },
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              Authorization: token,
+            },
+          },
+        },
+        query: {
+          roomId: conversation?._id ?? currentConversation?._id,
+        },
+      });
+
+      setSocketInstance(newSocket);
+    },
+    [currentConversation?._id, socketInstance, token]
+  );
 
   const newConversationMutation = useNewConversation({
     key: UseChatSocketKey.newConversation,
-    socket: socketInstance.current,
+    socket: socketInstance,
+    onSuccess: (conversation) => {
+      reconnect(conversation);
+    },
   });
 
   useEffect(() => {
-    if (!token || !currentConversation) return;
+    if (!token) return;
     console.log('---useEffect---');
-    let socket = socketInstance.current;
-    if (!socket) {
+    let socket = socketInstance;
+    if (!socket || currentConversation?._id) {
       socket = io(import.meta.env.VITE_API_URL as string, {
         auth: {
           token,
@@ -81,10 +110,11 @@ export function useChat({ onSuccess }: UseChatProps) {
           },
         },
         query: {
-          roomId: currentConversation._id,
+          roomId: currentConversation?._id,
         },
       });
-      socketInstance.current = socket;
+      setSocketInstance(socket);
+      console.log('---setSocketInstance---', { room: currentConversation?._id });
     }
 
     socket.on('connect', () => {
@@ -113,7 +143,7 @@ export function useChat({ onSuccess }: UseChatProps) {
 
     return () => {
       if (socket.connected) {
-        socketInstance.current = null;
+        setSocketInstance(null);
         socket.disconnect();
       }
     };
@@ -130,15 +160,19 @@ export function useChat({ onSuccess }: UseChatProps) {
         sentAt: new Date().toISOString(),
       };
       addMessage(message);
-      if (!socketInstance.current) return;
-      socketInstance.current.emit(UseChatSocketKey.sendMessage, message);
+      if (!socketInstance) return;
+      socketInstance.emit(UseChatSocketKey.sendMessage, message);
     },
-    [addMessage, user]
+    [addMessage, socketInstance, user]
   );
 
   const newConversation = useCallback(async () => {
     if (!newConversationMutation.isPending) {
-      await newConversationMutation.mutateAsync();
+      toast.promise(newConversationMutation.mutateAsync(), {
+        loading: 'Creating new conversation...',
+        success: 'New conversation created',
+        error: (e) => e,
+      });
     }
   }, [newConversationMutation]);
 
@@ -151,6 +185,7 @@ export function useChat({ onSuccess }: UseChatProps) {
     messages: flatMessages,
     conversation: currentConversation,
     newConversation,
+    isGettingNewConversation: newConversationMutation.isPending,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,

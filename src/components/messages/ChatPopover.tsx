@@ -7,7 +7,7 @@ import { Skeleton } from '@components/Skeleton';
 import Button from '@components/tailus-ui/Button';
 import Popover from '@components/tailus-ui/Popover';
 import { Title } from '@components/tailus-ui/typography';
-import { IconArrowDown, IconMessage2, IconX } from '@tabler/icons-react';
+import { IconArrowDown, IconLoader2, IconMessage2, IconX } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
 // export type ChatPopoverProps = {};
 export function ChatPopover() {
@@ -15,7 +15,17 @@ export function ChatPopover() {
 
   const messageListRef = useRef<HTMLDivElement>(null);
 
-  const { sendMessage, messages, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useChat({});
+  const {
+    sendMessage,
+    messages,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    conversation,
+    newConversation,
+    isGettingNewConversation,
+  } = useChat({});
 
   const onSendMessage = (text: string) => {
     sendMessage(text);
@@ -50,6 +60,58 @@ export function ChatPopover() {
     }
   };
 
+  const renderBody = () => {
+    if (isLoading) {
+      return (
+        <MessageList className="px-4 overflow-x-hidden overflow-y-auto" ref={messageListRef}>
+          {isLoading && (
+            <>
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28 ml-auto" />
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28 ml-auto" />
+              <Skeleton className="w-1/2 h-28" />
+              <Skeleton className="w-1/2 h-28 ml-auto" />
+            </>
+          )}
+        </MessageList>
+      );
+    }
+    if (conversation) {
+      return (
+        <MessageList className="px-4 py-5 overflow-x-hidden overflow-y-auto min-h-[calc(500px-105px)]" ref={messageListRef}>
+          {messages && (
+            <>
+              {messages.map((msg) => (
+                <MessageBubble key={msg._id} message={msg.text} isMine={true} sender={msg.sender} timestamp={getTimeStamp(new Date(msg.sentAt))} />
+              ))}
+            </>
+          )}
+          <LoadMoreTrigger onLoadMore={fetchNextPage} hasMore={hasNextPage} isLoading={isFetchingNextPage} />
+        </MessageList>
+      );
+    }
+
+    return (
+      <MessageList className="px-4 py-5 overflow-x-hidden overflow-y-auto h-full" ref={messageListRef}>
+        <div className="flex items-center justify-center flex-col h-full">
+          <Title>Hãy bắt đầu cuộc trò chuyện</Title>
+          <Button.Root size="md" variant="solid" className="mt-4" onClick={newConversation} disabled={isGettingNewConversation}>
+            {isGettingNewConversation && (
+              <Button.Icon type="only">
+                <IconLoader2 className="animate-spin" />
+              </Button.Icon>
+            )}
+            <Button.Label>{isGettingNewConversation ? 'Đang tìm tư vấn viên' : 'Bắt đầu cuộc trò chuyện'}</Button.Label>
+          </Button.Root>
+        </div>
+      </MessageList>
+    );
+  };
+
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
@@ -73,35 +135,7 @@ export function ChatPopover() {
             <div className="bg-soft-bg px-4 py-2.5 top-0">
               <Title size="base">Chat với tư vấn viên</Title>
             </div>
-            <MessageList className="px-4 overflow-x-hidden overflow-y-auto" ref={messageListRef}>
-              {isLoading && (
-                <>
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28 ml-auto" />
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28 ml-auto" />
-                  <Skeleton className="w-1/2 h-28" />
-                  <Skeleton className="w-1/2 h-28 ml-auto" />
-                </>
-              )}
-              {messages && (
-                <>
-                  {messages.map((msg) => (
-                    <MessageBubble
-                      key={msg._id}
-                      message={msg.text}
-                      isMine={true}
-                      sender={msg.sender}
-                      timestamp={getTimeStamp(new Date(msg.sentAt))}
-                    />
-                  ))}
-                </>
-              )}
-              <LoadMoreTrigger onLoadMore={fetchNextPage} hasMore={hasNextPage} isLoading={isFetchingNextPage} />
-            </MessageList>
+            {renderBody()}
             <MessageInput className="" sendMessage={onSendMessage} />
           </div>
           <Button.Root
