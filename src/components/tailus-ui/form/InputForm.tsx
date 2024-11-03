@@ -6,7 +6,7 @@ export interface InputProps extends PIProps {
   control: any;
   name: string;
   required?: boolean;
-  label: React.ReactNode;
+  label?: React.ReactNode;
 }
 
 const InputForm = React.forwardRef<HTMLInputElement, InputProps>(({ className, type, control, name, label, required, ...props }, ref) => {
@@ -16,10 +16,12 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(({ className, t
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel>
-            {label}
-            {required && <span className="text-danger-500 ml-1">*</span>}
-          </FormLabel>
+          {label && (
+            <FormLabel>
+              {label}
+              {required && <span className="text-danger-500 ml-1">*</span>}
+            </FormLabel>
+          )}
           <FormControl>
             <Input type={type} {...field} ref={ref} {...props} />
           </FormControl>

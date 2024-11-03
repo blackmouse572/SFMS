@@ -55,6 +55,11 @@ export const useUser = () => {
   return user;
 };
 
+export const useToken = () => {
+  const { token } = useAuth();
+  return token;
+};
+
 export const useStateLogin = () => {
   const { login } = useAuth();
   return login;
