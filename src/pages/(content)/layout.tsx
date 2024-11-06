@@ -3,8 +3,11 @@ import MDX from '@components/MDX';
 import { Navbar } from '@components/MainNavbar';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { AdminBreadcrumb, BreadcrumbProvider } from '@components/admin-breadcrumb/AdminBreadcrumb';
+import { ChatPopover } from '@components/messages';
+import { useIsAuthenticated } from '@lib/auth';
 import { Outlet } from 'react-router-dom';
 function ContentLayout() {
+  const isAuth = useIsAuthenticated();
   return (
     <BreadcrumbProvider>
       <SecondaryNavbar />
@@ -15,6 +18,7 @@ function ContentLayout() {
           <Outlet />
         </MDX>
       </div>
+      {isAuth && <ChatPopover />}
       <Footer />
     </BreadcrumbProvider>
   );

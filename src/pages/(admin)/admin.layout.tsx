@@ -14,7 +14,7 @@ function AdminLayout() {
     <BreadcrumbProvider>
       <SidebarProvider>
         <AdminSidebar />
-        <main className="w-full">
+        <main className="w-full h-screen">
           <header className="flex items-center divide-x-2 space-x-4 py-4 border-b w-full px-4">
             <SidebarTrigger intent="gray" />
             <AdminBreadcrumb className="pl-4" />

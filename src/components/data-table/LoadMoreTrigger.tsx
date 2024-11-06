@@ -13,7 +13,6 @@ function LoadMoreTrigger({ isLoading, hasMore, onLoadMore, threshold = 0, rootMa
   });
 
   useEffect(() => {
-    console.log({ hasMore, isIntersecting: entry?.isIntersecting, isLoading });
     if (!hasMore) return;
     if (entry?.isIntersecting && !isLoading) {
       onLoadMore();

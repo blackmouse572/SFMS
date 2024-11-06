@@ -27,8 +27,8 @@ export function ChatPopover() {
     isGettingNewConversation,
   } = useChat({});
 
-  const onSendMessage = (text: string) => {
-    sendMessage(text);
+  const onSendMessage = (text: string, files?: File[]) => {
+    sendMessage(text, files);
     if (messageListRef.current) {
       messageListRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
@@ -86,7 +86,13 @@ export function ChatPopover() {
           {messages && (
             <>
               {messages.map((msg) => (
-                <MessageBubble key={msg._id} message={msg.text} isMine={true} sender={msg.sender} timestamp={getTimeStamp(new Date(msg.sentAt))} />
+                <MessageBubble
+                  key={msg._id}
+                  message={msg}
+                  isMine={msg.sender._id === conversation.user._id}
+                  sender={msg.sender}
+                  timestamp={getTimeStamp(new Date(msg.sentAt))}
+                />
               ))}
             </>
           )}

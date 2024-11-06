@@ -80,7 +80,6 @@ export function ComboBoxForm({
                   shouldFilter={false}
                   {...props}
                   onValueChange={(v) => {
-                    console.log(v);
                     field.onChange(v);
                   }}
                 >

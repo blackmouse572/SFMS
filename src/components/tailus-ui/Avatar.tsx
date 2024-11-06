@@ -1,5 +1,7 @@
+import { BadgeVariantsProps } from '@components/tailus-ui/Badge';
+import { cn } from '@lib/utils';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
-import { avatar, fallback, image, type AvatarFallbackProps, type AvatarRootProps } from '@tailus/themer';
+import { avatar, badge, fallback, image, type AvatarFallbackProps, type AvatarRootProps } from '@tailus/themer';
 import React from 'react';
 
 const AvatarRoot = React.forwardRef<
@@ -22,10 +24,26 @@ const AvatarImage = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Ima
   }
 );
 
+const AvatarIndicator = React.forwardRef<
+  React.ElementRef<'div'>,
+  React.ComponentPropsWithoutRef<'div'> & {
+    intent: BadgeVariantsProps['intent'];
+  }
+>(({ className, intent, ...props }, ref) => {
+  return (
+    <div
+      {...props}
+      ref={ref}
+      className={badge['solid']({ intent, className: cn('absolute bottom-0 right-0 size-3 border-2 border-white origin-center', className) })}
+    />
+  );
+});
+
 export default {
   Root: AvatarRoot,
   Fallback: AvatarFallback,
   Image: AvatarImage,
+  Indicator: AvatarIndicator,
 };
 
 export { AvatarFallback, AvatarImage, AvatarRoot };

@@ -2,7 +2,7 @@ import { useGetCurrentConversation } from '@components/messages/useGetCurrentCon
 import { useGetMessages } from '@components/messages/useGetMessages';
 import { useNewConversation } from '@components/messages/useNewConversation';
 import { useToken, useUser } from '@lib/auth';
-import { Conversation, Message } from '@lib/types';
+import { Conversation, Message, MessagePayload } from '@lib/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
@@ -95,7 +95,6 @@ export function useChat({ onSuccess }: UseChatProps) {
 
   useEffect(() => {
     if (!token) return;
-    console.log('---useEffect---');
     let socket = socketInstance;
     if (!socket || currentConversation?._id) {
       socket = io(import.meta.env.VITE_API_URL as string, {
@@ -114,11 +113,9 @@ export function useChat({ onSuccess }: UseChatProps) {
         },
       });
       setSocketInstance(socket);
-      console.log('---setSocketInstance---', { room: currentConversation?._id });
     }
 
     socket.on('connect', () => {
-      console.log('Connected');
       setState((prev) => ({
         ...prev,
         status: 'connected',
@@ -151,17 +148,27 @@ export function useChat({ onSuccess }: UseChatProps) {
   }, [token, currentConversation]);
 
   const sendMessage = useCallback(
-    (text: string) => {
+    (text: string, files?: File[]) => {
       if (!user) return;
       const message: Message = {
         sender: user,
         text,
+        files: files,
         _id: Math.random().toString(),
         sentAt: new Date().toISOString(),
       };
+      const payload: MessagePayload = {
+        text: message.text,
+        files: files
+          ? files.map((file) => ({
+              name: file.name,
+              buffer: file,
+            }))
+          : [],
+      };
       addMessage(message);
       if (!socketInstance) return;
-      socketInstance.emit(UseChatSocketKey.sendMessage, message);
+      socketInstance.emitWithAck(UseChatSocketKey.sendMessage, payload);
     },
     [addMessage, socketInstance, user]
   );
@@ -169,8 +176,7 @@ export function useChat({ onSuccess }: UseChatProps) {
   const newConversation = useCallback(async () => {
     if (!newConversationMutation.isPending) {
       toast.promise(newConversationMutation.mutateAsync(), {
-        loading: 'Creating new conversation...',
-        success: 'New conversation created',
+        loading: 'Đang tìm tư vấn viên...',
         error: (e) => e,
       });
     }

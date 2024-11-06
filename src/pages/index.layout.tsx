@@ -11,7 +11,6 @@ function IndexLayout() {
   return (
     <main>
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" position="top" />
-      {isAuth && <ChatPopover />}
       <Outlet />
     </main>
   );

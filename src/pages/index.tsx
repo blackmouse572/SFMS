@@ -1,8 +1,10 @@
 import { FocusCard } from '@components/FocusCard';
 import { Navbar } from '@components/MainNavbar';
+import { ChatPopover } from '@components/messages';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import InfiniteScroll from '@components/tailus-ui/InfiniteScroll';
+import { useIsAuthenticated } from '@lib/auth';
 import { cn } from '@lib/utils';
 import { IconAward, IconBriefcase, IconSchool, IconWorld } from '@tabler/icons-react';
 import { Display, Text, Title } from '@tailus-ui/typography';
@@ -10,6 +12,7 @@ import { useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 
 function App() {
+  const isAuth = useIsAuthenticated();
   return (
     <main>
       <SecondaryNavbar className="" />
@@ -19,6 +22,7 @@ function App() {
         <StatsSection className="" />
         <AdvisorSection className="" />
         <ConnetSchoolSection className="" />
+        {isAuth && <ChatPopover />}
       </div>
     </main>
   );

@@ -36,7 +36,6 @@ function LoginForm() {
         return `Đăng nhập thành công với tên ${data.data.user.name}`;
       },
       error: async (e) => {
-        console.log(e);
         if (e instanceof AxiosError) {
           if (e.response?.status === 401) {
             return 'Sai tên đăng nhập hoặc mật khẩu';

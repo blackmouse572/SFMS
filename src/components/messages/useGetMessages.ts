@@ -7,23 +7,20 @@ export function useGetMessages(conversationId: string, filter?: Record<string, a
   const client = useQueryClient();
   const user = useUser();
   const addMessage = (message: Message) => {
-    console.log('New message', message);
     if (!user) return;
-    if (message.sender._id !== user._id) return;
-
-    client.setQueryData<InfiniteData<IPagedResponse<Message>['data'], number>>(['messages', filter], (oldData) => {
+    client.setQueryData<InfiniteData<IPagedResponse<Message>['data'], number>>(['messages', filter, conversationId], (oldData) => {
       if (!oldData) return;
-      const lastPage = oldData.pages[oldData.pages.length - 1];
+      const firstPage = oldData.pages[0];
 
-      if (lastPage) {
+      if (firstPage) {
         return {
           ...oldData,
           pages: [
-            ...oldData.pages.slice(0, oldData.pages.length - 1),
             {
-              ...lastPage,
-              result: [message, ...lastPage.result],
+              ...firstPage,
+              result: [message, ...firstPage.result],
             },
+            ...oldData.pages.slice(1),
           ],
         };
       }
@@ -33,7 +30,7 @@ export function useGetMessages(conversationId: string, filter?: Record<string, a
   };
 
   const query = useInfiniteQuery<IPagedResponse<Message>['data']>({
-    queryKey: ['messages', filter],
+    queryKey: ['messages', filter, conversationId],
     queryFn: async ({ pageParam }) => {
       const res = await axios.get<IPagedResponse<Message>>(`/chat/${conversationId}/messages`, {
         params: {
@@ -45,7 +42,6 @@ export function useGetMessages(conversationId: string, filter?: Record<string, a
 
       return {
         ...res.data.data,
-        result: res.data.data.result.reverse(),
       };
     },
     initialPageParam: 1,
@@ -59,10 +55,7 @@ export function useGetMessages(conversationId: string, filter?: Record<string, a
       if (firstPage.meta.current <= 1) return undefined;
       return firstPage.meta.current - 1;
     },
-    select: (data) => ({
-      pages: [...data.pages].reverse(),
-      pageParams: [...data.pageParams].reverse(),
-    }),
+
     ...options,
   });
 

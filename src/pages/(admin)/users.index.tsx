@@ -117,7 +117,7 @@ function AdminUsers() {
         header: 'Vai trò',
         cell: (cell) => {
           const value = cell.getValue() as { name: string };
-          return <Text>{value.name}</Text>;
+          return <Text>{value?.name}</Text>;
         },
       },
       {

@@ -15,7 +15,15 @@ import { Text } from '@components/tailus-ui/typography';
 import { AdminAvatar, UserDropdown } from '@components/user-nav';
 import { useUser } from '@lib/auth';
 import { User } from '@lib/types';
-import { IconChevronRight, IconDatabaseShare, IconFileInvoice, IconSchool, IconUserScan, IconUsersGroup } from '@tabler/icons-react';
+import {
+  IconChevronRight,
+  IconDatabaseShare,
+  IconFileInvoice,
+  IconMessage2Bolt,
+  IconSchool,
+  IconUserScan,
+  IconUsersGroup,
+} from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -59,6 +67,17 @@ const items: SidebarItem[] = [
         href: '/admin/resume',
         icon: <IconUserScan />,
         apiPath: '/api/v1/resumes',
+      },
+    ],
+  },
+  {
+    title: 'Hỗ trợ',
+    children: [
+      {
+        title: 'Chat',
+        href: '/admin/chat',
+        icon: <IconMessage2Bolt />,
+        apiPath: '/api/v1/chat',
       },
     ],
   },

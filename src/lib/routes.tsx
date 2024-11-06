@@ -19,6 +19,7 @@ import IndexLayout from '@pages/index.layout';
 import VerifyPage from '@pages/verify.index';
 import { createBrowserRouter, defer } from 'react-router-dom';
 import AdminUsers from '../pages/(admin)/users.index';
+import AdminChat from '@pages/(admin)/chat.index';
 
 export const router = createBrowserRouter([
   {
@@ -129,6 +130,10 @@ export const router = createBrowserRouter([
           {
             element: <AdminResume />,
             path: '/admin/resume',
+          },
+          {
+            element: <AdminChat />,
+            path: '/admin/chat',
           },
         ],
       },

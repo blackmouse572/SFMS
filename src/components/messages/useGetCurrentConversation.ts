@@ -10,7 +10,7 @@ export function useGetCurrentConversation() {
         params: {
           current: 1,
           pageSize: 1,
-          sort: '-createdAt',
+          // sort: '-createdAt',
         },
       });
       const conversation = res.data.data.result[0];

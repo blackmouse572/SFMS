@@ -128,8 +128,8 @@ export interface PaymentLink {
 
 export interface Conversation {
   _id: string;
-  user: Pick<User, '_id' | 'name' | 'avatar'>;
-  staff: Pick<User, '_id' | 'name' | 'avatar'>;
+  user: Pick<User, '_id' | 'email' | 'avatar'>;
+  staff: Pick<User, '_id' | 'email' | 'avatar'>;
   messages: Message[];
   status: boolean; //
 }
@@ -137,6 +137,14 @@ export interface Message {
   _id: string;
   sender: Pick<User, '_id' | 'name' | 'avatar'>;
   text: string;
-  files?: string[];
+  files?: string[] | File[];
   sentAt: string;
+}
+
+export interface MessagePayload {
+  text: string;
+  files: {
+    name: string;
+    buffer: File;
+  }[];
 }
