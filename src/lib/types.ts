@@ -74,6 +74,60 @@ export interface SchoolarShip {
   updatedAt?: string;
 }
 
+export const AdvisoryStatus = {
+  'Đang Chờ Tư Vấn': 'Đang Chờ Tư Vấn',
+  'Đang Tư Vấn': 'Đã Tư Vấn',
+  'Hoàn Thành Tư Vấn': 'Hoàn Thành Tư Vấn',
+};
+export type AdvisoryStatus = keyof typeof AdvisoryStatus;
+export const AdvisoryLevel = {
+  'Các khoá học Tiếng Anh': 'Các khoá học Tiếng Anh',
+  'Trung học': 'Trung học',
+  'Đại học': 'Đại học',
+  'Sau Đại học': 'Sau Đại học',
+  'Tiến sĩ': 'Tiến sĩ',
+  'Học nghề': 'Học nghề',
+  'Dự bị đại học': 'Dự bị đại học',
+};
+export type AdvisoryLevel = keyof typeof AdvisoryLevel;
+export const AdvisoryValue = {
+  'Tự chi trả': 'Tự chi trả',
+  'Được hỗ trợ bởi gia đình': 'Được hỗ trợ bởi gia đình',
+  'Tìm kiếm học bổng': 'Tìm kiếm học bổng',
+  'Tìm kiếm học bổng chính phủ': 'Tìm kiếm học bổng chính phủ',
+  'Đã được nhận học bổng từ chính phủ': 'Đã được nhận học bổng từ chính phủ',
+  'Vay ngân hàng': 'Vay ngân hàng',
+  Khác: 'Khác',
+  'Học bổng từ nhà tuyển dụng': 'Học bổng từ nhà tuyển dụng',
+};
+export type AdvisoryValue = keyof typeof AdvisoryValue;
+export interface Advisory {
+  _id: string;
+  emailAdvisory: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  continent: string;
+  time: string;
+  value: AdvisoryValue;
+  level: AdvisoryLevel;
+  status: AdvisoryStatus;
+  history: [
+    {
+      status: AdvisoryStatus;
+      updatedAt: Date;
+      updatedBy?: {
+        _id: string;
+        email: string;
+      };
+    },
+  ];
+  createdBy: string;
+  isDeleted: boolean;
+  deletedAt?: Date;
+  createdAt: Date;
+  updatedAt?: Date;
+}
 export interface CreatedBy {
   _id: string;
   email: string;

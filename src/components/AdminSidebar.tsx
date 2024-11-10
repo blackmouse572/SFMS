@@ -21,6 +21,7 @@ import {
   IconFileInvoice,
   IconMessage2Bolt,
   IconSchool,
+  IconTooltip,
   IconUserScan,
   IconUsersGroup,
 } from '@tabler/icons-react';
@@ -67,6 +68,12 @@ const items: SidebarItem[] = [
         href: '/admin/resume',
         icon: <IconUserScan />,
         apiPath: '/api/v1/resumes',
+      },
+      {
+        title: 'Quản lý tư vấn',
+        href: '/admin/advisory',
+        icon: <IconTooltip />,
+        // apiPath: '/api/v1/advisory',
       },
     ],
   },
@@ -134,7 +141,10 @@ function AdminSidebar() {
       if (item.children) {
         return {
           ...item,
-          children: item.children.filter((child) => permissions.some((p) => p.apiPath === child.apiPath)),
+          children: item.children.filter((child) => {
+            if (child.apiPath === undefined) return true;
+            return permissions.some((p) => p.apiPath === child.apiPath);
+          }),
         };
       }
       return item;

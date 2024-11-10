@@ -1,25 +1,13 @@
 import AdminLayout from '@pages/(admin)/admin.layout';
-import AdminResume from '@pages/(admin)/resume.index';
-import AdminScholarship from '@pages/(admin)/scholarship.index';
 import NotAuthLayout from '@pages/(auth)/auth.layout';
 import ForgotPage from '@pages/(auth)/forgot.index';
 import LoginPage from '@pages/(auth)/login.index';
 import RegisterPage from '@pages/(auth)/register.index';
-import PaymentCancelPage from '@pages/(content)/(payment)/cancel.index';
-import PaymentSuccessPage from '@pages/(content)/(payment)/success.index';
-import HocBongPage from '@pages/(content)/hoc-bong';
-import SchoolarshipDetails from '@pages/(content)/hoc-bong/[id].index';
 import ContentLayout from '@pages/(content)/layout';
-import TuVanPage from '@pages/(content)/tu-van';
-import CvProfile from '@pages/(profile)/cv.profile.index';
-import ProfileLayout from '@pages/(profile)/layout';
-import ProfilePage from '@pages/(profile)/profile.index';
-import App from '@pages/index';
 import IndexLayout from '@pages/index.layout';
 import VerifyPage from '@pages/verify.index';
+import { lazy } from 'react';
 import { createBrowserRouter, defer } from 'react-router-dom';
-import AdminUsers from '../pages/(admin)/users.index';
-import AdminChat from '@pages/(admin)/chat.index';
 
 export const router = createBrowserRouter([
   {
@@ -28,35 +16,35 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <App />,
+        Component: lazy(() => import('@pages/index')),
       },
       {
         element: <ContentLayout />,
         children: [
           {
-            element: <ProfileLayout />,
+            Component: lazy(() => import('@pages/(profile)/layout')),
             path: '/profile',
             children: [
               {
-                element: <ProfilePage />,
+                Component: lazy(() => import('@pages/(profile)/profile.index')),
                 index: true,
               },
               {
                 path: '/profile/cv',
-                element: <CvProfile />,
+                Component: lazy(() => import('@pages/(profile)/cv.profile.index')),
               },
             ],
           },
           {
             path: '/tu-van-du-hoc',
-            element: <TuVanPage />,
+            Component: lazy(() => import('@pages/(content)/tu-van')),
           },
           {
             path: '/hoc-bong',
             children: [
               {
                 index: true,
-                element: <HocBongPage />,
+                Component: lazy(() => import('@pages/(content)/hoc-bong')),
               },
               {
                 path: '/hoc-bong/:id',
@@ -74,7 +62,7 @@ export const router = createBrowserRouter([
                     related: [majorRelated, levelRelated, continentRelated],
                   });
                 },
-                element: <SchoolarshipDetails />,
+                Component: lazy(() => import('@pages/(content)/hoc-bong/[id].index')),
               },
             ],
           },
@@ -83,17 +71,16 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: '/payment/success',
-                element: <PaymentSuccessPage />,
+                Component: lazy(() => import('@pages/(content)/(payment)/success.index')),
               },
               {
                 path: '/payment/cancel',
-                element: <PaymentCancelPage />,
+                Component: lazy(() => import('@pages/(content)/(payment)/cancel.index')),
               },
             ],
           },
         ],
       },
-
       {
         element: <NotAuthLayout />,
         children: [
@@ -120,20 +107,24 @@ export const router = createBrowserRouter([
         path: '/admin',
         children: [
           {
-            element: <AdminScholarship />,
+            Component: lazy(() => import('@pages/(admin)/scholarship.index')),
             path: '/admin/scholarship',
           },
           {
-            element: <AdminUsers />,
+            Component: lazy(() => import('@pages/(admin)/users.index')),
             path: '/admin/users',
           },
           {
-            element: <AdminResume />,
+            Component: lazy(() => import('@pages/(admin)/resume.index')),
             path: '/admin/resume',
           },
           {
-            element: <AdminChat />,
+            Component: lazy(() => import('@pages/(admin)/chat.index')),
             path: '/admin/chat',
+          },
+          {
+            Component: lazy(() => import('@pages/(admin)/advisory.index')),
+            path: '/admin/advisory',
           },
         ],
       },

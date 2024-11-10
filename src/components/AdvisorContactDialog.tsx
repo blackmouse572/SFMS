@@ -1,40 +1,77 @@
+import { LEVEL_OPTIONS, VALUE_OPTIONS } from '@components/advisory-list/constant';
 import { useCreateAdvisory } from '@components/advisory/useCreateAdvisory';
+import { ContinentOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Dialog from '@components/tailus-ui/Dialog';
-import { Form, InputForm } from '@components/tailus-ui/form';
+import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconSend, IconX } from '@tabler/icons-react';
+import { IconPhoneFilled, IconX } from '@tabler/icons-react';
+import { format } from 'date-fns';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 export const AdvisorSchema = z.object({
   fullName: z.string().min(3).max(255),
   emailAdvisory: z.string().email(),
-  phone: z.coerce.number().min(10),
+  phone: z.string().regex(/^\d{10,11}$/, {
+    message: 'Số điện thoại không hợp lệ',
+  }),
   address: z.string().default(''),
-  time: z.coerce.string().default(new Date().toString()),
-  level: z.string(),
-  pay: z.string().default(''),
+  time: z.coerce.string().min(3),
+  value: z.string().min(3),
+  level: z.string().min(3),
+  continent: z.string().min(3),
 });
 export type AdvisorSchema = z.infer<typeof AdvisorSchema>;
 
 function AdvisorContactDialog() {
+  const [open, setOpen] = useState(false);
   const { mutateAsync: createAdvisory } = useCreateAdvisory();
   const form = useForm<AdvisorSchema>({
     resolver: zodResolver(AdvisorSchema),
+    defaultValues: {
+      fullName: '',
+      emailAdvisory: '',
+      phone: '',
+      address: '',
+      time: format(new Date(), 'MMM yyyy'),
+      value: VALUE_OPTIONS[0].value,
+      level: LEVEL_OPTIONS[0].value,
+      continent: ContinentOptions[0].value,
+    },
   });
 
   const onSubmit = async (data: AdvisorSchema) => {
     toast.promise(createAdvisory(data), {
-      success: 'Đã gửi đơn tới chuyên gia, chúng tôi sẽ liên hệ với bạn sớm nhất có thể',
+      success: () => {
+        form.reset();
+        return 'Đã gửi đơn tới chuyên gia, chúng tôi sẽ liên hệ với bạn sớm nhất có thể';
+      },
       error: 'OOps, có lỗi xảy ra, vui lòng thử lại sau',
+      finally: () => {
+        setOpen(false);
+      },
     });
   };
 
+  const generateTimeOptions = (startDate: Date, count: number): string[] => {
+    const formattedDates: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setMonth(startDate.getMonth() + i);
+      const formattedDate = format(currentDate, 'MMM yyyy');
+      formattedDates.push(formattedDate);
+    }
+
+    return formattedDates;
+  };
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button.Root intent="secondary" size="lg">
+        <Button.Root intent="secondary" size="lg" className="rounded-full">
           <Button.Label>Đăng ký tư vấn</Button.Label>
         </Button.Root>
       </Dialog.Trigger>
@@ -46,15 +83,40 @@ function AdvisorContactDialog() {
           <Dialog.Description className="mt-2">Đăng ký tư vấn để nhận được sự hỗ trợ từ chuyên gia của chúng tôi.</Dialog.Description>
           <Form {...form}>
             <form className="mt-4 space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <InputForm control={form.control} name="fullName" label="Họ và tên" />
-              <InputForm control={form.control} name="emailAdvisory" label="Email" />
-              <div className="grid grid-cols-2 gap-4">
-                <InputForm type="number" control={form.control} name="phone" label="Số điện thoại" />
-                <InputForm type="datetime-local" control={form.control} name="time" label="Thời gian bạn có thể nghe tư vấn" />
-              </div>
+              <InputForm required control={form.control} name="fullName" label="Họ và tên" />
+              <InputForm required control={form.control} name="emailAdvisory" label="Email" />
+              <InputForm type="number" control={form.control} name="phone" label="Số điện thoại" />
               <InputForm control={form.control} name="address" label="Địa chỉ" />
-              <InputForm control={form.control} name="level" label="Trình độ bạn muốn học bổng" />
-              <InputForm control={form.control} name="pay" label="Hình thức thanh toán học bổng" />
+              <div className="grid grid-cols-2 gap-4">
+                <SelectForm control={form.control} name="level" label="Trình độ bạn muốn học bổng?">
+                  {LEVEL_OPTIONS.map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectForm>
+                <SelectForm control={form.control} name="value" label="Bạn muốn chi trả như thế nào?">
+                  {VALUE_OPTIONS.map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectForm>
+                <SelectForm control={form.control} name="continent" label="Bạn muốn học ở đâu?">
+                  {ContinentOptions.map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.value}
+                    </SelectItem>
+                  ))}
+                </SelectForm>
+                <SelectForm control={form.control} name="time" label="Khi nào bạn dự định học?">
+                  {generateTimeOptions(new Date(), 40).map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
+                  ))}
+                </SelectForm>
+              </div>
 
               <Dialog.Actions>
                 <Dialog.Close asChild>
@@ -66,7 +128,7 @@ function AdvisorContactDialog() {
                 </Dialog.Close>
                 <Button.Root className="w-full">
                   <Button.Icon type="leading">
-                    <IconSend />
+                    <IconPhoneFilled />
                   </Button.Icon>
                   <Button.Label>
                     <Button.Label>Nhận tư vấn</Button.Label>
