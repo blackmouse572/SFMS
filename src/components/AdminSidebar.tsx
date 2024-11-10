@@ -16,6 +16,7 @@ import { AdminAvatar, UserDropdown } from '@components/user-nav';
 import { useUser } from '@lib/auth';
 import { User } from '@lib/types';
 import {
+  IconBuildingMonument,
   IconChevronRight,
   IconDatabaseShare,
   IconFileInvoice,
@@ -50,6 +51,11 @@ const items: SidebarItem[] = [
         href: '/admin/scholarship',
         icon: <IconSchool />,
         apiPath: '/api/v1/scholarship',
+      },
+      {
+        title: 'Quản lý du học',
+        href: '/admin/study',
+        icon: <IconBuildingMonument />,
       },
       {
         title: 'Quản lý tài khoản',

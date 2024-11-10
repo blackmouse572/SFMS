@@ -202,3 +202,18 @@ export interface MessagePayload {
     buffer: File;
   }[];
 }
+
+export interface Study {
+  _id: string;
+  name: string;
+  image: string[];
+  location: string;
+  continent: string;
+  description: string;
+  isActive: boolean;
+  createdBy: CreatedBy;
+  isDeleted: boolean;
+  deletedAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+}

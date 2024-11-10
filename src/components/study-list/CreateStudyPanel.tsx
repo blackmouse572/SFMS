@@ -3,7 +3,6 @@ import Button from '@components/tailus-ui/Button';
 import Editor from '@components/tailus-ui/editor/editor';
 import { Form, FormField, FormItem, FormLabel, InputForm, SelectForm } from '@components/tailus-ui/form';
 import { SwitchForm } from '@components/tailus-ui/form/SwitchForm';
-import { TagInputForm } from '@components/tailus-ui/form/TagInput';
 import Select from '@components/tailus-ui/Select';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { useUploadImage } from '@components/upload/useUploadImage';
@@ -16,33 +15,12 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export const CreateScholarSchema = z.object({
+export const CreateStudySchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(3).max(255),
   continent: z.string().min(3).max(255),
-  major: z
-    .array(
-      // serve for tag input
-      // it will be converted to string[]
-      z.object({
-        id: z.string().optional(),
-        text: z.string().min(1).max(255),
-      })
-    )
-    .nonempty(),
-  level: z
-    .array(
-      // serve for tag input
-      // it will be converted to string[]
-      z.object({
-        id: z.string().optional(),
-        text: z.string().min(1).max(255),
-      })
-    )
-    .nonempty(),
   location: z.string().min(3).max(255),
   description: z.string().min(3).max(5000),
-  quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
   image: z
     .array(z.instanceof(File))
@@ -57,15 +35,15 @@ export const CreateScholarSchema = z.object({
       message: 'Dung lượng ảnh tối đa 10MB',
     }),
 });
-export type CreateScholarSchema = z.infer<typeof CreateScholarSchema>;
+export type CreateStudySchema = z.infer<typeof CreateStudySchema>;
 
 type CreateScholarPanelProps = {
-  onSubmit: (data: CreateScholarSchema, form: UseFormReturn<CreateScholarSchema>) => Promise<void>;
-  defaultValues?: Partial<CreateScholarSchema>;
+  onSubmit: (data: CreateStudySchema, form: UseFormReturn<CreateStudySchema>) => Promise<void>;
+  defaultValues?: Partial<CreateStudySchema>;
 } & VariantProps &
   Omit<DialogProps, 'children'>;
 
-function CreateScholarPanel(props: CreateScholarPanelProps) {
+function CreateStudyPanel(props: CreateScholarPanelProps) {
   const { defaultValues, onSubmit, ...rest } = props;
   const { mutateAsync } = useUploadImage();
   const handleUploadImage = async (file: File) => {
@@ -87,8 +65,8 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
       });
     });
   };
-  const form = useForm<CreateScholarSchema>({
-    resolver: zodResolver(CreateScholarSchema),
+  const form = useForm<CreateStudySchema>({
+    resolver: zodResolver(CreateStudySchema),
     defaultValues: defaultValues,
   });
 
@@ -115,25 +93,18 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
       <SheetContent size="3xl" className="flex h-full flex-col gap-4 overflow-y-auto">
         <Form {...form}>
           <SheetHeader>
-            <SheetTitle>Tạo học bổng</SheetTitle>
+            <SheetTitle>Tạo du học</SheetTitle>
           </SheetHeader>
           <SheetBody className="space-y-2 flex-1">
             <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
-              <div className="grid grid-cols-[minmax(200px,_1fr)_100px] gap-2">
-                <InputForm control={form.control} className={''} name="name" label="Tên học bổng" required />
-                <InputForm control={form.control} name="quantity" required label="Số lượng" />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <InputForm control={form.control} name="location" label="Loại học bổng" required />
-                <SelectForm control={form.control} name="continent" label="Khu vực" required>
-                  {ContinentOptions.map((country) => (
-                    <SelectItem entry={country} key={country.value} />
-                  ))}
-                </SelectForm>
-              </div>
-              <TagInputForm control={form.control} name="level" label="Cấp" required />
-              <TagInputForm control={form.control} name="major" label="Ngành học" required />
-              <SwitchForm control={form.control} name="isActive" label="Sử dụng học bổng" />
+              <InputForm control={form.control} className={''} name="name" label="Tên" required />
+              <InputForm control={form.control} name="location" label="Vị trí" required />
+              <SelectForm control={form.control} name="continent" label="Khu vực" required>
+                {ContinentOptions.map((country) => (
+                  <SelectItem entry={country} key={country.value} />
+                ))}
+              </SelectForm>
+              <SwitchForm control={form.control} name="isActive" label="Sử dụng" />
               <FormField
                 control={form.control}
                 name="image"
@@ -228,4 +199,4 @@ const SelectItem = ({ entry }: { entry: Entry }) => {
     </Select.Item>
   );
 };
-export { CreateScholarPanel };
+export { CreateStudyPanel };

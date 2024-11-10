@@ -49,8 +49,18 @@ function useGetListLocation() {
   });
 }
 
+function useGetListStudy() {
+  return useQuery({
+    queryKey: ['listStudy'],
+    queryFn: async () => {
+      return axios.get<IResponse<Record<string, string[]>>>('/study/list-location').then((res) => res.data.data);
+    },
+  });
+}
+
 export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitiveRoot>) {
   const { isLoading, data } = useGetListLocation();
+  const { isLoading: isLoadingStudy, data: dataStudy } = useGetListStudy();
   return (
     <NavigationMenu {...props} className={cn('flex justify-between w-full max-w-none [&>.viewport]:left-48', className)}>
       <NavigationMenuList>
@@ -64,35 +74,20 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
           <NavigationMenuTrigger>Du học</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-4 lg:w-[80vw] w-[50vw] w lg:grid-cols-[.75fr_1fr_1fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <Link
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-white to-soft-bg p-6 no-underline outline-none focus:shadow-md "
-                    to="/"
-                  >
-                    {/* <Icons.logo className="h-6 w-6" /> */}
-                    <div className="mb-2 mt-4 text-lg font-medium">SFMS</div>
-                    <p className="text-sm leading-tight text-muted-foreground">Học bổng chất lượng - Tự do phát triển</p>
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-              <div>
-                <Text weight={'bold'}>Du học Úc</Text>
-                <ListItem href="/about-us" title="Du học Úc" />
-                <ListItem href="/about-us" title="Du học New Zealand" />
-              </div>
-              <div>
-                <Text weight={'bold'}>Du học Châu Mỹ</Text>
-                <ListItem href="/about-us" title="Du học Mỹ" />
-                <ListItem href="/about-us" title="Du học Canada" />
-              </div>
-              <div>
-                <Text weight={'bold'}>Du học Châu Á</Text>
-                <ListItem href="/about-us" title="Du học Trung Quốc" />
-                <ListItem href="/about-us" title="Du học Hàn Quốc" />
-                <ListItem href="/about-us" title="Du học Singapore" />
-                <ListItem href="/about-us" title="Du học Philippines" />
-              </div>
+              {isLoadingStudy && (
+                <li>
+                  <Text>Loading...</Text>
+                </li>
+              )}
+              {dataStudy &&
+                Object.entries(dataStudy ?? {}).map(([continent, countries]) => (
+                  <div key={continent}>
+                    <Text weight={'bold'}>{continent}</Text>
+                    {countries.map((country) => (
+                      <ListItem key={country} title={country} href={`/du-hoc?location=${country}`} />
+                    ))}
+                  </div>
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

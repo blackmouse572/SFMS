@@ -67,6 +67,33 @@ export const router = createBrowserRouter([
             ],
           },
           {
+            path: '/du-hoc',
+            children: [
+              {
+                index: true,
+                Component: lazy(() => import('@pages/(content)/du-hoc')),
+              },
+              {
+                path: '/du-hoc/:id',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { getRelatedStudies, getStudyDetails } = await import('@pages/(content)/du-hoc/[id].loader');
+                  const scholarship = await getStudyDetails(id);
+                  const { continent, location } = scholarship;
+                  const majorRelated = getRelatedStudies({ continent });
+                  const levelRelated = getRelatedStudies({ location });
+                  const continentRelated = getRelatedStudies({ continent });
+
+                  return defer({
+                    data: scholarship,
+                    related: [majorRelated, levelRelated, continentRelated],
+                  });
+                },
+                Component: lazy(() => import('@pages/(content)/du-hoc/[id].index')),
+              },
+            ],
+          },
+          {
             path: '/payment',
             children: [
               {
@@ -125,6 +152,10 @@ export const router = createBrowserRouter([
           {
             Component: lazy(() => import('@pages/(admin)/advisory.index')),
             path: '/admin/advisory',
+          },
+          {
+            Component: lazy(() => import('@pages/(admin)/study.index')),
+            path: '/admin/study',
           },
         ],
       },
