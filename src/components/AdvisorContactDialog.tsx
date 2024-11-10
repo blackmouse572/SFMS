@@ -3,7 +3,7 @@ import { useCreateAdvisory } from '@components/advisory/useCreateAdvisory';
 import { ContinentOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Dialog from '@components/tailus-ui/Dialog';
-import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { CheckboxForm, Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPhoneFilled, IconX } from '@tabler/icons-react';
 import { format } from 'date-fns';
@@ -13,8 +13,11 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 export const AdvisorSchema = z.object({
   fullName: z.string().min(3).max(255),
-  emailAdvisory: z.string().email(),
-  phone: z.string().regex(/^\d{10,11}$/, {
+  emailAdvisory: z.string().email({
+    message: 'Email không hợp lệ',
+  }),
+  // phone need to be 10 or 11 digits, start with 0 or 84
+  phone: z.string().regex(/^(0|84)[0-9]{9,10}$/, {
     message: 'Số điện thoại không hợp lệ',
   }),
   address: z.string().default(''),
@@ -22,6 +25,12 @@ export const AdvisorSchema = z.object({
   value: z.string().min(3),
   level: z.string().min(3),
   continent: z.string().min(3),
+  agree: z.object({
+    terms: z.boolean().refine((value) => value === true, {
+      message: 'Bạn cần đồng ý với điều khoản sử dụng',
+    }),
+    registerNewsletter: z.boolean(),
+  }),
 });
 export type AdvisorSchema = z.infer<typeof AdvisorSchema>;
 
@@ -116,6 +125,20 @@ function AdvisorContactDialog() {
                     </SelectItem>
                   ))}
                 </SelectForm>
+              </div>
+              <div className="w-fit mx-auto space-y-2">
+                <CheckboxForm
+                  defaultValue={false}
+                  control={form.control}
+                  name="agree.terms"
+                  label="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
+                />
+                <CheckboxForm
+                  defaultValue={false}
+                  control={form.control}
+                  name="agree.registerNewsletter"
+                  label="Tôi muốn nhận thông tin mới nhất và ưu đãi"
+                />
               </div>
 
               <Dialog.Actions>
