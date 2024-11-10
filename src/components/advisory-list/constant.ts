@@ -16,6 +16,6 @@ export const STATUS_OPTIONS = Object.values(AdvisoryStatus).map((status) => ({
 }));
 
 export const getAdvisoryKey = {
-  list: (filter?: Record<string, any>) => ['advisory', filter],
+  list: (filter?: Record<string, any>) => ['advisory', filter ?? {}],
   id: (id: string) => ['advisory', id],
 };
