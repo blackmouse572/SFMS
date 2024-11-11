@@ -129,6 +129,11 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Liên hệ</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link to="/kiem-tra">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Làm bài kiểm tra</NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
       </NavigationMenuList>
       <AdvisorContactDialog />
     </NavigationMenu>

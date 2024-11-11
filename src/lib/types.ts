@@ -217,3 +217,30 @@ export interface Study {
   createdAt: string;
   updatedAt?: string;
 }
+export const QuizType = {
+  certification: 'certification',
+  interview: 'interview',
+};
+export type QuizType = keyof typeof QuizType;
+export interface Quiz {
+  _id: string;
+  title: string;
+  description: string;
+  question: Question[];
+  type: QuizType;
+  isDeleted: boolean;
+  deletedAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+export interface Question {
+  _id: string;
+  question: string;
+  answer: string;
+  option: string[];
+  createdBy: CreatedBy;
+  isDeleted: boolean;
+  deletedAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
