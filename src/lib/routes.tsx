@@ -175,6 +175,14 @@ export const router = createBrowserRouter([
             Component: lazy(() => import('@pages/(admin)/study.index')),
             path: '/admin/study',
           },
+          {
+            Component: lazy(() => import('@pages/(admin)/quiz.index')),
+            path: '/admin/quiz',
+          },
+          {
+            Component: lazy(() => import('@pages/(admin)/question.index')),
+            path: '/admin/question',
+          },
         ],
       },
     ],
