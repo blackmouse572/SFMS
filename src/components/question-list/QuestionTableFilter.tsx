@@ -70,20 +70,3 @@ export function QuestionTableFilter(props: TableFilterProps) {
     </Sheet>
   );
 }
-const SelectItem = ({
-  entry,
-}: {
-  entry: {
-    key?: string;
-    value: string;
-  };
-}) => {
-  return (
-    <Select.Item value={entry.key ?? entry.value} className="pl-7 items-center">
-      <Select.ItemIndicator asChild>
-        <IconCheck className="size-3.5 text-secondary-500" />
-      </Select.ItemIndicator>
-      <Select.ItemText>{entry.value}</Select.ItemText>
-    </Select.Item>
-  );
-};

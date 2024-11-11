@@ -1,5 +1,5 @@
+import { getQuizKey } from '@components/quiz-list/constant';
 import { Filter } from '@components/quiz-list/QuizTableFilter';
-import { getStudyKey } from '@components/study-list/constant';
 import axios from '@lib/axios';
 import { IPagedRequest, IPagedResponse, Quiz } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -16,12 +16,14 @@ type UseGet = {
 export function useGetQuizzes(props: UseGet) {
   const { filter, request } = props;
   return useInfiniteQuery<IPagedResponse<Quiz>>({
-    queryKey: getStudyKey.list(filter ?? {}),
+    queryKey: getQuizKey.list(filter ?? {}),
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,
         current: pageParam,
         type: filter?.type && new RegExp(filter.type, 'i'),
+        populate: 'question',
+        fields: 'question.question,question.option,question.answer',
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,

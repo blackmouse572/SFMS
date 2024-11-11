@@ -1,17 +1,18 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
-import { CreateStudyPanel, CreateStudySchema, StudyDetailPanel, StudyTableFilter, useGetStudy } from '@components/study-list';
-import { useCreateStudy } from '@components/study-list/useCreateStudy';
-import { useDeleteStudy } from '@components/study-list/useDeleteStudy';
-import { useEditStudy } from '@components/study-list/useEditStudy';
+import { CreateQuizPanel, CreateQuizSchema } from '@components/quiz-list/CreateQuizPanel';
+import { QuizDetailPanel } from '@components/quiz-list/QuizDetailPanel';
+import { QuizTableFilter } from '@components/quiz-list/QuizTableFilter';
+import { useCreateQuiz } from '@components/quiz-list/useCreateQuiz';
+import { useDeleteQuiz } from '@components/quiz-list/useDeleteQuiz';
+import { useEditQuiz } from '@components/quiz-list/useEditQuiz';
+import { useGetQuizzes } from '@components/quiz-list/useGetQuiz';
 import Badge from '@components/tailus-ui/Badge';
 import { Caption, Text } from '@components/tailus-ui/typography';
-import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { SchoolarShip, Study } from '@lib/types';
-import { cn } from '@lib/utils';
-import { IconEye, IconPencil, IconPlus, IconPointFilled, IconTrash } from '@tabler/icons-react';
+import { Quiz } from '@lib/types';
+import { IconEye, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
@@ -22,73 +23,42 @@ export default function AdminQuiz() {
   useEffectOnce(() => {
     setItems([
       {
-        title: 'Quản lý du học',
-        href: '/admin/study',
+        title: 'Quản lý quiz',
+        href: '/admin/quiz',
       },
     ]);
   });
   const [filter, setFilter] = useState<Record<string, any>>();
-  const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetStudy({ filter });
-  const { mutateAsync: create } = useCreateStudy();
-  const { mutateAsync: deleteById } = useDeleteStudy();
-  const { mutateAsync: edit } = useEditStudy();
+  const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetQuizzes({ filter });
+  const { mutateAsync: create } = useCreateQuiz();
+  const { mutateAsync: deleteById } = useDeleteQuiz();
+  const { mutateAsync: edit } = useEditQuiz();
 
-  const columns = useMemo<ColumnDef<Study>[]>(
+  const columns = useMemo<ColumnDef<Quiz>[]>(
     () => [
       {
+        accessorKey: 'title',
+        header: 'Tên quiz',
+        cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
+      },
+      {
+        accessorKey: 'description',
+        header: 'Mô tả',
+        cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
+      },
+      {
+        accessorKey: 'type',
+        header: 'Loại',
+        cell: (info) => <Badge size="sm">{info.getValue() as string}</Badge>,
+      },
+      {
         accessorFn: (row) => ({
-          name: row.name,
-          isActive: row.isActive,
-        }),
-        header: 'Tên du học',
-        cell: (info) => {
-          const { name, isActive } = info.getValue() as { name: string; isActive: boolean };
-          return (
-            <div className="flex items-center gap-2">
-              <IconPointFilled className={cn(isActive ? 'text-green-500' : 'text-red-500', 'shrink-0')} />
-              <Text size="sm">{name}</Text>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'continent',
-        header: 'Lục địa',
-        cell: (info) => (
-          <Badge size="sm" variant={'outlined'} className="text-nowrap">
-            {info.getValue() as string}
-          </Badge>
-        ),
-      },
-
-      {
-        accessorKey: 'location',
-        header: 'Vị trí',
-        cell: (info) => (
-          <Badge size="sm" variant={'outlined'} className="text-nowrap">
-            {info.getValue() as string}
-          </Badge>
-        ),
-      },
-
-      {
-        accessorKey: 'createdBy',
-        accessorFn: (row) => ({
-          ...row.createdBy,
           createdAt: row.createdAt,
         }),
         header: 'Tạo bởi',
         cell: (info) => {
-          const user = info.getValue() as SchoolarShip['createdBy'] & { createdAt: string };
-          return (
-            <div className="flex items-center gap-2">
-              <AdminAvatar size="sm" />
-              <div className="space-y-1">
-                <Text size="sm">{user.email}</Text>
-                <Caption size="xs">Lúc {Intl.DateTimeFormat('vi-VN').format(new Date(user.createdAt))}</Caption>
-              </div>
-            </div>
-          );
+          const data = info.getValue() as { createdAt: string };
+          return <Caption size="xs">Lúc {Intl.DateTimeFormat('vi-VN').format(new Date(data.createdAt))}</Caption>;
         },
       },
     ],
@@ -107,7 +77,7 @@ export default function AdminQuiz() {
   const [isCreatePanelOpen, setIsCreatePanelOpen] = useState(false);
   const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
 
-  const [selectedItems, setSelectedItem] = useState<Study[]>([]);
+  const [selectedItems, setSelectedItem] = useState<Quiz[]>([]);
   const items = data?.pages?.map((p) => p.data.result).flat() ?? [];
 
   const onSelect = (ids: string[]) => {
@@ -115,53 +85,47 @@ export default function AdminQuiz() {
     setSelectedItem(filtered);
   };
 
-  const onCreate = async (data: CreateStudySchema, f: UseFormReturn<CreateStudySchema>) => {
+  const onCreate = async (data: CreateQuizSchema, f: UseFormReturn<CreateQuizSchema>) => {
     toast.promise(create(data), {
-      loading: 'Đang tạo du học...',
+      loading: 'Đang tạo quiz...',
       success: () => {
         f.reset();
         setIsCreatePanelOpen(false);
-        return 'Tạo du học thành công';
+        return 'Tạo quiz thành công';
       },
-      error: 'Tạo du học thất bại',
+      error: 'Tạo quiz thất bại',
     });
   };
 
   const onEdit = useCallback(
-    async (data: CreateStudySchema, f: UseFormReturn<CreateStudySchema>) => {
+    async (data: CreateQuizSchema, f: UseFormReturn<CreateQuizSchema>) => {
       if (selectedItems.length === 0) {
-        toast.error('Chưa chọn du học để cập nhật');
+        toast.error('Chưa chọn quiz để cập nhật');
       }
-      toast.promise(
-        edit({
-          data,
-          old: selectedItems[0],
-        }),
-        {
-          loading: 'Đang cập nhật du học...',
-          success: () => {
-            f.reset();
-            setIsEditPanelOpen(false);
-            return 'Cập nhật du học thành công';
-          },
-          error: 'Cập nhật du học thất bại',
-        }
-      );
+      toast.promise(edit(data), {
+        loading: 'Đang cập nhật quiz...',
+        success: () => {
+          f.reset();
+          setIsEditPanelOpen(false);
+          return 'Cập nhật quiz thành công';
+        },
+        error: 'Cập nhật quiz thất bại',
+      });
     },
     [edit, selectedItems]
   );
 
   const onDelete = useCallback(() => {
     if (selectedItems.length === 0) {
-      return toast.error('Chưa chọn du học để xóa');
+      return toast.error('Chưa chọn quiz để xóa');
     }
     toast.promise(deleteById(selectedItems[0]._id), {
-      loading: 'Đang xóa du học...',
+      loading: 'Đang xóa quiz...',
       success: () => {
         setIsDetailPanelOpen(false);
-        return 'Xóa du học thành công';
+        return 'Xóa quiz thành công';
       },
-      error: 'Xóa du học thất bại',
+      error: 'Xóa quiz thất bại',
     });
   }, [deleteById, selectedItems]);
 
@@ -223,10 +187,10 @@ export default function AdminQuiz() {
         isFilterActive={isFilterActive}
         totalItems={data?.pages?.[0].data.meta.total}
       />
-      <StudyTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
-      <StudyDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems[0]} />
-      <CreateStudyPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
-      <CreateStudyPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={onEdit} defaultValues={selectedItems[0] as any} />
+      <QuizTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
+      <QuizDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems[0]} />
+      <CreateQuizPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
+      <CreateQuizPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={onEdit} defaultValues={selectedItems[0] as any} />
       <DataTable
         data={items}
         columns={columns}
