@@ -19,11 +19,14 @@ const ChatSchema = z.object({
     .array(z.instanceof(File), {
       required_error: 'Vui lòng chọn file',
     })
+    .optional()
     .refine((file) => {
+      if (!file) return true;
       const files = Array.from(file);
       return !files.some((file) => file.size > MAX_UPLOAD_SIZE);
     }, 'File quá lớn, vui lòng chọn file nhỏ hơn 5MB')
     .refine((file) => {
+      if (!file) return true;
       const files = Array.from(file);
       return files.every((file) => ACCEPTED_FILE_TYPES.includes(file.type));
     }, 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg'),
@@ -47,7 +50,7 @@ function MessageInput({ sendMessage, className, disabled, ...rest }: MessageInpu
         className={cn('px-3 py-1.5 flex gap-2 bottom-0 bg-white shadow-md border-t relative', className)}
         onSubmit={form.handleSubmit(
           (data) => {
-            sendMessage(data.text, data.files);
+            sendMessage(data.text, data.files ?? []);
             form.reset();
           },
           (err) => {
@@ -57,10 +60,10 @@ function MessageInput({ sendMessage, className, disabled, ...rest }: MessageInpu
           }
         )}
       >
-        {files?.length > 0 && (
+        {files && files.length > 0 && (
           <Card className="absolute -top-20 origin-bottom flex overflow-x-auto p-2 w-[80%] gap-2">
             {Array.from(files).map((file, index) => (
-              <Card variant="soft" key={index} className="flex items-center gap-2 p-2">
+              <Card variant="soft" key={file.name} className="flex items-center gap-2 p-2">
                 <div className="flex items-center gap-2 flex-1">
                   <IconFile className="flex-shrink-0 text-caption" />
                   <Caption className="line-clamp-1">{file.name}</Caption>
@@ -93,7 +96,7 @@ function MessageInput({ sendMessage, className, disabled, ...rest }: MessageInpu
                   <Button.Icon type="only">
                     <IconPaperclip />
                   </Button.Icon>
-                  {files?.length > 0 && (
+                  {files && files.length > 0 && (
                     <Badge className="absolute -bottom-1 -right-1" size="xs">
                       <span className="text-xs">{files?.length}</span>
                     </Badge>

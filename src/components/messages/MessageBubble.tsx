@@ -1,16 +1,14 @@
 import Card from '@components/tailus-ui/Card';
-import { Caption } from '@components/tailus-ui/typography';
+import { Caption, Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
-import { Message } from '@lib/types';
+import { Message, User } from '@lib/types';
 import { cn } from '@lib/utils';
 
 export type MessageBubbleProps = {
   message: Message;
   isMine: boolean;
-  sender: {
-    name: string;
-    avatar?: string;
-  };
+  sender: Pick<User, 'email' | 'avatar'>;
+
   timestamp?: string;
 };
 export function MessageBubble(type: MessageBubbleProps) {
@@ -41,6 +39,7 @@ export function MessageBubble(type: MessageBubbleProps) {
     <div className={`flex gap-2 ${type.isMine ? 'justify-end' : 'justify-start'}`}>
       {!type.isMine && <AdminAvatar size="sm" src={type.sender.avatar} />}
       <div className={`p-3 rounded-lg max-w-[70%] ${type.isMine ? 'bg-primary-500 text-white' : 'bg-gray-100'}`}>
+        {!type.isMine && <Caption className="mb-2">{type.sender.email}</Caption>}
         {type.message.files && type.message.files?.map(renderFile)}
         <p className="text-sm">{type.message.text}</p>
         {type.timestamp && <Caption className={cn(type.isMine && 'text-primary-400')}>{type.timestamp}</Caption>}
