@@ -15,7 +15,7 @@ export interface RadioGroupProps extends CheckboxProps {
   rules?: ControllerProps['rules'];
 }
 
-const RadioGroupForm = React.forwardRef<HTMLButtonElement, RadioGroupProps>(({ className, control, name, label, values, rules, ...props }, ref) => {
+const RadioGroupForm = React.forwardRef<HTMLDivElement, RadioGroupProps>(({ className, control, name, label, values, rules, ...props }, ref) => {
   return (
     <FormField
       control={control}
@@ -25,7 +25,7 @@ const RadioGroupForm = React.forwardRef<HTMLButtonElement, RadioGroupProps>(({ c
         <FormItem className={cn('', className)}>
           <FormLabel className="pt-0 text-wrap">{label}</FormLabel>
           <FormControl className="grid grid-cols-2 gap-2">
-            <RadioGroup.Root {...field} onValueChange={field.onChange} defaultValue={field.value} intent="primary">
+            <RadioGroup.Root {...props} {...field} onValueChange={field.onChange} defaultValue={field.value} intent="primary" ref={ref}>
               {values.map((item) => (
                 <FormItem key={item.key} className="">
                   <FormControl key={item.value}>

@@ -1,11 +1,12 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import Button from '@components/tailus-ui/Button';
+import Card from '@components/tailus-ui/Card';
 import { Form } from '@components/tailus-ui/form';
 import { RadioGroupForm } from '@components/tailus-ui/form/RadioGroup';
 import { Caption, Display, List, Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Quiz } from '@lib/types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLoaderData, useParams } from 'react-router-dom';
 
@@ -33,6 +34,7 @@ function QuizDetailPage() {
 
   const form = useForm<{ _id: string; answer: string }[]>({
     defaultValues: data.question.map((q) => ({ _id: q._id, answer: '' })),
+    disabled: score != undefined,
   });
 
   const handleSubmit = (payload: Record<number, { _id: string; answer: string }>) => {
@@ -53,7 +55,7 @@ function QuizDetailPage() {
     setScore(score);
 
     wrongAnswerIndexes.forEach((index) => {
-      form.setError(`${index}.answer`, { type: 'manual', message: 'Câu trả lời không đúng' });
+      form.setError(`${index}.answer`, { type: 'manual', message: 'Đáp án là: ' + data.question[index].answer });
     });
   };
 
@@ -77,6 +79,7 @@ function QuizDetailPage() {
             <li key={q._id} className="space-y-4">
               <input type="hidden" {...form.register(`${i}._id` as const)} value={q._id} />
               <RadioGroupForm
+                key={'radio' + i + score + q._id}
                 control={form.control}
                 name={`${i}.answer`}
                 label={q.question}
@@ -86,17 +89,37 @@ function QuizDetailPage() {
             </li>
           ))}
         </List>
-        <div className="flex justify-between">
-          <Button.Root type="submit">
-            <Button.Label>Nộp bài</Button.Label>
-          </Button.Root>
-          {score && (
-            <div>
+        {score != undefined ? (
+          <Card variant="soft" className="flex divide-x-2 items-center">
+            <div className="px-5 w-1/3">
               <Text>Điểm số:</Text>
-              <Display>{score}/100</Display>
+              <Display>{score}</Display>
             </div>
-          )}
-        </div>
+            <List className="px-5 flex-1 h-full my-0" inside type="none">
+              <li>Số câu đúng: {data.question.length * (score / 100)}</li>
+              <li>Tổng số câu: {data.question.length}</li>
+            </List>
+            <div className="px-5 flex flex-col items-stretch justify-between gap-3">
+              <Button.Root
+                intent="primary"
+                variant="soft"
+                onClick={() => {
+                  setScore(undefined);
+                  form.reset();
+                }}
+              >
+                <Button.Label>Làm lại</Button.Label>
+              </Button.Root>
+              <Button.Root intent="danger" variant="soft" href={`${window.location.pathname}`}>
+                <Button.Label>Thoát</Button.Label>
+              </Button.Root>
+            </div>
+          </Card>
+        ) : (
+          <Button.Root type="submit">
+            <Button.Label>Nộp bài {score}</Button.Label>
+          </Button.Root>
+        )}
       </form>
     </Form>
   );
