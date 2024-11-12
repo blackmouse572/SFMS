@@ -14,7 +14,7 @@ import {
 import { Text } from '@components/tailus-ui/typography';
 import { AdminAvatar, UserDropdown } from '@components/user-nav';
 import { useUser } from '@lib/auth';
-import { User } from '@lib/types';
+import { Permission, User } from '@lib/types';
 import {
   IconBuildingMonument,
   IconChevronRight,
@@ -73,7 +73,7 @@ const items: SidebarItem[] = [
         apiPath: '/api/v1/advisory',
       },
       {
-        title: 'Quản lý CV',
+        title: 'Quản lý hồ sơ',
         href: '/admin/resume',
         icon: <IconUserScan />,
         apiPath: '/api/v1/resumes',
@@ -137,8 +137,8 @@ const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
           </CollapsibleTrigger>
           <CollapsibleContent>
             <ul className="border-l ml-2">
-              {item.children.map((item, i) => (
-                <CollapsibleItem item={item} />
+              {item.children.map((item) => (
+                <CollapsibleItem item={item} key={item.title} />
               ))}
             </ul>
           </CollapsibleContent>
@@ -157,30 +157,30 @@ const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
     </SidebarMenuItem>
   );
 };
-
+const filterItemsFunc = (items: SidebarItem[], permissions: Permission[]) => {
+  return items.map((item) => {
+    if (item.children) {
+      return {
+        ...item,
+        children: item.children.filter((child) => {
+          if (child.apiPath === undefined) return true;
+          return permissions.some((p) => p.apiPath === child.apiPath);
+        }),
+      };
+    }
+    return item;
+  });
+};
 function AdminSidebar() {
   const user = useUser() as User;
   const filterItems = useMemo(() => {
-    const { permissions } = user;
-
-    return items.map((item) => {
-      if (item.children) {
-        return {
-          ...item,
-          children: item.children.filter((child) => {
-            if (child.apiPath === undefined) return true;
-            return permissions.some((p) => p.apiPath === child.apiPath);
-          }),
-        };
-      }
-      return item;
-    });
+    return filterItemsFunc(items, user?.permissions ?? []);
   }, [user]);
   return (
     <Sidebar>
       <SidebarHeader className="flex-row items-center gap-2 p-2">
         <div className="flex-1 flex gap-2 items-center">
-          <img src="/images/logo.jpg" width={40} height={40} className="rounded-full size-12" />
+          <img alt="logo" src="/images/logo.jpg" width={40} height={40} className="rounded-full size-12" />
           <Text weight={'medium'}>{import.meta.env.VITE_APP_TITLE}</Text>
         </div>
       </SidebarHeader>
@@ -189,8 +189,8 @@ function AdminSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {filterItems.map((item, i) => (
-                <CollapsibleItem item={item} />
+              {filterItems.map((item) => (
+                <CollapsibleItem item={item} key={item.title} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

@@ -1,4 +1,4 @@
-import Tabs from '@components/tailus-ui/tabs';
+import Tabs from '@components/tailus-ui/Tabs';
 import { QuizType } from '@lib/types';
 import { cn } from '@lib/utils';
 import React, { useLayoutEffect, useRef } from 'react';

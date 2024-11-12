@@ -1,8 +1,8 @@
-import Tabs from '@components/tailus-ui/tabs';
 import { IconDeviceDesktop, IconMoon, IconSun } from '@tabler/icons-react';
 import { type TabsIndicatorProps as IndicatorProps, type TabsListProps as ListProps } from '@tailus/themer';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { useEffect, useRef } from 'react';
+import Tabs from '@components/tailus-ui/Tabs';
 
 type TabsAppProps = 'light' | 'system' | 'dark';
 
