@@ -12,7 +12,7 @@ import { IconCheck, IconCloudUpload, IconTrash } from '@tabler/icons-react';
 import { DialogProps as VariantProps } from '@tailus/themer';
 import { TagInput } from 'emblor';
 import { useEffect } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -27,17 +27,33 @@ export const CreateScholarSchema = z.object({
   quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
   image: z
-    .array(z.instanceof(File))
-    .nonempty({
+    .array(z.union([z.string().url(), z.instanceof(File)]))
+    .min(1, {
       message: 'Chưa chọn ảnh',
     })
-    .refine((files) => files.every((file) => file.type.startsWith('image/')), {
-      message: 'File không phải là ảnh',
-    })
+    .refine(
+      (files) => {
+        return files.every((file) => {
+          if (typeof file === 'string') return true;
+          return file.type.startsWith('image/');
+        });
+      },
+      {
+        message: 'File không phải là ảnh',
+      }
+    )
     .refine((files) => files.length <= 10, { message: 'Chỉ được tải lên tối đa 10 ảnh' })
-    .refine((files) => files.reduce((acc, file) => acc + file.size, 0) <= 1024 * 1024 * 10, {
-      message: 'Dung lượng ảnh tối đa 10MB',
-    }),
+    .refine(
+      (files) =>
+        files.reduce((acc, file) => {
+          if (typeof file === 'string') return acc;
+          return acc + file.size;
+        }, 0) <=
+        1024 * 1024 * 10,
+      {
+        message: 'Dung lượng ảnh tối đa 10MB',
+      }
+    ),
 });
 export type CreateScholarSchema = z.infer<typeof CreateScholarSchema>;
 
@@ -75,21 +91,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
   });
 
   useEffect(() => {
-    if (!defaultValues) return;
-
-    if (typeof defaultValues?.image?.[0] === 'string') {
-      // if image is string, convert to file
-      const files = defaultValues.image.map((url: any) => {
-        const filename = url.split('/').pop();
-        return new File([filename], filename, { type: 'image/png' });
-      });
-
-      return form.reset({
-        ...defaultValues,
-        image: files,
-      });
-    }
-    return form.reset(defaultValues);
+    form.reset(defaultValues);
   }, [defaultValues, form]);
 
   return (
@@ -136,6 +138,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                           },
                         }}
                         activeTagIndex={null}
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         setActiveTagIndex={() => {}}
                         tags={field.value.map((v) => ({ id: v, text: v }))}
                         setTags={(newTags) => {
@@ -172,6 +175,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                           },
                         }}
                         activeTagIndex={null}
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         setActiveTagIndex={() => {}}
                         tags={field.value.map((v) => ({ id: v, text: v }))}
                         setTags={(newTags) => {
@@ -186,60 +190,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                 )}
               />
               <SwitchForm control={form.control} name="isActive" label="Sử dụng học bổng" />
-              <FormField
-                control={form.control}
-                name="image"
-                defaultValue={[] as any}
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel htmlFor={field.name}>Hình ảnh</FormLabel>
-                    <div className="flex flex-wrap gap-2">
-                      <label htmlFor="image" className="size-40 rounded-btn border flex items-center justify-center text-xs text-caption flex-col">
-                        <IconCloudUpload className="size-5" />
-                        <span>Chọn ảnh</span>
-                      </label>
-                      {field.value?.map((file: File) => (
-                        <div key={file.name} className="relative group">
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt={file.name}
-                            className="size-40 object-cover rounded-btn group-hover:brightness-75 transition-[brightness] duration-300 border"
-                          />
-                          <Button.Root
-                            variant="outlined"
-                            size="xs"
-                            className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 origin-center opacity-0 group-hover:opacity-100"
-                            intent="danger"
-                            onClick={() => {
-                              field.onChange(field.value.filter((f) => f !== file));
-                            }}
-                          >
-                            <Button.Icon type="only">
-                              <IconTrash className="size-3.5" />
-                            </Button.Icon>
-                          </Button.Root>
-                        </div>
-                      ))}
-                    </div>
-                    <input
-                      hidden
-                      id="image"
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => {
-                        if (e.target.files) {
-                          field.onChange(
-                            [...field.value, ...Array.from(e.target.files)].filter((file, index, self) => {
-                              return index === self.findIndex((f) => f.name === file.name);
-                            })
-                          );
-                        }
-                      }}
-                    />
-                  </FormItem>
-                )}
-              />
+              <ImageForm control={form.control} name="image" label="Ảnh" required />
               <FormField
                 control={form.control}
                 name="description"
@@ -253,7 +204,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
             </form>
           </SheetBody>
           <SheetFooter>
-            <Button.Root form="createform" intent="gray" variant="outlined" onClick={() => form.reset()}>
+            <Button.Root type="reset" form="createform" intent="gray" variant="outlined" onClick={() => form.reset()}>
               <Button.Label>Đặt lại</Button.Label>
             </Button.Root>
             <Button.Root form="createform" type="submit">
@@ -278,6 +229,96 @@ const SelectItem = ({ entry }: { entry: Entry }) => {
       </Select.ItemIndicator>
       <Select.ItemText>{entry.value}</Select.ItemText>
     </Select.Item>
+  );
+};
+
+export const ImageForm = ({ control, name, label, required }: { control: any; name: string; label: string; required?: boolean }) => {
+  const { remove, append } = useFieldArray({
+    control,
+    name,
+  });
+  return (
+    <FormField
+      control={control}
+      name={name}
+      defaultValue={[] as any}
+      render={({ field }) => (
+        <FormItem className="flex flex-col">
+          <FormLabel htmlFor={field.name}>
+            {label}
+            {required && <span className="text-danger-500 ml-1">*</span>}
+          </FormLabel>
+          <div className="flex flex-wrap gap-2">
+            <label htmlFor="image" className="size-40 rounded-btn border flex items-center justify-center text-xs text-caption flex-col">
+              <IconCloudUpload className="size-5" />
+              <span>Chọn ảnh</span>
+            </label>
+            {field.value?.map((file: File | string, index: number) =>
+              typeof file === 'string' ? (
+                <div key={file} className="relative group">
+                  <img
+                    src={file}
+                    alt={file}
+                    className="size-40 object-cover rounded-btn group-hover:brightness-75 transition-[brightness] duration-300 border"
+                  />
+                  <Button.Root
+                    variant="outlined"
+                    size="xs"
+                    className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 origin-center opacity-0 group-hover:opacity-100"
+                    intent="danger"
+                    type="button"
+                    onClick={() => {
+                      remove(index);
+                    }}
+                  >
+                    <Button.Icon type="only">
+                      <IconTrash className="size-3.5" />
+                    </Button.Icon>
+                  </Button.Root>
+                </div>
+              ) : (
+                <div key={file.name} className="relative group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={file.name}
+                    className="size-40 object-cover rounded-btn group-hover:brightness-75 transition-[brightness] duration-300 border"
+                  />
+                  <Button.Root
+                    variant="outlined"
+                    size="xs"
+                    type="button"
+                    className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 origin-center opacity-0 group-hover:opacity-100"
+                    intent="danger"
+                    onClick={() => {
+                      remove(index);
+                    }}
+                  >
+                    <Button.Icon type="only">
+                      <IconTrash className="size-3.5" />
+                    </Button.Icon>
+                  </Button.Root>
+                </div>
+              )
+            )}
+          </div>
+          <input
+            hidden
+            id="image"
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files) {
+                const files = Array.from(e.target.files);
+                files.forEach((file) => {
+                  append(file);
+                });
+              }
+            }}
+          />
+        </FormItem>
+      )}
+    />
   );
 };
 export { CreateScholarPanel };

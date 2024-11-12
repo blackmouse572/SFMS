@@ -193,7 +193,7 @@ export interface Conversation {
 }
 export interface Message {
   _id: string;
-  sender: Pick<User, '_id' | 'name' | 'avatar'>;
+  sender: Pick<User, '_id' | 'email' | 'avatar'>;
   text: string;
   files?: string[] | File[];
   sentAt: string;

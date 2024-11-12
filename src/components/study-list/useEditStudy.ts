@@ -9,20 +9,16 @@ export function useEditStudy() {
   const client = useQueryClient();
   const { mutateAsync } = useUploadBatchImages();
   return useMutation({
-    mutationFn: async ({ data, old }: { data: CreateStudySchema; old: Study }) => {
-      const diffImages = data.image.filter((image) => !old.image.includes(image.name));
-      if (diffImages.length > 0) {
-        const results = await mutateAsync(diffImages);
-        const images = results.map((result) => result.url);
-
-        return axios.patch(`/study/${data._id}`, {
-          ...data,
-          image: images,
-        });
+    mutationFn: async ({ data }: { data: CreateStudySchema; old: Study }) => {
+      const imagesToUpload = data.image.filter((i) => i instanceof File);
+      const images = data.image.filter((i) => !(i instanceof File));
+      if (imagesToUpload.length > 0) {
+        const res = await mutateAsync(imagesToUpload);
+        images.push(...res.map((r) => r.url));
       }
       return axios.patch(`/study/${data._id}`, {
         ...data,
-        image: old.image,
+        image: images,
       });
     },
     onSuccess: () => {
