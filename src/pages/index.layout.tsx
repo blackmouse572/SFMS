@@ -1,15 +1,34 @@
 import { Skeleton } from '@components/Skeleton';
 import { customErrorMap } from '@lib/zod';
+import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { z } from 'zod';
 z.setErrorMap(customErrorMap);
+const queryClient = new QueryClient();
+
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import('@tanstack/react-query-devtools/build/modern/production.js').then((d) => ({
+    default: d.ReactQueryDevtools,
+  }))
+);
 
 function IndexLayout() {
+  const [showDevtools, setShowDevtools] = React.useState(false);
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    window.toggleDevtools = () => setShowDevtools((old) => !old);
+  }, []);
   return (
     <main>
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" position="top" />
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
       <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>

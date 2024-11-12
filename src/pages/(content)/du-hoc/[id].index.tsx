@@ -81,22 +81,20 @@ function StudyDetails() {
           >
             <Await resolve={Promise.all([...related])} errorElement={<p>Error loading package location!</p>}>
               {(packageLocation) => {
-                const related = _.uniqBy<SchoolarShip>(
-                  _.flatten<SchoolarShip>(packageLocation).filter((a) => a._id === data._id),
+                const related = _.uniqBy<Study>(
+                  _.flatten<Study>(packageLocation).filter((a) => a._id !== data._id),
                   '_id'
                 );
 
-                return related.map((scholarship: SchoolarShip) => (
-                  <Card variant="outlined" className="px-0 py-0">
-                    <Link key={scholarship._id} to={`/du-hoc/${scholarship._id}`}>
-                      <img src={scholarship.image[0]} alt={scholarship.name} className="w-full h-40 object-cover rounded-t-md" />
+                return related.map((item) => (
+                  <Card variant="outlined" className="px-0 py-0" key={item._id}>
+                    <Link key={item._id} to={`/du-hoc/${item._id}`}>
+                      <img src={item.image[0]} alt={item.name} className="w-full h-40 object-cover rounded-t-md" />
                       <div className="p-3">
                         <Text weight="medium" size="sm">
-                          {scholarship.name}
+                          {item.name}
                         </Text>
-                        <Caption size="xs">
-                          {scholarship.location} - {scholarship.level}
-                        </Caption>
+                        <Caption size="xs">{item.location}</Caption>
                       </div>
                     </Link>
                   </Card>

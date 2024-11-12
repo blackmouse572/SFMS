@@ -6,9 +6,11 @@ import { ResumeUpdateStatusPanel, UpdateResumeStatusSchema } from '@components/r
 import StatusBadge from '@components/resume-details/StatusBadge';
 import { useUpdateResumeStatus } from '@components/resume-details/useUpdateResumeStatus';
 import { ResumeTableFilter, useDeleteResume, useResumeList } from '@components/resume-list';
+import Button from '@components/tailus-ui/Button';
 import { Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Resume, SchoolarShip } from '@lib/types';
+import { DownloadIcon } from '@radix-ui/react-icons';
 import { IconAbacus, IconEye } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
@@ -101,13 +103,14 @@ function AdminResume() {
   const columns = useMemo<ColumnDef<Resume>[]>(
     () => [
       {
-        accessorKey: '_id',
-        header: 'ID',
-      },
-      {
         accessorKey: 'email',
         header: 'Email',
-        cell: (row) => <Text>{row.getValue() as string}</Text>,
+        cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,
+      },
+      {
+        accessorKey: 'name',
+        header: 'Họ và tên',
+        cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,
       },
       {
         accessorKey: 'status',
@@ -130,6 +133,18 @@ function AdminResume() {
         accessorKey: 'orderCode',
         header: 'Mã đơn hàng',
         cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,
+      },
+      {
+        accessorKey: 'urlCV',
+        header: '',
+        cell: (row) => (
+          <Button.Root size="xs" variant="ghost" href={row.getValue() as string} target="_blank">
+            <Button.Icon type="leading">
+              <DownloadIcon />
+            </Button.Icon>
+            <Button.Label>Tải CV</Button.Label>
+          </Button.Root>
+        ),
       },
     ],
     []

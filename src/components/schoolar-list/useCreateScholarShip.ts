@@ -15,8 +15,6 @@ export function useCreateScholarShip() {
       return axios.post('/scholarship', {
         ...data,
         image: images,
-        major: data.major.map((major) => major.text),
-        level: data.level.map((level) => level.text),
       });
     },
     onSuccess: () => {

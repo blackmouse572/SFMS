@@ -1,6 +1,6 @@
 import { useGetSchoolarShip } from '@components/schoolar-list';
 import Button from '@components/tailus-ui/Button';
-import { Form, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { ComboBoxForm } from '@components/tailus-ui/form/ComboBoxForm';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { ResumeStatus } from '@lib/types';
@@ -18,6 +18,8 @@ export const FilterSchema = z
   .object({
     scholarship: z.string().min(3),
     status: z.string(),
+    email: z.string(),
+    name: z.string(),
   })
   .partial();
 
@@ -29,6 +31,8 @@ function ResumeTableFilter(props: UserListFilterProps) {
     defaultValues: {
       scholarship: '',
       status: undefined,
+      email: '',
+      name: '',
     },
   });
   const [scholarship, setScholarship] = useState<string>('');
@@ -40,10 +44,7 @@ function ResumeTableFilter(props: UserListFilterProps) {
   const items = useMemo(() => data?.pages.flatMap((d) => d.data.result).map((a) => ({ id: a._id, text: a.name })) ?? [], [data]);
 
   const onReset = () => {
-    form.reset({
-      scholarship: '',
-      status: '',
-    });
+    form.reset();
   };
 
   const onFormSubmit = (data: UserFilter) => {
@@ -81,6 +82,8 @@ function ResumeTableFilter(props: UserListFilterProps) {
                   </SelectItem>
                 ))}
               </SelectForm>
+              <InputForm control={form.control} name="email" label="Email" />
+              <InputForm control={form.control} name="name" label="Tên" />
             </SheetBody>
             <SheetFooter className="">
               <Button.Root type="reset" intent="gray" variant="outlined" onClick={onReset}>

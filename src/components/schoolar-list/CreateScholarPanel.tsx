@@ -1,9 +1,8 @@
 import { ContinentOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Editor from '@components/tailus-ui/editor/editor';
-import { Form, FormField, FormItem, FormLabel, InputForm, SelectForm } from '@components/tailus-ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm } from '@components/tailus-ui/form';
 import { SwitchForm } from '@components/tailus-ui/form/SwitchForm';
-import { TagInputForm } from '@components/tailus-ui/form/TagInput';
 import Select from '@components/tailus-ui/Select';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { useUploadImage } from '@components/upload/useUploadImage';
@@ -11,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { IconCheck, IconCloudUpload, IconTrash } from '@tabler/icons-react';
 import { DialogProps as VariantProps } from '@tailus/themer';
+import { TagInput } from 'emblor';
 import { useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -20,26 +20,8 @@ export const CreateScholarSchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(3).max(255),
   continent: z.string().min(3).max(255),
-  major: z
-    .array(
-      // serve for tag input
-      // it will be converted to string[]
-      z.object({
-        id: z.string().optional(),
-        text: z.string().min(1).max(255),
-      })
-    )
-    .nonempty(),
-  level: z
-    .array(
-      // serve for tag input
-      // it will be converted to string[]
-      z.object({
-        id: z.string().optional(),
-        text: z.string().min(1).max(255),
-      })
-    )
-    .nonempty(),
+  major: z.array(z.string()).nonempty(),
+  level: z.array(z.string()).nonempty(),
   location: z.string().min(3).max(255),
   description: z.string().min(3).max(5000),
   quantity: z.coerce.number().optional(),
@@ -131,8 +113,78 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                   ))}
                 </SelectForm>
               </div>
-              <TagInputForm control={form.control} name="level" label="Cấp" required />
-              <TagInputForm control={form.control} name="major" label="Ngành học" required />
+              <FormField
+                control={form.control}
+                name={'level'}
+                defaultValue={[] as any}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Cấp
+                      <span className="text-danger-500 ml-1">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <TagInput
+                        styleClasses={{
+                          input: 'placeholder:text-caption rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
+                          inlineTagsContainer: '!rounded-btn focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
+                          tagList: {
+                            container: 'border-red-500',
+                          },
+                          tag: {
+                            body: '!rounded-card bg-soft-bg',
+                          },
+                        }}
+                        activeTagIndex={null}
+                        setActiveTagIndex={() => {}}
+                        tags={field.value.map((v) => ({ id: v, text: v }))}
+                        setTags={(newTags) => {
+                          const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={'major'}
+                defaultValue={[] as any}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Ngành học
+                      <span className="text-danger-500 ml-1">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <TagInput
+                        styleClasses={{
+                          input: 'placeholder:text-caption rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
+                          inlineTagsContainer: '!rounded-btn focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
+                          tagList: {
+                            container: 'border-red-500',
+                          },
+                          tag: {
+                            body: '!rounded-card bg-soft-bg',
+                          },
+                        }}
+                        activeTagIndex={null}
+                        setActiveTagIndex={() => {}}
+                        tags={field.value.map((v) => ({ id: v, text: v }))}
+                        setTags={(newTags) => {
+                          const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <SwitchForm control={form.control} name="isActive" label="Sử dụng học bổng" />
               <FormField
                 control={form.control}
@@ -205,7 +257,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
               <Button.Label>Đặt lại</Button.Label>
             </Button.Root>
             <Button.Root form="createform" type="submit">
-              <Button.Label>Tạo mới</Button.Label>
+              <Button.Label>{defaultValues ? 'Cập nhật' : 'Tạo mới'}</Button.Label>
             </Button.Root>
           </SheetFooter>
         </Form>

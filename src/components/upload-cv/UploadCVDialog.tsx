@@ -61,7 +61,7 @@ function UploadCVDialog({ scholarship }: { scholarship: SchoolarShip }) {
       <Dialog.Trigger asChild>
         <Button.Root intent="primary" className="text-nowrap mx-auto">
           <Button.Label>
-            <Button.Label>Upload CV vào trường này</Button.Label>
+            <Button.Label>Nộp hồ sơ vào trường này</Button.Label>
           </Button.Label>
         </Button.Root>
       </Dialog.Trigger>

@@ -143,6 +143,7 @@ export enum ResumeStatus {
 
 export interface Resume {
   _id: string;
+  name: string;
   email: string;
   userId: string;
   urlCV: string;
