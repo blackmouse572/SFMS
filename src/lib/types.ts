@@ -133,13 +133,16 @@ export interface CreatedBy {
   email: string;
 }
 
-export enum ResumeStatus {
-  PENDING = 'PENDING', // Waiting for payment
-  PAID = 'PAID', // Payment received, waiting for approval
-  REJECTED = 'REJECTED', // Rejected
-  REVIEWING = 'REVIEWING', // In reviewing
-  DONE = 'DONE', // Approved
+export const ResumeStatus = {
+  "Đã thanh toán": "Đã thanh toán",
+  "Sửa hồ sơ": "Sửa hồ sơ",
+  "Giao staff xử lý": "Giao staff xử lý",
+  "Hoàn chỉnh hồ sơ": "Hoàn chỉnh hồ sơ",
+  "Chờ kết quả": "Chờ kết quả",
+  "Đã hoàn tất": "Đã hoàn tất",
 }
+
+export type ResumeStatus = keyof typeof ResumeStatus;
 
 export interface Resume {
   _id: string;

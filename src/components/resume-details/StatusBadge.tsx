@@ -11,11 +11,12 @@ function StatusBadge({ status, className }: { status: string; className?: string
 }
 
 const ColorMap: Record<keyof typeof ResumeStatus, BadgeProps['intent']> = {
-  PAID: 'info',
-  PENDING: 'gray',
-  REJECTED: 'warning',
-  DONE: 'success',
-  REVIEWING: 'primary',
+  'Chờ kết quả': 'info',
+  'Đã thanh toán': 'gray',
+  'Sửa hồ sơ': 'warning',
+  'Đã hoàn tất': 'success',
+  'Giao staff xử lý': 'primary',
+  'Hoàn chỉnh hồ sơ': 'accent',
 };
 
 export default StatusBadge;

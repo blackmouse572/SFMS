@@ -11,7 +11,7 @@ import { z } from 'zod';
 
 export const UpdateResumeStatusSchema = z.object({
   id: z.string(),
-  status: z.enum([ResumeStatus.REJECTED, ResumeStatus.REVIEWING, ResumeStatus.DONE]),
+  status: z.string().min(1),
 });
 
 export type UpdateResumeStatusSchema = z.infer<typeof UpdateResumeStatusSchema>;
@@ -27,14 +27,14 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
     resolver: zodResolver(UpdateResumeStatusSchema),
     defaultValues: {
       id: item?._id,
-      status: ResumeStatus.REVIEWING,
+      status: ResumeStatus['Chờ kết quả'],
     },
   });
 
   useEffect(() => {
     form.reset({
       id: item?._id,
-      status: ResumeStatus.REVIEWING,
+      status: item?.status,
     });
   }, [form, item]);
 
@@ -47,26 +47,16 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
       <SheetContent size="lg" className="flex h-full flex-col gap-4 overflow-auto">
         <SheetHeader className="sticky top-0 z-[51] bg-white border-b py-7">
           <SheetTitle>Cập nhật trạng thái hồ sơ</SheetTitle>
-          <SheetDescription>
-            {item?.status === ResumeStatus.PENDING ? 'Hồ sơ đang chờ xử lý bạn không thể cập nhật' : 'Cập nhật trạng thái hồ sơ'}
-          </SheetDescription>
         </SheetHeader>
         <SheetBody className="flex-1">
           <Form {...form}>
             <form id="update-status" className="flex-1" onSubmit={form.handleSubmit(onSubmit)}>
-              <SelectForm label="Trạng thái" control={form.control} name="status" disabled={item?.status === ResumeStatus.PENDING}>
-                <SelectItem value={ResumeStatus.REJECTED}>
-                  <IconPointFilled className="inline-block size-5 mr-2 text-danger-500" />
-                  Từ chối
-                </SelectItem>
-                <SelectItem value={ResumeStatus.REVIEWING}>
-                  <IconPointFilled className="inline-block size-5 mr-2 text-warning-500" />
-                  Đang xem xét
-                </SelectItem>
-                <SelectItem value={ResumeStatus.DONE}>
-                  <IconPointFilled className="inline-block size-5 mr-2 text-success-500" />
-                  Hoàn thành
-                </SelectItem>
+              <SelectForm label="Trạng thái" control={form.control} name="status">
+                {Object.values(ResumeStatus).map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status}
+                  </SelectItem>
+                ))}
               </SelectForm>
               <input type="hidden" {...form.register('id')} />
             </form>
@@ -74,10 +64,10 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
         </SheetBody>
         <SheetFooter className="">
           <Button.Root type="reset" intent="gray" variant="outlined" onClick={() => form.reset()}>
-            <Button.Label>Xóa</Button.Label>
+            <Button.Label>Đặt lại</Button.Label>
           </Button.Root>
           <Button.Root type="submit" form="update-status">
-            <Button.Label>Lưu</Button.Label>
+            <Button.Label>Cập nhật</Button.Label>
           </Button.Root>
         </SheetFooter>
       </SheetContent>
