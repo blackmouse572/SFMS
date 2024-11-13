@@ -178,6 +178,21 @@ export const router = createBrowserRouter([
           {
             Component: lazy(() => import('@pages/(admin)/quiz.index')),
             path: '/admin/quiz',
+            children: [
+              {
+                Component: lazy(() => import('@pages/(admin)/edit.quiz.index')),
+                path: '/admin/quiz/edit/:id',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { loader } = await import('@pages/(admin)/edit.quiz.index');
+                  return loader(id!);
+                },
+              },
+              {
+                Component: lazy(() => import('@pages/(admin)/add.quiz.index')),
+                path: '/admin/quiz/add',
+              },
+            ],
           },
           {
             Component: lazy(() => import('@pages/(admin)/question.index')),

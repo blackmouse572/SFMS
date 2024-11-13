@@ -1,61 +1,54 @@
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
-import { Form, FormField, FormItem, FormLabel, FormMessage, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@components/tailus-ui/form';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { Text } from '@components/tailus-ui/typography';
 import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE } from '@components/upload-cv/UploadCVDialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Resume, ResumeStatus } from '@lib/types';
+import { Resume } from '@lib/types';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { IconCloudUpload, IconFileTypePdf, IconX } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const UpdateResumeStatusSchema = z.object({
+export const UpdateResumeSchema = z.object({
   id: z.string(),
-  status: z.string().min(1),
   urlCv: z
     .instanceof(File, {
       message: 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg',
     })
-    .nullable()
     .refine((file) => {
-      if (!file) return true;
       return file.size <= MAX_UPLOAD_SIZE;
     }, 'File quá lớn, vui lòng chọn file nhỏ hơn 5MB')
     .refine((file) => {
-      if (!file) return true;
       return ACCEPTED_FILE_TYPES.includes(file?.type);
     }, 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg'),
 });
 
-export type UpdateResumeStatusSchema = z.infer<typeof UpdateResumeStatusSchema>;
+export type UpdateResumeSchema = z.infer<typeof UpdateResumeSchema>;
 
 type ResumeDetailPanel = {
   item?: Pick<Resume, '_id' | 'status'>;
-  onSubmit: (data: UpdateResumeStatusSchema) => void;
+  onSubmit: (data: UpdateResumeSchema) => void;
 } & Omit<DialogProps, 'children'>;
 
-export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
+export function UpdateResumePanel(props: ResumeDetailPanel) {
   const { item, ...rest } = props;
-  const form = useForm<UpdateResumeStatusSchema>({
-    resolver: zodResolver(UpdateResumeStatusSchema),
+  const form = useForm<UpdateResumeSchema>({
+    resolver: zodResolver(UpdateResumeSchema),
     defaultValues: {
       id: item?._id,
-      status: ResumeStatus['Chờ kết quả'],
     },
   });
 
   useEffect(() => {
     form.reset({
       id: item?._id,
-      status: item?.status,
-      urlCv: null,
     });
   }, [form, item]);
 
-  const onSubmit = (data: UpdateResumeStatusSchema) => {
+  const onSubmit = (data: UpdateResumeSchema) => {
     props.onSubmit(data);
   };
 
@@ -68,13 +61,6 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
         <SheetBody className="flex-1">
           <Form {...form}>
             <form id="update-status" className="flex-1 space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <SelectForm label="Trạng thái" control={form.control} name="status">
-                {Object.values(ResumeStatus).map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
-                ))}
-              </SelectForm>
               <input type="hidden" {...form.register('id')} />
               <FormField
                 control={form.control}

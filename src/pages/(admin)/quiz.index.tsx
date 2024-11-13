@@ -138,7 +138,8 @@ export default function AdminQuiz() {
           size: 'sm',
           intent: 'gray',
           variant: 'soft',
-          onClick: () => setIsCreatePanelOpen(true),
+          href: '/admin/quiz/add',
+          // onClick: () => setIsCreatePanelOpen(true),
         },
       ],
       selectedItems.length > 0
@@ -158,7 +159,8 @@ export default function AdminQuiz() {
               intent: 'secondary',
               variant: 'soft',
               mode: 'single',
-              onClick: () => setIsEditPanelOpen(true),
+              href: `/admin/quiz/edit/${selectedItems[0]._id}`,
+              // onClick: () => setIsEditPanelOpen(true),
             },
           ]
         : [],

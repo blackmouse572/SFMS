@@ -134,13 +134,13 @@ export interface CreatedBy {
 }
 
 export const ResumeStatus = {
-  "Đã thanh toán": "Đã thanh toán",
-  "Sửa hồ sơ": "Sửa hồ sơ",
-  "Giao staff xử lý": "Giao staff xử lý",
-  "Hoàn chỉnh hồ sơ": "Hoàn chỉnh hồ sơ",
-  "Chờ kết quả": "Chờ kết quả",
-  "Đã hoàn tất": "Đã hoàn tất",
-}
+  'Đã thanh toán': 'Đã thanh toán',
+  'Giao staff xử lý': 'Giao staff xử lý',
+  'Sửa hồ sơ': 'Sửa hồ sơ',
+  'Hoàn chỉnh hồ sơ': 'Hoàn chỉnh hồ sơ',
+  'Chờ kết quả': 'Chờ kết quả',
+  'Đã hoàn tất': 'Đã hoàn tất',
+};
 
 export type ResumeStatus = keyof typeof ResumeStatus;
 
