@@ -87,7 +87,7 @@ function AdvisorContactDialog() {
 
       <Dialog.Portal>
         <Dialog.Overlay className="z-[11]" />
-        <Dialog.Content className="w-[30vw] z-[11]">
+        <Dialog.Content className="lg:w-1/2 z-[11]">
           <Dialog.Title>Đăng ký tư vấn</Dialog.Title>
           <Dialog.Description className="mt-2">Đăng ký tư vấn để nhận được sự hỗ trợ từ chuyên gia của chúng tôi.</Dialog.Description>
           <Form {...form}>
