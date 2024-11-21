@@ -248,3 +248,14 @@ export interface Question {
   createdAt: string;
   updatedAt?: string;
 }
+
+export interface CrawData {
+  _id: string;
+  title: string;
+  href: string;
+  description: string;
+  isDeleted: boolean;
+  deletedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -25,6 +25,7 @@ import {
   IconMessage2Bolt,
   IconMessage2Question,
   IconSchool,
+  IconSpider,
   IconTooltip,
   IconUserScan,
   IconUsersGroup,
@@ -111,6 +112,18 @@ const items: SidebarItem[] = [
         href: '/admin/chat',
         icon: <IconMessage2Bolt />,
         apiPath: '/api/v1/chat',
+      },
+    ],
+  },
+  {
+    title: 'Crawler',
+    icon: <IconSpider />,
+    children: [
+      {
+        title: 'Học bổng',
+        href: '/admin/crawler',
+        icon: <IconSchool />,
+        apiPath: '/api/v1/scholarship',
       },
     ],
   },

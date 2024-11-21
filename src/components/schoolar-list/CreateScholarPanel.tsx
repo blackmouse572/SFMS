@@ -208,7 +208,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
               <Button.Label>Đặt lại</Button.Label>
             </Button.Root>
             <Button.Root form="createform" type="submit">
-              <Button.Label>{defaultValues ? 'Cập nhật' : 'Tạo mới'}</Button.Label>
+              <Button.Label>{defaultValues?._id ? 'Cập nhật' : 'Tạo mới'}</Button.Label>
             </Button.Root>
           </SheetFooter>
         </Form>

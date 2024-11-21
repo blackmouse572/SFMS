@@ -176,6 +176,10 @@ export const router = createBrowserRouter([
             path: '/admin/study',
           },
           {
+            Component: lazy(() => import('@pages/(admin)/crawler.index')),
+            path: '/admin/crawler',
+          },
+          {
             Component: lazy(() => import('@pages/(admin)/quiz.index')),
             path: '/admin/quiz',
             children: [
@@ -185,7 +189,7 @@ export const router = createBrowserRouter([
                 loader: async ({ params }) => {
                   const id = params.id;
                   const { loader } = await import('@pages/(admin)/edit.quiz.index');
-                  return loader(id!);
+                  return loader(id ?? '');
                 },
               },
               {

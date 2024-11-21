@@ -1,4 +1,5 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
+import { Filter } from '@components/craw-data/CrawDataFilterPanel';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { CreateScholarPanel, CreateScholarSchema, ScholarDetailPanel } from '@components/schoolar-list';
@@ -29,7 +30,7 @@ function AdminScholarship() {
       },
     ]);
   });
-  const [filter, setFilter] = useState<SchoolarFilter>();
+  const [filter, setFilter] = useState<Filter>();
   const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({ filter });
   const { mutateAsync: create } = useCreateScholarShip();
   const { mutateAsync: deleteById } = useDeleteScholarship();

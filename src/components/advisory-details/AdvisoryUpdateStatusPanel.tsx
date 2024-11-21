@@ -1,13 +1,10 @@
 import { STATUS_OPTIONS } from '@components/advisory-list/constant';
 import Button from '@components/tailus-ui/Button';
-import Card from '@components/tailus-ui/Card';
-import { Form, FormField, FormItem, FormLabel, FormMessage, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
-import { Text } from '@components/tailus-ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Advisory } from '@lib/types';
 import { type DialogProps } from '@radix-ui/react-dialog';
-import { IconCloudUpload, IconFileTypePdf, IconX } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
