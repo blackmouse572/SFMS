@@ -8,16 +8,18 @@ export const AdminAvatar = ({
   size = 'xxs',
   initial = 'MI',
   indicator,
+  className,
 }: {
   src?: string;
   size?: AvatarRootProps['size'];
   initial?: string;
   indicator?: Pick<AvatarFallbackProps, 'intent'>;
+  className?: string;
 }) => {
   const randomIntent = intents[Math.floor(Math.random() * intents.length)];
 
   return (
-    <Avatar.Root size={size ?? 'md'}>
+    <Avatar.Root size={size ?? 'md'} className={className}>
       <Avatar.Image src={src} loading="lazy" alt="User Avatar" width={120} height={120} />
       <Avatar.Fallback
         intent={randomIntent}

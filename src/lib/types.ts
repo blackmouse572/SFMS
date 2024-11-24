@@ -254,6 +254,9 @@ export interface CrawData {
   title: string;
   href: string;
   description: string;
+  level: string;
+  location: string;
+  logo: string;
   isDeleted: boolean;
   deletedAt: Date | null;
   createdAt: Date;

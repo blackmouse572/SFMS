@@ -8,6 +8,7 @@ import { CreateScholarPanel, CreateScholarSchema } from '@components/schoolar-li
 import { type Filter as SchoolarFilter } from '@components/schoolar-list/ScholarshipTableFilter';
 import { useCreateScholarShip } from '@components/schoolar-list/useCreateScholarShip';
 import { Caption, Link, Text } from '@components/tailus-ui/typography';
+import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { CrawData } from '@lib/types';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
@@ -34,11 +35,20 @@ function AdminCrawler() {
   const columns = useMemo<ColumnDef<CrawData>[]>(
     () => [
       {
-        accessorKey: 'title',
-        header: 'Tên học bổng',
+        accessorFn: (row) => ({
+          id: row._id,
+          title: row.title,
+          logo: row.logo,
+        }),
+        header: 'Học bổng',
         cell: (info) => {
-          const title = info.getValue() as CrawData['title'];
-          return <Text size="sm">{title}</Text>;
+          const { title, logo } = info.getValue() as CrawData;
+          return (
+            <div className="flex gap-2 items-center">
+              <AdminAvatar src={logo} size="md" className="flex-shrink-0" />
+              <Text size="sm">{title}</Text>
+            </div>
+          );
         },
       },
       {
@@ -51,6 +61,22 @@ function AdminCrawler() {
               {link}
             </Link>
           );
+        },
+      },
+      {
+        accessorKey: 'level',
+        header: 'Trình độ',
+        cell: (info) => {
+          const link = info.getValue() as CrawData['level'];
+          return <Text size="sm">{link}</Text>;
+        },
+      },
+      {
+        accessorKey: 'location',
+        header: 'Location',
+        cell: (info) => {
+          const link = info.getValue() as CrawData['location'];
+          return <Text size="sm">{link}</Text>;
         },
       },
       {
@@ -140,7 +166,6 @@ function AdminCrawler() {
         : [],
     ];
   }, [onDelete, selectedItem.length]);
-  console.log({ items });
   return (
     <div className="space-y-2 mt-8">
       <TopBar
@@ -158,6 +183,9 @@ function AdminCrawler() {
         defaultValues={{
           name: selectedItem[0]?.title,
           //html to text
+          level: (selectedItem[0]?.level ? [selectedItem[0].level] : []) as any,
+          location: selectedItem[0]?.location,
+          image: selectedItem[0]?.logo ? [selectedItem[0]?.logo] : [],
           description: selectedItem[0]?.description.replace(/<[^>]*>?/gm, ''),
         }}
       />

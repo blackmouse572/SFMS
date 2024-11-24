@@ -140,7 +140,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                         activeTagIndex={null}
                         // eslint-disable-next-line @typescript-eslint/no-empty-function
                         setActiveTagIndex={() => {}}
-                        tags={field.value.map((v) => ({ id: v, text: v }))}
+                        tags={field.value?.map((v) => ({ id: v, text: v }))}
                         setTags={(newTags) => {
                           const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
                           field.onChange(value);
@@ -177,7 +177,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                         activeTagIndex={null}
                         // eslint-disable-next-line @typescript-eslint/no-empty-function
                         setActiveTagIndex={() => {}}
-                        tags={field.value.map((v) => ({ id: v, text: v }))}
+                        tags={field.value?.map((v) => ({ id: v, text: v }))}
                         setTags={(newTags) => {
                           const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
                           field.onChange(value);
