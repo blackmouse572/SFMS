@@ -1,4 +1,5 @@
 import AdvisorContactDialog from '@components/AdvisorContactDialog';
+import Button from '@components/tailus-ui/Button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +14,7 @@ import axios from '@lib/axios';
 import { IResponse } from '@lib/types';
 import { cn } from '@lib/utils';
 import { Root as NavigationMenuPrimitiveRoot } from '@radix-ui/react-navigation-menu';
+import { IconSearch } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -135,7 +137,15 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
-      <AdvisorContactDialog />
+      <NavigationMenuList>
+        <Button.Root variant="outlined" size="sm" intent="gray">
+          <Button.Icon type="leading">
+            <IconSearch />
+          </Button.Icon>
+          <Button.Label>Tìm kiếm Học bổng</Button.Label>
+        </Button.Root>
+        <AdvisorContactDialog />
+      </NavigationMenuList>
     </NavigationMenu>
   );
 }

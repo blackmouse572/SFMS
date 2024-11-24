@@ -1,5 +1,4 @@
 import { getScholarShipKey } from '@components/schoolar-list/constant';
-import { Filter } from '@components/schoolar-list/ScholarshipTableFilter';
 import axios from '@lib/axios';
 import { IPagedRequest, IPagedResponse, SchoolarShip } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -10,7 +9,7 @@ const initialRequest: IPagedRequest = {
   pageSize: 30,
 };
 type UseGetSchoolarShip = {
-  filter?: Filter;
+  filter?: Record<string, any>;
   request?: IPagedRequest;
 };
 export function useGetSchoolarShip(props: UseGetSchoolarShip) {
@@ -25,6 +24,10 @@ export function useGetSchoolarShip(props: UseGetSchoolarShip) {
         level: filter?.level && new RegExp(filter.level, 'i'),
         location: filter?.location && new RegExp(filter.location, 'i'),
         continent: filter?.continent && new RegExp(filter.continent, 'i'),
+        value: filter?.value && new RegExp(filter.value, 'i'),
+        'GPA<': filter?.gpa && filter.gpa,
+        'ielts<': filter?.ielts && filter.ielts,
+        'pay<': filter?.pay && filter.pay,
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
