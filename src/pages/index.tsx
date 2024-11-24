@@ -2,14 +2,20 @@ import { FocusCard } from '@components/FocusCard';
 import { Navbar } from '@components/MainNavbar';
 import { ChatPopover } from '@components/messages';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
+import { Skeleton } from '@components/Skeleton';
+import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import InfiniteScroll from '@components/tailus-ui/InfiniteScroll';
 import { useIsAuthenticated } from '@lib/auth';
+import axios from '@lib/axios';
+import { IPagedResponse, News } from '@lib/types';
 import { cn } from '@lib/utils';
 import { IconAward, IconBriefcase, IconSchool, IconWorld } from '@tabler/icons-react';
 import { Display, Text, Title } from '@tailus-ui/typography';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import { Link } from 'react-router-dom';
 
 function App() {
   const isAuth = useIsAuthenticated();
@@ -21,6 +27,7 @@ function App() {
         <HeaderSection className="" />
         <StatsSection className="" />
         <AdvisorSection className="" />
+        <NewsSection />
         <ConnetSchoolSection className="" />
         {isAuth && <ChatPopover />}
       </div>
@@ -212,4 +219,51 @@ function ConnetSchoolSection(props: React.HTMLAttributes<HTMLDivElement>) {
     </section>
   );
 }
+
+function NewsSection(props: React.HTMLAttributes<HTMLDivElement>) {
+  const { isLoading, data } = useQuery({
+    queryKey: ['news'],
+    queryFn: async () => {
+      const res = await axios.get<IPagedResponse<News>>('/news');
+      return res.data.data.result;
+    },
+  });
+  return (
+    <section id="news" {...props} className={cn('mt-8 space-y-4')}>
+      <Display size="4xl" className="">
+        Tin tức
+      </Display>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+        {isLoading && (
+          <Card>
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </Card>
+        )}
+        {data &&
+          data.map((news) => (
+            <Link key={news._id} to={`/news/${news._id}`} className="flex flex-col items-center justify-center p-4">
+              <Card key={news._id} className="flex flex-col items-center justify-center p-4">
+                <img
+                  src={
+                    news.heroImage?.length > 0
+                      ? news.heroImage
+                      : `https://dynamic-og-image-generator.vercel.app/api/generate?title=${news.title}&author=SFMS&websiteUrl=https%3A%2F%2Fsfms.pages.dev%2F&avatar=https%3A%2F%2Fsfms.pages.dev%2Fimages%2Flogo.jpg&theme=dracula`
+                  }
+                  alt={news.title}
+                  className="w-full h-42 aspect-video object-cover"
+                />
+                <Text size="lg" className="mt-4 line-clamp-2">
+                  {news.title}
+                </Text>
+              </Card>
+            </Link>
+          ))}
+      </div>
+    </section>
+  );
+}
+
 export default App;

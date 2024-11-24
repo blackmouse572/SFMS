@@ -124,6 +124,21 @@ export const router = createBrowserRouter([
               },
             ],
           },
+          {
+            path: '/news',
+            children: [
+              {
+                path: '/news/:id',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { loader } = await import('@pages/news.[id].index');
+                  if (!loader || !id) return null;
+                  return loader({ params: { id } });
+                },
+                Component: lazy(() => import('@pages/news.[id].index')),
+              },
+            ],
+          },
         ],
       },
       {
@@ -180,9 +195,12 @@ export const router = createBrowserRouter([
             path: '/admin/crawler',
           },
           {
-            Component: lazy(() => import('@pages/(admin)/quiz.index')),
             path: '/admin/quiz',
             children: [
+              {
+                Component: lazy(() => import('@pages/(admin)/quiz.index')),
+                index: true,
+              },
               {
                 Component: lazy(() => import('@pages/(admin)/edit.quiz.index')),
                 path: '/admin/quiz/edit/:id',

@@ -29,7 +29,6 @@ function AddQuizAdminPage() {
       error: 'Tạo quiz thất bại',
     });
   };
-
   return <CreateQuizForm onSubmit={onCreate} defaultValues={{}} />;
 }
 

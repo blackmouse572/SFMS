@@ -24,7 +24,7 @@ type CreateQuizFormProps = {
   onSubmit: (data: CreateQuizSchema) => void;
 };
 function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
-  const form = useForm<CreateQuizSchema>({ resolver: zodResolver(CreateQuizSchema) });
+  const form = useForm<CreateQuizSchema>({ resolver: zodResolver(CreateQuizSchema), defaultValues });
 
   const [search, setSearch] = useState('');
   const { isLoading, data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetQuestion({
@@ -39,10 +39,22 @@ function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
     return items.filter((item) => !questions.find((q) => q._id === item._id));
   }, [data?.pages, questions]);
 
-  const { append } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control: form.control,
     name: 'question',
   });
+  const onRemove = (index: number) => {
+    remove(index);
+    setQuestions((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const reset = () => {
+    form.reset({
+      ...defaultValues,
+      question: defaultValues?.question?.map((q) => q._id) ?? [],
+    });
+    setQuestions(defaultValues?.question ?? []);
+  };
   useEffect(() => {
     form.reset({
       ...defaultValues,
@@ -73,7 +85,7 @@ function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
               <div className="space-y-4">
                 {questions.map((q, index) => (
                   <div key={q._id} className="flex items-start gap-2">
-                    <Button.Root className="flex-shrink-0" variant="outlined" intent="gray" type="button" size="xs" onClick={() => append(q._id)}>
+                    <Button.Root className="flex-shrink-0" variant="outlined" intent="gray" type="button" size="xs" onClick={() => onRemove(index)}>
                       <Button.Icon type="only">
                         <IconX />
                       </Button.Icon>
@@ -101,7 +113,7 @@ function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
         {/* <QuestionForm control={form.control} name="question" label="Câu hỏi" /> */}
       </form>
       <div className="bg-white px-4 py-5 sticky bottom-0 right-0 left-0 border-t flex items-center justify-end w-full gap-4 max-h-20">
-        <Button.Root type="reset" form="createform" intent="gray" variant="outlined">
+        <Button.Root type="reset" form="createform" intent="gray" variant="outlined" onClick={reset}>
           <Button.Label>Đặt lại</Button.Label>
         </Button.Root>
         <Button.Root type="submit" form="createform">

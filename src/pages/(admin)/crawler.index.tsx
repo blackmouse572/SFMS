@@ -157,7 +157,8 @@ function AdminCrawler() {
         onSubmit={onCreate}
         defaultValues={{
           name: selectedItem[0]?.title,
-          description: selectedItem[0]?.description,
+          //html to text
+          description: selectedItem[0]?.description.replace(/<[^>]*>?/gm, ''),
         }}
       />
       <DataTable
