@@ -1,4 +1,5 @@
 import AdvisorContactDialog from '@components/AdvisorContactDialog';
+import SubscribeDialog from '@components/subscriber/SubscribeDialog';
 import Button from '@components/tailus-ui/Button';
 import {
   NavigationMenu,
@@ -10,6 +11,7 @@ import {
   navigationMenuTriggerStyle,
 } from '@components/tailus-ui/NavigationMenu';
 import { Text } from '@components/tailus-ui/typography';
+import { useIsAuthenticated } from '@lib/auth';
 import axios from '@lib/axios';
 import { IResponse } from '@lib/types';
 import { cn } from '@lib/utils';
@@ -63,6 +65,7 @@ function useGetListStudy() {
 export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitiveRoot>) {
   const { isLoading, data } = useGetListLocation();
   const { isLoading: isLoadingStudy, data: dataStudy } = useGetListStudy();
+  const isAuth = useIsAuthenticated();
   return (
     <NavigationMenu {...props} className={cn('flex justify-between w-full max-w-none [&>.viewport]:left-48', className)}>
       <NavigationMenuList>
@@ -114,28 +117,13 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Tư vấn</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem key={component.title} title={component.title} href={component.href}>
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/about-us">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Liên hệ</NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+
         <NavigationMenuItem>
           <Link to="/kiem-tra">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Làm bài kiểm tra</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+        <NavigationMenuItem>{isAuth && <SubscribeDialog />}</NavigationMenuItem>
       </NavigationMenuList>
       <NavigationMenuList>
         <Button.Root variant="outlined" size="sm" intent="gray" href="/hoc-bong">

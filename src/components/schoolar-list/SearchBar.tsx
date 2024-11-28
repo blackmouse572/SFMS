@@ -97,8 +97,7 @@ type SearchCompProps = {
   name: string;
   control: any;
 };
-
-function ListLevel({ name, control }: SearchCompProps) {
+export function ListLevel({ name, control }: SearchCompProps) {
   const { isLoading, data } = useQuery({
     queryKey: ['scholarships', 'level'],
     queryFn: async () => axios.get<IResponse<{ level: string[] }>>('/scholarship/list-level').then((res) => res.data.data),
@@ -123,8 +122,7 @@ function ListLevel({ name, control }: SearchCompProps) {
     </SelectForm>
   );
 }
-
-function LocationLevel({ name, control }: SearchCompProps) {
+export function LocationLevel({ name, control }: SearchCompProps) {
   const { isLoading, data } = useQuery({
     queryKey: ['scholarships', 'location'],
     queryFn: async () => axios.get<IResponse<{ location: string[] }>>('/scholarship/list-country').then((res) => res.data.data),
@@ -149,8 +147,7 @@ function LocationLevel({ name, control }: SearchCompProps) {
     </SelectForm>
   );
 }
-
-function MajorLevel({ name, control }: SearchCompProps) {
+export function MajorLevel({ name, control }: SearchCompProps) {
   const { isLoading, data } = useQuery({
     queryKey: ['scholarships', 'major'],
     queryFn: async () => axios.get<IResponse<{ major: string[] }>>('/scholarship/list-major').then((res) => res.data.data),
