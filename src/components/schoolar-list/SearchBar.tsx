@@ -1,4 +1,4 @@
-import { ContinentOptions } from '@components/schoolar-list/constant';
+import { SchoolarShipValueOptions } from '@components/schoolar-list/constant';
 import { Skeleton } from '@components/Skeleton';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
@@ -13,11 +13,11 @@ import { z } from 'zod';
 const SchoolarShipsSearch = z.object({
   level: z.string(),
   major: z.string(),
-  continent: z.string(),
   location: z.string(),
   gpa: z.number().min(0).max(4),
   ielts: z.number().min(0).max(9),
   pay: z.number().min(0),
+  value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
 });
 export type SchoolarShipSearch = z.infer<typeof SchoolarShipsSearch>;
 
@@ -30,11 +30,12 @@ function SearchBar(props: SearchBarProps) {
   const form = useForm<SchoolarShipSearch>({
     defaultValues: props.defaultValues ?? {
       level: '',
-      continent: '',
       location: '',
       gpa: 0,
       ielts: 0,
       pay: 0,
+      major: '',
+      value: 'Học bổng toàn phần',
     },
   });
 
@@ -55,11 +56,11 @@ function SearchBar(props: SearchBarProps) {
           <ListLevel name="level" control={form.control} />
           <LocationLevel name="location" control={form.control} />
           <MajorLevel name="major" control={form.control} />
-          <InputForm control={form.control} name="gpa" label="Điểm trung bình" type="number" />
-          <InputForm control={form.control} name="ielts" label="Điểm IELTS" type="number" />
-          <InputForm control={form.control} name="pay" label="Học phí" type="number" />
-          <SelectForm control={form.control} name="continent" label="Khu vực" required>
-            {ContinentOptions.map((country) => (
+          <InputForm control={form.control} name="ielts" label="Điểm IELTS" type="number" min="0" max="9" />
+          <InputForm control={form.control} name="pay" label="Sinh hoạt phí mà bạn chi trả trong 1 tháng ($)" type="number" />
+          <InputForm control={form.control} name="GPA" label="Điểm GPA" type="number" min="0" max="4" />
+          <SelectForm control={form.control} name="value" label="Loại học bổng" required>
+            {SchoolarShipValueOptions.map((country) => (
               <SelectItem key={country.value} value={country.value}>
                 {country.value}
               </SelectItem>
@@ -72,7 +73,6 @@ function SearchBar(props: SearchBarProps) {
             onClick={() =>
               form.reset({
                 level: '',
-                continent: '',
                 location: '',
                 gpa: 0,
                 ielts: 0,

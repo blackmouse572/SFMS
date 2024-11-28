@@ -138,7 +138,7 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
         </NavigationMenuItem>
       </NavigationMenuList>
       <NavigationMenuList>
-        <Button.Root variant="outlined" size="sm" intent="gray">
+        <Button.Root variant="outlined" size="sm" intent="gray" href="/hoc-bong">
           <Button.Icon type="leading">
             <IconSearch />
           </Button.Icon>

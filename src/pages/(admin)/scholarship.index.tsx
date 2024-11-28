@@ -3,7 +3,7 @@ import { Filter } from '@components/craw-data/CrawDataFilterPanel';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { CreateScholarPanel, CreateScholarSchema, ScholarDetailPanel } from '@components/schoolar-list';
-import { ScholarTableFilter, type Filter as SchoolarFilter } from '@components/schoolar-list/ScholarshipTableFilter';
+import { ScholarTableFilter } from '@components/schoolar-list/ScholarshipTableFilter';
 import { useCreateScholarShip } from '@components/schoolar-list/useCreateScholarShip';
 import { useDeleteScholarship } from '@components/schoolar-list/useDeleteScholarship';
 import { useEditScholarship } from '@components/schoolar-list/useEditScholarShip';
@@ -52,6 +52,34 @@ function AdminScholarship() {
               <Text size="sm">{name}</Text>
             </div>
           );
+        },
+      },
+      {
+        accessorKey: 'GPA',
+        header: 'Điểm GPA',
+        cell: (info) => {
+          return <Text size="sm">{info.getValue() as number}</Text>;
+        },
+      },
+      {
+        accessorKey: 'ielts',
+        header: 'Điểm IELTS',
+        cell: (info) => {
+          return <Text size="sm">{info.getValue() as number}</Text>;
+        },
+      },
+      {
+        accessorKey: 'GPA',
+        header: 'Điểm GPA',
+        cell: (info) => {
+          return <Text size="sm">{info.getValue() as number}</Text>;
+        },
+      },
+      {
+        accessorKey: 'pay',
+        header: 'Học phí',
+        cell: (info) => {
+          return <Text size="sm">{info.getValue() as number}</Text>;
         },
       },
       {

@@ -1,4 +1,4 @@
-import { ContinentOptions } from '@components/schoolar-list/constant';
+import { ContinentOptions, SchoolarShipValueOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Editor from '@components/tailus-ui/editor/editor';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm } from '@components/tailus-ui/form';
@@ -26,6 +26,10 @@ export const CreateScholarSchema = z.object({
   description: z.string().min(3).max(5000),
   quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
+  ielts: z.number().min(0).max(9).optional(),
+  GPA: z.number().min(0).max(4).optional(),
+  pay: z.number().min(0).optional(),
+  value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
   image: z
     .array(z.union([z.string().url(), z.instanceof(File)]))
     .min(1, {
@@ -99,7 +103,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
       <SheetContent size="3xl" className="flex h-full flex-col gap-4 overflow-y-auto">
         <Form {...form}>
           <SheetHeader>
-            <SheetTitle>Tạo học bổng</SheetTitle>
+            <SheetTitle>{defaultValues?._id ? 'Cập nhật học bổng' : 'Tạo mới học bổng'}</SheetTitle>
           </SheetHeader>
           <SheetBody className="space-y-2 flex-1">
             <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
@@ -108,12 +112,24 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                 <InputForm control={form.control} name="quantity" required label="Số lượng" />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <InputForm control={form.control} name="location" label="Loại học bổng" required />
+                <InputForm control={form.control} name="location" label="Vị trí" required />
                 <SelectForm control={form.control} name="continent" label="Khu vực" required>
                   {ContinentOptions.map((country) => (
                     <SelectItem entry={country} key={country.value} />
                   ))}
                 </SelectForm>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputForm control={form.control} name="GPA" label="Điểm GPA" type="number" min="0" max="4" />
+                <SelectForm control={form.control} name="value" label="Loại học bổng" required>
+                  {SchoolarShipValueOptions.map((country) => (
+                    <SelectItem entry={country} key={country.value} />
+                  ))}
+                </SelectForm>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputForm control={form.control} name="pay" type="number" label="Mức phí" />
+                <InputForm control={form.control} name="ielts" type="number" label="Điểm ielts" min="0" max="9" />
               </div>
               <FormField
                 control={form.control}

@@ -1,3 +1,5 @@
+import { SchoolarShipValue } from '@lib/types';
+
 export const ContinentOptions = [
   {
     value: 'Châu Úc',
@@ -10,6 +12,15 @@ export const ContinentOptions = [
   },
   {
     value: 'Châu Á',
+  },
+];
+
+export const SchoolarShipValueOptions = [
+  {
+    value: SchoolarShipValue['Học bổng bán phần'],
+  },
+  {
+    value: SchoolarShipValue['Học bổng toàn phần'],
   },
 ];
 

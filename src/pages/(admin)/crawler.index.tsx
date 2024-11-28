@@ -73,12 +73,13 @@ function AdminCrawler() {
       },
       {
         accessorKey: 'location',
-        header: 'Location',
+        header: 'Địa điểm',
         cell: (info) => {
           const link = info.getValue() as CrawData['location'];
           return <Text size="sm">{link}</Text>;
         },
       },
+
       {
         accessorKey: 'createdAt',
         header: 'Craw lúc',

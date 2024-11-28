@@ -56,12 +56,21 @@ export interface IPagedResponse<T> {
     result: T[];
   };
 }
+
+export const SchoolarShipValue = {
+  'Học bổng toàn phần': 'Học bổng toàn phần',
+  'Học bổng bán phần': 'Học bổng bán phần',
+};
 export interface SchoolarShip {
   _id: string;
   name: string;
   image: string[];
   location: string;
   continent: string;
+  ielts?: number;
+  GPA?: number;
+  pay?: number;
+  value: keyof typeof SchoolarShipValue;
   level: string[];
   major: string[];
   quantity: number;
