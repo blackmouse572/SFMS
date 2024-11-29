@@ -1,9 +1,16 @@
 import { SchoolarShipValueOptions } from '@components/schoolar-list/constant';
-import { LocationLevel } from '@components/schoolar-list/SearchBar';
+import { ListLevel, MajorLevel, SearchCompProps } from '@components/schoolar-list/SearchBar';
 import { SubcribeSchema } from '@components/subscriber/SubscribeDialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import Button from '@components/tailus-ui/Button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@components/tailus-ui/Command';
+import { Form, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import Popover from '@components/tailus-ui/Popover';
 import { useUser } from '@lib/auth';
-import { TagInput } from 'emblor';
+import { IResponse } from '@lib/types';
+import { cn } from '@lib/utils';
+import { IconCaretDown, IconCheck } from '@tabler/icons-react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -35,80 +42,8 @@ function SubcribeForm({ onSubmit, form, defaultValues }: SubcribeFormProps) {
           <InputForm control={form.control} name="email" label="Email" value={user?.email} disabled />
           <InputForm control={form.control} name="name" label="Tên" value={user?.name} disabled />
         </div>
-        <FormField
-          control={form.control}
-          name={'level'}
-          defaultValue={[] as any}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Cấp
-                <span className="text-danger-500 ml-1">*</span>
-              </FormLabel>
-              <FormControl>
-                <TagInput
-                  styleClasses={{
-                    input: 'placeholder:text-caption rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
-                    inlineTagsContainer: '!rounded-btn focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
-                    tagList: {
-                      container: 'border-red-500',
-                    },
-                    tag: {
-                      body: '!rounded-card bg-soft-bg',
-                    },
-                  }}
-                  activeTagIndex={null}
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  setActiveTagIndex={() => {}}
-                  tags={field.value?.map((v) => ({ id: v, text: v }))}
-                  setTags={(newTags) => {
-                    const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={'major'}
-          defaultValue={[] as any}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Ngành học
-                <span className="text-danger-500 ml-1">*</span>
-              </FormLabel>
-              <FormControl>
-                <TagInput
-                  styleClasses={{
-                    input: 'placeholder:text-caption rounded-none focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
-                    inlineTagsContainer: '!rounded-btn focus:ring-0 focus-visible:ring-0 focus-visible:border-0 focus:outline-none',
-                    tagList: {
-                      container: 'border-red-500',
-                    },
-                    tag: {
-                      body: '!rounded-card bg-soft-bg',
-                    },
-                  }}
-                  activeTagIndex={null}
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  setActiveTagIndex={() => {}}
-                  tags={field.value?.map((v) => ({ id: v, text: v }))}
-                  setTags={(newTags) => {
-                    const value = (newTags as any).map((tag: Record<string, any>) => tag.text);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <ListLevel name="level" control={form.control} />
+        <MajorLevel name="major" control={form.control} />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <InputForm name="ielts" control={form.control} label="Điểm IELTS" type="number" min="0" max="9" />
           <InputForm name="GPA" control={form.control} label="Điểm GPA" type="number" min="0" max="4" />
@@ -129,4 +64,70 @@ function SubcribeForm({ onSubmit, form, defaultValues }: SubcribeFormProps) {
   );
 }
 
+export function LocationLevel({ name, control }: SearchCompProps) {
+  const { isLoading, data } = useQuery({
+    queryKey: ['scholarships', 'location'],
+    queryFn: async () => axios.get<IResponse<{ location: string[] }>>('/scholarship/list-country').then((res) => res.data.data),
+  });
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Vị trí</FormLabel>
+          <Popover.Root modal>
+            <Popover.Trigger asChild>
+              <Button.Root
+                variant="outlined"
+                role="combobox"
+                intent="gray"
+                className={cn(
+                  field.value && 'text-caption',
+                  'w-full text-start justify-between text-sm [&>span]:text-ellipsis [&>span]:overflow-hidden [&>span]:text-nowrap [&>span]:max-w-full'
+                )}
+              >
+                <Button.Label>{field.value ? data?.location.find((o) => o === field.value) : 'Chọn vị trí'}</Button.Label>
+                <Button.Icon type="trailing">
+                  <IconCaretDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button.Icon>
+              </Button.Root>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content fancy className={cn('max-w-xs z-[13] p-0 relative w-[320px]')}>
+                <Command
+                  className="w-full"
+                  shouldFilter={false}
+                  onValueChange={(v) => {
+                    field.onChange(v);
+                  }}
+                >
+                  <CommandInput placeholder="" className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>"Không có dữ liệu"</CommandEmpty>
+                    <CommandGroup>
+                      {data?.location?.map((language) => (
+                        <CommandItem
+                          value={language}
+                          key={language}
+                          onSelect={() => {
+                            field.onChange(language);
+                          }}
+                        >
+                          {language}
+                          <IconCheck className={cn('ml-auto h-4 w-4', language === field.value ? 'opacity-100' : 'opacity-0')} />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
 export default SubcribeForm;

@@ -17,7 +17,7 @@ const SchoolarShipsSearch = z.object({
   gpa: z.number().min(0).max(4),
   ielts: z.number().min(0).max(9),
   pay: z.number().min(0),
-  value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
+  value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']).optional(),
 });
 export type SchoolarShipSearch = z.infer<typeof SchoolarShipsSearch>;
 
@@ -59,7 +59,7 @@ function SearchBar(props: SearchBarProps) {
           <InputForm control={form.control} name="ielts" label="Điểm IELTS" type="number" min="0" max="9" />
           <InputForm control={form.control} name="pay" label="Sinh hoạt phí mà bạn chi trả trong 1 tháng ($)" type="number" />
           <InputForm control={form.control} name="GPA" label="Điểm GPA" type="number" min="0" max="4" />
-          <SelectForm control={form.control} name="value" label="Loại học bổng" required>
+          <SelectForm control={form.control} name="value" label="Loại học bổng">
             {SchoolarShipValueOptions.map((country) => (
               <SelectItem key={country.value} value={country.value}>
                 {country.value}
@@ -93,7 +93,7 @@ function SearchBar(props: SearchBarProps) {
     </Form>
   );
 }
-type SearchCompProps = {
+export type SearchCompProps = {
   name: string;
   control: any;
 };

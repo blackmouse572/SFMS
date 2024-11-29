@@ -18,12 +18,12 @@ import { z } from 'zod';
 
 export const CreateScholarSchema = z.object({
   _id: z.string().optional(),
-  name: z.string().min(3).max(255),
-  continent: z.string().min(3).max(255),
+  name: z.string().min(1).max(255),
+  continent: z.string().min(1).max(255),
   major: z.array(z.string()).nonempty(),
   level: z.array(z.string()).nonempty(),
-  location: z.string().min(3).max(255),
-  description: z.string().min(3).max(5000),
+  location: z.string().min(1).max(255),
+  description: z.string().min(1).max(5000),
   quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
   ielts: z.coerce.number().min(0).max(9).optional(),
