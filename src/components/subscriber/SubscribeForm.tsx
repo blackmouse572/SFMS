@@ -1,21 +1,25 @@
 import { SchoolarShipValueOptions } from '@components/schoolar-list/constant';
 import { LocationLevel } from '@components/schoolar-list/SearchBar';
-import { SubcribeSchema, SubscribeSchema } from '@components/subscriber/SubscribeDialog';
+import { SubcribeSchema } from '@components/subscriber/SubscribeDialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useUser } from '@lib/auth';
 import { TagInput } from 'emblor';
-import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
 type SubcribeFormProps = {
   onSubmit: (data: SubcribeSchema) => void;
   defaultValues?: Partial<SubcribeSchema>;
+  form: UseFormReturn<SubcribeSchema>;
 };
-function SubcribeForm({ onSubmit, defaultValues }: SubcribeFormProps) {
-  const form = useForm<SubcribeSchema>({
-    resolver: zodResolver(SubscribeSchema),
-    defaultValues: defaultValues,
-  });
+function SubcribeForm({ onSubmit, form, defaultValues }: SubcribeFormProps) {
+  const user = useUser();
+
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues]);
+
   return (
     <Form {...form}>
       <form
@@ -27,6 +31,10 @@ function SubcribeForm({ onSubmit, defaultValues }: SubcribeFormProps) {
           });
         })}
       >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <InputForm control={form.control} name="email" label="Email" value={user?.email} disabled />
+          <InputForm control={form.control} name="name" label="Tên" value={user?.name} disabled />
+        </div>
         <FormField
           control={form.control}
           name={'level'}

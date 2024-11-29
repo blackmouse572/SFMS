@@ -26,9 +26,9 @@ export const CreateScholarSchema = z.object({
   description: z.string().min(3).max(5000),
   quantity: z.coerce.number().optional(),
   isActive: z.boolean().default(true),
-  ielts: z.number().min(0).max(9).optional(),
-  GPA: z.number().min(0).max(4).optional(),
-  pay: z.number().min(0).optional(),
+  ielts: z.coerce.number().min(0).max(9).optional(),
+  GPA: z.coerce.number().min(0).max(4).optional(),
+  pay: z.coerce.number().min(0).optional(),
   value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
   image: z
     .array(z.union([z.string().url(), z.instanceof(File)]))

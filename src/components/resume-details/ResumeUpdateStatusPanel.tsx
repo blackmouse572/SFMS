@@ -89,7 +89,7 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
                           <div className="rounded-full bg-soft-bg aspect-square w-14 flex items-center justify-center">
                             <IconFileTypePdf className="size-6 opacity-35" />
                           </div>
-                          <Text>{field.value.name}</Text>
+                          <Text>{field.value?.name}</Text>
                           <Button.Root
                             size={'xs'}
                             className="absolute top-0 right-0"
