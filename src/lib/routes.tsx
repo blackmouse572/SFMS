@@ -64,6 +64,15 @@ export const router = createBrowserRouter([
                 },
                 Component: lazy(() => import('@pages/(content)/hoc-bong/[id].index')),
               },
+              {
+                path: '/hoc-bong/:id/apply',
+                Component: lazy(() => import('@pages/(content)/hoc-bong/apply.[id].index')),
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { getScholarshipDetails } = await import('@pages/(content)/hoc-bong/[id].loader');
+                  return getScholarshipDetails(id);
+                },
+              },
             ],
           },
           {
