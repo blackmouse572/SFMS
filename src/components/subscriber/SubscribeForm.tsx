@@ -1,16 +1,8 @@
 import { SchoolarShipValueOptions } from '@components/schoolar-list/constant';
-import { ListLevel, MajorLevel, SearchCompProps } from '@components/schoolar-list/SearchBar';
+import { ListLevel, LocationLevel, MajorLevel } from '@components/schoolar-list/SearchBar';
 import { SubcribeSchema } from '@components/subscriber/SubscribeDialog';
-import Button from '@components/tailus-ui/Button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@components/tailus-ui/Command';
-import { Form, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
-import Popover from '@components/tailus-ui/Popover';
+import { Form, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { useUser } from '@lib/auth';
-import { IResponse } from '@lib/types';
-import { cn } from '@lib/utils';
-import { IconCaretDown, IconCheck } from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -64,70 +56,70 @@ function SubcribeForm({ onSubmit, form, defaultValues }: SubcribeFormProps) {
   );
 }
 
-export function LocationLevel({ name, control }: SearchCompProps) {
-  const { isLoading, data } = useQuery({
-    queryKey: ['scholarships', 'location'],
-    queryFn: async () => axios.get<IResponse<{ location: string[] }>>('/scholarship/list-country').then((res) => res.data.data),
-  });
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Vị trí</FormLabel>
-          <Popover.Root modal>
-            <Popover.Trigger asChild>
-              <Button.Root
-                variant="outlined"
-                role="combobox"
-                intent="gray"
-                className={cn(
-                  field.value && 'text-caption',
-                  'w-full text-start justify-between text-sm [&>span]:text-ellipsis [&>span]:overflow-hidden [&>span]:text-nowrap [&>span]:max-w-full'
-                )}
-              >
-                <Button.Label>{field.value ? data?.location.find((o) => o === field.value) : 'Chọn vị trí'}</Button.Label>
-                <Button.Icon type="trailing">
-                  <IconCaretDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button.Icon>
-              </Button.Root>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content fancy className={cn('max-w-xs z-[13] p-0 relative w-[320px]')}>
-                <Command
-                  className="w-full"
-                  shouldFilter={false}
-                  onValueChange={(v) => {
-                    field.onChange(v);
-                  }}
-                >
-                  <CommandInput placeholder="" className="h-9" />
-                  <CommandList>
-                    <CommandEmpty>"Không có dữ liệu"</CommandEmpty>
-                    <CommandGroup>
-                      {data?.location?.map((language) => (
-                        <CommandItem
-                          value={language}
-                          key={language}
-                          onSelect={() => {
-                            field.onChange(language);
-                          }}
-                        >
-                          {language}
-                          <IconCheck className={cn('ml-auto h-4 w-4', language === field.value ? 'opacity-100' : 'opacity-0')} />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
+// export function LocationLevel({ name, control }: SearchCompProps) {
+//   const { isLoading, data } = useQuery({
+//     queryKey: ['scholarships', 'location'],
+//     queryFn: async () => axios.get<IResponse<{ location: string[] }>>('/scholarship/list-country').then((res) => res.data.data),
+//   });
+//   return (
+//     <FormField
+//       control={control}
+//       name={name}
+//       render={({ field }) => (
+//         <FormItem>
+//           <FormLabel>Vị trí</FormLabel>
+//           <Popover.Root modal>
+//             <Popover.Trigger asChild>
+//               <Button.Root
+//                 variant="outlined"
+//                 role="combobox"
+//                 intent="gray"
+//                 className={cn(
+//                   field.value && 'text-caption',
+//                   'w-full text-start justify-between text-sm [&>span]:text-ellipsis [&>span]:overflow-hidden [&>span]:text-nowrap [&>span]:max-w-full'
+//                 )}
+//               >
+//                 <Button.Label>{field.value ? data?.location.find((o) => o === field.value) : 'Chọn vị trí'}</Button.Label>
+//                 <Button.Icon type="trailing">
+//                   <IconCaretDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+//                 </Button.Icon>
+//               </Button.Root>
+//             </Popover.Trigger>
+//             <Popover.Portal>
+//               <Popover.Content fancy className={cn('max-w-xs z-[13] p-0 relative w-[320px]')}>
+//                 <Command
+//                   className="w-full"
+//                   shouldFilter={false}
+//                   onValueChange={(v) => {
+//                     field.onChange(v);
+//                   }}
+//                 >
+//                   <CommandInput placeholder="" className="h-9" />
+//                   <CommandList>
+//                     <CommandEmpty>"Không có dữ liệu"</CommandEmpty>
+//                     <CommandGroup>
+//                       {data?.location?.map((language) => (
+//                         <CommandItem
+//                           value={language}
+//                           key={language}
+//                           onSelect={() => {
+//                             field.onChange(language);
+//                           }}
+//                         >
+//                           {language}
+//                           <IconCheck className={cn('ml-auto h-4 w-4', language === field.value ? 'opacity-100' : 'opacity-0')} />
+//                         </CommandItem>
+//                       ))}
+//                     </CommandGroup>
+//                   </CommandList>
+//                 </Command>
+//               </Popover.Content>
+//             </Popover.Portal>
+//           </Popover.Root>
+//           <FormMessage />
+//         </FormItem>
+//       )}
+//     />
+//   );
+// }
 export default SubcribeForm;
