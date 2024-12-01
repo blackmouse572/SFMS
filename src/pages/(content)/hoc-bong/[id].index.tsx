@@ -7,7 +7,6 @@ import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text } from '@components/tailus-ui/typography';
-import UploadCVDialog from '@components/upload-cv/UploadCVDialog';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { SchoolarShip } from '@lib/types';
 import { IconImageInPicture } from '@tabler/icons-react';
@@ -90,7 +89,9 @@ function SchoolarshipDetails() {
       </section>
       <section className="sticky top-0 py-3 h-fit space-y-5 bg-soft-bg p-3 min-h-screen">
         <Text className="text-lg font-bold">Bạn muốn học bổng tại đây?</Text>
-        <UploadCVDialog scholarship={data} />
+        <Button.Root href={`/hoc-bong/${data._id}/apply`} variant="soft" size="lg" className="rounded-full">
+          <Button.Label>Nộp hồ sơ ngay</Button.Label>
+        </Button.Root>
         <SeparatorRoot />
         <Text className="text-lg font-bold">Học bổng liên quan</Text>
         <div className="space-y-4">
