@@ -40,15 +40,14 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
       );
     }
     return (
-      user.role.name === 'ADMIN' ||
-      (user.role.name === 'SUPER_ADMIN' && (
+      (user.role.name.toUpperCase() === 'ADMIN' || user.role.name.toUpperCase() === 'STAFF') && (
         <Button.Root className="bg-soft-bg" variant="outlined" size="xs" intent="gray" href="/admin">
           <Button.Icon size="xs" type="leading">
             <IconSettings2 />
           </Button.Icon>
           <Button.Label>Quản lý</Button.Label>
         </Button.Root>
-      ))
+      )
     );
   }, [path, user]);
   return (
