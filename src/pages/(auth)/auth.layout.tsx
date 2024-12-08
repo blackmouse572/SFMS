@@ -4,7 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 function NotAuthLayout() {
   const isAuthed = useIsAuthenticated();
   if (isAuthed) {
-    return <Navigate to="/user" />;
+    return <Navigate to="/" />;
   }
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 relative">

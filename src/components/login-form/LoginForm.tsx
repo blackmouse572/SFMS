@@ -7,6 +7,7 @@ import Label from '@components/tailus-ui/Label';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Link, Title } from '@components/tailus-ui/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconBrandGoogle } from '@tabler/icons-react';
 import { AxiosError } from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -85,6 +86,12 @@ function LoginForm() {
         <div className="space-y-2">
           <Button.Root type="submit" size="sm" className="w-full">
             <Button.Label>Đăng nhập</Button.Label>
+          </Button.Root>
+          <Button.Root variant="ghost" size="sm" intent="gray" type="button" className="w-full" href={`${import.meta.env.VITE_API_URL}/auth/google`}>
+            <Button.Icon>
+              <IconBrandGoogle />
+            </Button.Icon>
+            <Button.Label>Đăng nhập với Google</Button.Label>
           </Button.Root>
           <SeparatorRoot />
           <Button.Root variant="ghost" size="sm" type="button" className="w-full" href="/register">

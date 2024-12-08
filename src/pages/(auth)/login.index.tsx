@@ -1,8 +1,8 @@
 import LoginForm from '@components/login-form/LoginForm';
-import { useIsAuthenticated } from '@lib/auth';
-import { Navigate } from 'react-router-dom';
+import useGoogleCallback from '@hooks/useGoogleCallback';
 
 function LoginPage() {
+  useGoogleCallback();
   return <LoginForm />;
 }
 
