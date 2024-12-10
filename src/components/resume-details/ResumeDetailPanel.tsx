@@ -119,12 +119,28 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
                 <Text weight={'bold'}>Lịch sử</Text>
                 <div className="space-y-4">
                   {data.history.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
-                      <div>
-                        <Text size="sm">{h.updatedBy.email}</Text>
-                        <StatusBadge status={h.status} />
+                    <div key={i}>
+                      <div key={i} className="flex items-center gap-2">
+                        <Caption size="xs">{Intl.DateTimeFormat('vi-VN').format(new Date(h.updatedAt))}</Caption>
+                        <div>
+                          <Text size="sm">{h.updatedBy.email}</Text>
+                          <StatusBadge status={h.status} />
+                        </div>
                       </div>
+                      {h.note && (
+                        <div>
+                          <Text size="sm">
+                            <span className="font-medium">Note:</span> {h.note}
+                          </Text>
+                        </div>
+                      )}
+                      {h.urlCV && (
+                        <div>
+                          <Text size="sm">
+                            <span className="font-medium">URL CV:</span> <Link href={h.urlCV}>{h.urlCV.split('/').pop()}</Link>
+                          </Text>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

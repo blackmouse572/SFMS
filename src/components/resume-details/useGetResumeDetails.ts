@@ -20,6 +20,7 @@ export function useGetResumeDetails(id: string, option: Options = {}) {
           skipEmptyString: true,
         }
       );
+      console.log('details');
       return axios.get<IResponse<Resume>>(`/resumes/${id}?${qs}`).then((d) => d.data.data);
     },
     ...option,

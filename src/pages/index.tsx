@@ -1,3 +1,4 @@
+import AdvisorContactDialog from '@components/AdvisorContactDialog';
 import { FocusCard } from '@components/FocusCard';
 import { Navbar } from '@components/MainNavbar';
 import { ChatPopover } from '@components/messages';
@@ -6,12 +7,14 @@ import { Skeleton } from '@components/Skeleton';
 import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import InfiniteScroll from '@components/tailus-ui/InfiniteScroll';
+import SeparatorRoot from '@components/tailus-ui/Separator';
 import { useIsAuthenticated } from '@lib/auth';
 import axios from '@lib/axios';
 import { IPagedResponse, News } from '@lib/types';
 import { cn } from '@lib/utils';
-import { IconAward, IconBriefcase, IconSchool, IconWorld } from '@tabler/icons-react';
-import { Display, Text, Title } from '@tailus-ui/typography';
+import { FEATURE_DATA, REVIEW_DATA, STEP_DATA, WHY_DATA } from '@pages/(content)/hoc-bong/constant';
+import { IconAward, IconBriefcase, IconBulb, IconSchool, IconSparkles, IconStarFilled, IconWorld } from '@tabler/icons-react';
+import { Caption, Display, Text, Title } from '@tailus-ui/typography';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
@@ -28,6 +31,107 @@ function App() {
         <StatsSection className="" />
         <AdvisorSection className="" />
         <NewsSection />
+        <section className="py-8 space-y-8 relative overflow-clip">
+          <div className="uppercase flex items-center justify-center gap-4 z-10">
+            <div className="">
+              <Title weight={{ initial: 'bold' }} className="text-primary-800" size="xl">
+                Tại sao nên chọn
+              </Title>
+              <Title weight={{ initial: 'bold' }} className="text-primary-800" size="3xl">
+                DU HỌC TẠI SFMS
+              </Title>
+            </div>
+            <Display weight={{ initial: 'bold' }} className="text-primary-800" size="7xl">
+              ?
+            </Display>
+          </div>
+          <div className="grid grid-cols-2 gap-4 w-full max-w-screen-xl mx-auto z-10">
+            {WHY_DATA.map((item) => (
+              <Card className="rounded-full flex items-center gap-4 bg-white" key={item}>
+                <div className="bg-primary-800 text-white w-full h-full rounded-full aspect-square flex items-center justify-center max-w-16">
+                  <IconBulb className="size-10" />
+                </div>
+                <Text className="text-sm text-pretty">{item}</Text>
+              </Card>
+            ))}
+          </div>
+          <img src="/images/element03.png" alt="apply-scholarship" className="-z-10 absolute w-full inset-0 scale-125 -top-32" />
+        </section>
+        <section
+          style={{
+            background: 'url(/images/element04.png) no-repeat center center',
+          }}
+          className=""
+        >
+          <div className="flex items-center justify-between bg-primary-800 bg-opacity-90 px-5 py-8">
+            {FEATURE_DATA.map((item) => (
+              <div className="flex items-center flex-col">
+                <img src={item.img} alt="feature" className="w-16" />
+                <Text className="text-white text-wrap max-w-[20ch] text-center">{item.title}</Text>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="py-8">
+          <Display className="text-center text-primary-900 max-w-6xl mx-auto" weight={{ initial: 'normal' }} size="4xl">
+            Lộ trình <span className="text-primary-500">đăng ký du học tại SFMS</span> tinh gọn,
+            <span>
+              <IconSparkles className="inline-block size-16 text-yellow-500" />
+            </span>
+            <br />
+            quy trình xử lý hồ sơ <span className="text-primary-500">nhanh chóng, đơn giản</span>
+          </Display>
+          <div className="flex items-center justify-between relative">
+            {STEP_DATA.map((item, index) => (
+              <div className="flex flex-col items-center py-4 z-10" key={item.title}>
+                <div className="bg-primary-800 text-white size-20 rounded-full flex items-center justify-center">
+                  <img src={item.img} alt="step" className="w-10" />
+                </div>
+                <Text size={'lg'}>Bước {index + 1}</Text>
+                <Text className="text-primary-900">{item.title}</Text>
+              </div>
+            ))}
+            <div className="absolute top-[38%] right-12 left-12 -translate-x-1.2 border border-dashed border-primary-200"></div>
+          </div>
+        </section>
+        <section className="bg-primary-800 py-8">
+          <div className="w-fit mx-auto space-y-2">
+            <Display className="text-center uppercase text-white max-w-6xl mx-auto" weight={{ initial: 'bold' }} size="4xl">
+              KHÔNG NGỪNG HOÀN THIỆN vì bạn
+            </Display>
+            <SeparatorRoot className="bg-orange-500" />
+            <Text size="xl" className="text-white">
+              Đem đến trải nghiệm đăng ký du học và được tư vấn bởi nhân viên được tối ưu nhất
+            </Text>
+          </div>
+          <div className="flex gap-2 snap-mandatory overflow-x-auto py-8 w-full snap-x px-4">
+            {REVIEW_DATA.map((item) => (
+              <Card key={item.content} className="min-w-[33%] space-y-2">
+                <div className="flex items-center gap-4 snap-center">
+                  <img src={item.avatar} className="w-16 h-16 rounded-full" alt={item.name} />
+                  <Caption>{item.content}</Caption>
+                </div>
+                <SeparatorRoot />
+                <div className="flex items-center gap-2 justify-between">
+                  <div>
+                    <Text weight={{ initial: 'bold' }}>{item.name}</Text>
+                    <Caption size="xs">{item.university}</Caption>
+                  </div>
+                  <div className="flex">
+                    <IconStarFilled className="text-yellow-500" />
+                    <IconStarFilled className="text-yellow-500" />
+                    <IconStarFilled className="text-yellow-500" />
+                    <IconStarFilled className="text-yellow-500" />
+                    <IconStarFilled className="text-yellow-500" />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <div className="w-fit mx-auto">
+            <AdvisorContactDialog />
+          </div>
+        </section>
         <ConnetSchoolSection className="" />
         {isAuth && <ChatPopover />}
       </div>

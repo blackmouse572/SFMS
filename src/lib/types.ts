@@ -175,6 +175,8 @@ export interface Resume {
 
 export interface History {
   status: string;
+  urlCV?: string;
+  note?: string;
   updatedAt: string;
   updatedBy: CreatedBy;
 }

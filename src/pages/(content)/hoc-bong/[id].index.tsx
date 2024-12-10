@@ -1,4 +1,5 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
+import AdvisorContactDialog from '@components/AdvisorContactDialog';
 import MdxPreview from '@components/MdxPreview';
 import { Skeleton } from '@components/Skeleton';
 import Badge from '@components/tailus-ui/Badge';
@@ -87,50 +88,62 @@ function SchoolarshipDetails() {
           <MdxPreview>{data?.description}</MdxPreview>
         </div>
       </section>
-      <section className="sticky top-0 py-3 h-fit space-y-5 bg-soft-bg p-3 min-h-screen">
-        <Text className="text-lg font-bold">Bạn muốn học bổng tại đây?</Text>
-        <Button.Root href={`/hoc-bong/${data._id}/apply`} variant="soft" size="lg" className="rounded-full">
-          <Button.Label>Nộp hồ sơ ngay</Button.Label>
-        </Button.Root>
+      <section className="sticky top-0 py-3 h-fit space-y-5  p-3 min-h-screen">
+        <Card variant="outlined" className="p-3">
+          <Text className="text-lg font-bold text-center">Quy trình nhận học bổng</Text>
+          <Text>Bước 1 : Hãy khoan nộp hồ sơ mà hãy lắng nghe tư vấn xem học bổng có phù hợp với bạn hay không.</Text>
+          <Text size="lg" className="font-bold italic text-primary-800">
+            Tư vấn để nhận được học bổng này
+          </Text>
+          <div>
+            <AdvisorContactDialog />
+          </div>
+          <Text>Bước 2 : Khi được tư vấn và xem học bổng có phù hợp với bạn hay không , sau đó hãy tiến hành nộp hồ sơ .</Text>
+          <Button.Root href={`/hoc-bong/${data._id}/apply`} variant="soft" size="lg" className="rounded-full">
+            <Button.Label>Nộp hồ sơ ngay</Button.Label>
+          </Button.Root>
+        </Card>
         <SeparatorRoot />
-        <Text className="text-lg font-bold">Học bổng liên quan</Text>
-        <div className="space-y-4">
-          <React.Suspense
-            fallback={
-              <>
-                <Skeleton className="w-full h-0" />
-                <Skeleton className="w-full h-0" />
-                <Skeleton className="w-full h-0" />
-                <Skeleton className="w-full h-0" />
-                <Skeleton className="w-full h-0" />
-              </>
-            }
-          >
-            <Await resolve={Promise.all([...related])} errorElement={<p>Error loading package location!</p>}>
-              {(packageLocation) => {
-                const related = _.uniqBy<SchoolarShip>(
-                  _.flatten<SchoolarShip>(packageLocation).filter((a) => a._id !== data._id),
-                  '_id'
-                );
+        <div className="bg-soft-bg">
+          <Text className="text-lg font-bold">Học bổng liên quan</Text>
+          <div className="space-y-4">
+            <React.Suspense
+              fallback={
+                <>
+                  <Skeleton className="w-full h-0" />
+                  <Skeleton className="w-full h-0" />
+                  <Skeleton className="w-full h-0" />
+                  <Skeleton className="w-full h-0" />
+                  <Skeleton className="w-full h-0" />
+                </>
+              }
+            >
+              <Await resolve={Promise.all([...related])} errorElement={<p>Error loading package location!</p>}>
+                {(packageLocation) => {
+                  const related = _.uniqBy<SchoolarShip>(
+                    _.flatten<SchoolarShip>(packageLocation).filter((a) => a._id !== data._id),
+                    '_id'
+                  );
 
-                return related.map((scholarship: SchoolarShip, i) => (
-                  <Card variant="outlined" className="px-0 py-0" key={scholarship._id}>
-                    <Link key={scholarship._id} to={`/hoc-bong/${scholarship._id}`}>
-                      <img src={scholarship.image[0]} alt={scholarship.name} className="w-full h-40 object-cover rounded-t-md" />
-                      <div className="p-3">
-                        <Text weight="medium" size="sm">
-                          {scholarship.name}
-                        </Text>
-                        <Caption size="xs">
-                          {scholarship.location} - {scholarship.level}
-                        </Caption>
-                      </div>
-                    </Link>
-                  </Card>
-                ));
-              }}
-            </Await>
-          </React.Suspense>
+                  return related.map((scholarship: SchoolarShip, i) => (
+                    <Card variant="outlined" className="px-0 py-0" key={scholarship._id}>
+                      <Link key={scholarship._id} to={`/hoc-bong/${scholarship._id}`}>
+                        <img src={scholarship.image[0]} alt={scholarship.name} className="w-full h-40 object-cover rounded-t-md" />
+                        <div className="p-3">
+                          <Text weight="medium" size="sm">
+                            {scholarship.name}
+                          </Text>
+                          <Caption size="xs">
+                            {scholarship.location} - {scholarship.level}
+                          </Caption>
+                        </div>
+                      </Link>
+                    </Card>
+                  ));
+                }}
+              </Await>
+            </React.Suspense>
+          </div>
         </div>
       </section>
     </div>

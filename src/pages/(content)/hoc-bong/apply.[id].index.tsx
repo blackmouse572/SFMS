@@ -1,68 +1,15 @@
+import AdvisorContactDialog from '@components/AdvisorContactDialog';
+import Accordion from '@components/tailus-ui/Accordion';
 import Badge from '@components/tailus-ui/Badge';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
+import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text, Title } from '@components/tailus-ui/typography';
 import UploadCVForm from '@components/upload-cv/UploadCvForm';
 import { SchoolarShip } from '@lib/types';
-import { IconBulb, IconCircleCheckFilled, IconSparkles } from '@tabler/icons-react';
+import { WHY_DATA, FEATURE_DATA, STEP_DATA, REVIEW_DATA, FAQ_DATA, PROFIT_DATA } from '@pages/(content)/hoc-bong/constant';
+import { IconBulb, IconCircleCheckFilled, IconSparkles, IconStarFilled } from '@tabler/icons-react';
 import { useLoaderData } from 'react-router-dom';
-const WHY_DATA = [
-  'Bạn còn có cơ hội nhận được các phần quà giá trị từ quỹ học bổng của công ty tu vấn SFMS.',
-  'Quy trình làm việc minh bạch, luôn tôn trọng và đặt lợi ích của khách hàng lên hàng đầu',
-  'Đội ngũ chuyên viên tư vấn chuyên môn cao, xây dựng lộ trình giáo dục tốt nhất, tận tình giải đáp 24/7',
-  'Hướng dẫn làm hồ sơ chứng minh tài chính, xin visa với tỷ lệ đạt cao, săn học bổng giá trị lên đến 100%',
-  'Cung cấp dịch vụ luyện tập phỏng vấn và chứng chỉ được thu thập từ các nguồn uy tín trên thế giới .',
-  'Giữ kết nối, chăm sóc và hỗ trợ học sinh trước khi bay, trong khi bay và sau khi bay',
-];
-const FEATURE_DATA = [
-  {
-    img: '/images/element05.svg',
-    title: 'Đội ngũ tư vấn chuyên nghiệp, tận tâm',
-  },
-  {
-    img: '/images/element06.svg',
-    title: 'Chương trình học bổng phù hợp',
-  },
-  {
-    img: '/images/element07.svg',
-    title: 'Đối tác của hơn 1.000+ trường trên thế giới',
-  },
-  {
-    img: '/images/element08.svg',
-    title: 'Cập nhật học bổng mới nhất liên tục ',
-  },
-];
-const STEP_DATA = [
-  {
-    img: '/images/step1.svg',
-    title: 'Phí hoàn thành hồ sơ',
-  },
-  {
-    img: '/images/step2.svg',
-    title: 'Giao Staff xử lý',
-  },
-  {
-    img: '/images/step3.svg',
-    title: 'Sửa hồ sơ',
-  },
-  {
-    img: '/images/step4.svg',
-    title: 'Hoàn thành hồ sơ',
-  },
-  {
-    img: '/images/step5.svg',
-    title: 'Nhận kết quả',
-  },
-];
-const PROFIT_DATA = [
-  'Được tư vấn miễn phí về học bổng và du học.',
-
-  'Staff sửa hồ sơ cho ứng viên cho đến khi hoàn hảo. ',
-
-  'Được SFMS hỗ trợ nộp hồ sơ xin học bổng .',
-
-  'Được làm các bài kiểm tra luyện tập để thi chứng chỉ cũng như những câu hỏi phỏng vấn .',
-];
 function ApplyScholarship() {
   const scholarship = useLoaderData() as SchoolarShip;
 
@@ -155,15 +102,71 @@ function ApplyScholarship() {
           <div className="absolute top-[38%] right-12 left-12 -translate-x-1.2 border border-dashed border-primary-200"></div>
         </div>
       </section>
+      <section className="bg-primary-800 py-8">
+        <div className="w-fit mx-auto space-y-2">
+          <Display className="text-center uppercase text-white max-w-6xl mx-auto" weight={{ initial: 'bold' }} size="4xl">
+            KHÔNG NGỪNG HOÀN THIỆN vì bạn
+          </Display>
+          <SeparatorRoot className="bg-orange-500" />
+          <Text size="xl" className="text-white">
+            Đem đến trải nghiệm đăng ký du học và được tư vấn bởi nhân viên được tối ưu nhất
+          </Text>
+        </div>
+        <div className="flex gap-2 snap-mandatory overflow-x-auto py-8 w-full snap-x px-4">
+          {REVIEW_DATA.map((item) => (
+            <Card key={item.content} className="min-w-[33%] space-y-2">
+              <div className="flex items-center gap-4 snap-center">
+                <img src={item.avatar} className="w-16 h-16 rounded-full" alt={item.name} />
+                <Caption>{item.content}</Caption>
+              </div>
+              <SeparatorRoot />
+              <div className="flex items-center gap-2 justify-between">
+                <div>
+                  <Text weight={{ initial: 'bold' }}>{item.name}</Text>
+                  <Caption size="xs">{item.university}</Caption>
+                </div>
+                <div className="flex">
+                  <IconStarFilled className="text-yellow-500" />
+                  <IconStarFilled className="text-yellow-500" />
+                  <IconStarFilled className="text-yellow-500" />
+                  <IconStarFilled className="text-yellow-500" />
+                  <IconStarFilled className="text-yellow-500" />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+        <div className="w-fit mx-auto">
+          <AdvisorContactDialog />
+        </div>
+      </section>
+      <section className="py-8 px-4 flex">
+        <div>
+          <Display size="4xl" className="text-primary-800">
+            SFMS giúp bạn tháo gỡ thắc mắc
+          </Display>
+          <img src="/images/element10.png" alt="apply-scholarship" width={812} height={372} />
+        </div>
+        <div>
+          <Accordion.Root type="multiple" className="">
+            {FAQ_DATA.map((item) => (
+              <Accordion.Item value={item.question} key={FAQ_DATA.indexOf(item)}>
+                <Accordion.Trigger>{item.question}</Accordion.Trigger>
+                <Accordion.Content>{item.answer}</Accordion.Content>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        </div>
+      </section>
       <section className="bg-primary-800 flex gap-5 py-8 px-4" id="apply-scholarship">
         <img src="/images/element09.png" alt="apply-scholarship" className="flex-shrink-0 aspect-square" />
         <Card fancy className="flex-1 flex flex-col gap-4">
           <div className="">
             <div className="flex flex-col items-center gap-4 text-center">
               <Title>Phí hoàn thành hồ sơ</Title>
-              <Title>3.000.000 VND</Title>
+              <Title>300.000 VND</Title>
               <Caption>
-                <span className="line-through">4.000.000 VND</span>
+                <span className="line-through">1.000.000 VND</span>
                 <Badge className="ml-2 decoration-current inline" color="red">
                   -25%
                 </Badge>

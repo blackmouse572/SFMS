@@ -7,7 +7,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 function AdminLayout() {
   const user = useUser();
-  if (user?.role.name !== ROLE.ADMIN && user?.role.name !== ROLE.SUPER_ADMIN) {
+  if (!user) return null;
+  if (user?.role && typeof user.role === 'object' && 'name' in user.role && user.role.name === ROLE.USER) {
     return <Navigate to="/" />;
   }
   return (

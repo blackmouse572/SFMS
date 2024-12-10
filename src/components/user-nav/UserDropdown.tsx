@@ -40,7 +40,7 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
       );
     }
     return (
-      (user.role.name.toUpperCase() === 'ADMIN' || user.role.name.toUpperCase() === 'STAFF') && (
+      (user.role.name.toUpperCase() === 'ADMIN' || user.role.name.toUpperCase() === 'STAFF' || user.role.name.toUpperCase() === 'SUPER_ADMIN') && (
         <Button.Root className="bg-soft-bg" variant="outlined" size="xs" intent="gray" href="/admin">
           <Button.Icon size="xs" type="leading">
             <IconSettings2 />

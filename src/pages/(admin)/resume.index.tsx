@@ -1,6 +1,7 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
+import { ReassignPanel } from '@components/reassign/ReassignPanel';
 import ResumeDetailPanel from '@components/resume-details/ResumeDetailPanel';
 import { ResumeUpdateStatusPanel, UpdateResumeStatusSchema } from '@components/resume-details/ResumeUpdateStatusPanel';
 import StatusBadge from '@components/resume-details/StatusBadge';
@@ -11,7 +12,7 @@ import { Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Resume, SchoolarShip } from '@lib/types';
 import { DownloadIcon } from '@radix-ui/react-icons';
-import { IconAbacus, IconEye } from '@tabler/icons-react';
+import { IconAbacus, IconEye, IconTransfer } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -31,6 +32,7 @@ function AdminResume() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
   const [isUpdateStatusPanelOpen, setIsUpdateStatusPanelOpen] = useState(false);
+  const [tranferPanelOpen, setTranferPanelOpen] = useState(false);
   const [filter, setFilter] = useState<Record<string, any>>();
 
   const { data, isFetchingNextPage, fetchNextPage, isLoading } = useResumeList({ filter });
@@ -84,6 +86,14 @@ function AdminResume() {
               intent: 'secondary',
               onClick: () => setIsUpdateStatusPanelOpen(true),
               icon: <IconAbacus />,
+            },
+            {
+              label: 'Giao staff xử lý',
+              size: 'sm',
+              variant: 'soft',
+              intent: 'success',
+              onClick: () => setTranferPanelOpen(true),
+              icon: <IconTransfer />,
             },
             {
               label: 'Xóa',
@@ -177,6 +187,14 @@ function AdminResume() {
         item={selectedItems?.[0]}
         onSubmit={(data) => {
           onStatusUpdate(data);
+        }}
+      />
+      <ReassignPanel
+        open={tranferPanelOpen}
+        onOpenChange={setTranferPanelOpen}
+        defaultValues={{
+          id: selectedItems?.[0]?._id ?? '',
+          staff: '',
         }}
       />
       <DataTable
