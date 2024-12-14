@@ -4,7 +4,7 @@ import DataTable from '@components/data-table/DataTable';
 import TopBar from '@components/data-table/Topbar';
 import ResumeDetailPanel from '@components/resume-details/ResumeDetailPanel';
 import StatusBadge from '@components/resume-details/StatusBadge';
-import { UpdateResumePanel, UpdateResumeSchema } from '@components/resume-details/UpdateResumePanel';
+import { UpdateResumePanel, UpdateResumeSchema } from '@components/resume-details/UserUpdateResumePanel';
 import { useUpdateResumeStatus } from '@components/resume-details/useUpdateResumeStatus';
 import Button from '@components/tailus-ui/Button';
 import { Caption, Text } from '@components/tailus-ui/typography';

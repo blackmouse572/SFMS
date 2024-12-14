@@ -147,6 +147,8 @@ export const ResumeStatus = {
   'Giao staff xử lý': 'Giao staff xử lý',
   'Sửa hồ sơ': 'Sửa hồ sơ',
   'Hoàn chỉnh hồ sơ': 'Hoàn chỉnh hồ sơ',
+  'Thanh toán lần 2': 'Thanh toán lần 2',
+  'Đang chờ thanh toán': 'Đang chờ thanh toán',
   'Chờ kết quả': 'Chờ kết quả',
   'Đã hoàn tất': 'Đã hoàn tất',
 };

@@ -1,6 +1,7 @@
 import CopyButton from '@components/CopyButton';
 import StatusBadge from '@components/resume-details/StatusBadge';
 import { useGetResumeDetails } from '@components/resume-details/useGetResumeDetails';
+import useGetResumePayment from '@components/resume-details/useGetResumePayment';
 import { Skeleton } from '@components/Skeleton';
 import Button from '@components/tailus-ui/Button';
 import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
@@ -21,6 +22,9 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
   const { item, ...rest } = props;
   const { isLoading, data } = useGetResumeDetails(item?._id ?? '', {
     enabled: !!item && rest.open,
+  });
+  const { data: paymentLink } = useGetResumePayment(item?._id ?? '', {
+    enabled: !!item && rest.open && (data?.status === 'Thanh toán lần 2' || data?.status === 'Đang chờ thanh toán'),
   });
   const table = useMemo(() => {
     if (!data) return [];
@@ -83,8 +87,19 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
             ),
           }
         : {},
+      paymentLink?.data.data
+        ? {
+            label: 'Link thanh toán',
+            value: (
+              <Link size={'sm'} href={paymentLink.data.data.checkoutUrl} target="_blank">
+                Đi đến trang thanh toán
+              </Link>
+            ),
+            action: <CopyButton intent="gray" size="xs" variant="soft" content={data.orderCode} />,
+          }
+        : null,
     ];
-  }, [data]);
+  }, [data, paymentLink]);
   return (
     <Sheet {...rest}>
       <SheetContent size="lg" className="flex h-full flex-col gap-4 overflow-auto">
@@ -106,13 +121,17 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
             <div className="space-y-8">
               <Table className="border-separate border-spacing-y-2">
                 <TableBody className="gap-1 space-y-3">
-                  {table.map(({ label, value, action }) => (
-                    <TableRow key={label} className="border-none group [&>td]:py-2 relative">
-                      <TableCell className="bg-soft-bg font-medium text-nowrap">{label}</TableCell>
-                      <TableCell className="font-normal">{value}</TableCell>
-                      {action && <div className="absolute top-1/2 right-0 hidden group-hover:inline-block -translate-y-1/2">{action}</div>}
-                    </TableRow>
-                  ))}
+                  {table.map((item) => {
+                    if (!item) return;
+                    const { label, value, action } = item;
+                    return (
+                      <TableRow key={label} className="border-none group [&>td]:py-2 relative">
+                        <TableCell className="bg-soft-bg font-medium text-nowrap">{label}</TableCell>
+                        <TableCell className="font-normal">{value}</TableCell>
+                        {action && <div className="absolute top-1/2 right-0 hidden group-hover:inline-block -translate-y-1/2">{action}</div>}
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
               <div className="space-y-2">

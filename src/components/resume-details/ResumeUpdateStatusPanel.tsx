@@ -2,7 +2,7 @@ import StatusBadge from '@components/resume-details/StatusBadge';
 import { useGetResumeDetails } from '@components/resume-details/useGetResumeDetails';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
-import { Form, FormField, FormItem, FormLabel, FormMessage, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { Caption, Link, Text } from '@components/tailus-ui/typography';
 import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE } from '@components/upload-cv/UploadCVDialog';
@@ -17,6 +17,7 @@ import { z } from 'zod';
 export const UpdateResumeStatusSchema = z.object({
   id: z.string(),
   status: z.string().min(1),
+  note: z.string().optional(),
   urlCv: z
     .instanceof(File, {
       message: 'File không hợp lệ, vui lòng chọn file pdf, jpg, png, jpeg',
@@ -74,14 +75,17 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
         <SheetBody className="flex-1">
           <Form {...form}>
             <form id="update-status" className="flex-1 space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <SelectForm label="Trạng thái" control={form.control} name="status">
-                {Object.values(ResumeStatus).map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
-                ))}
+              <SelectForm label="Trạng thái" control={form.control} required name="status">
+                {Object.values(ResumeStatus)
+                  .filter((a) => a !== ResumeStatus['Giao staff xử lý'])
+                  .map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
               </SelectForm>
               <input type="hidden" {...form.register('id')} />
+              <InputForm control={form.control} name="note" label="Ghi chú" />
               <FormField
                 control={form.control}
                 name="urlCv"
