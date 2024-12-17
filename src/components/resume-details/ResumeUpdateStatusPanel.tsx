@@ -58,6 +58,7 @@ export function ResumeUpdateStatusPanel(props: ResumeDetailPanel) {
     form.reset({
       id: item?._id,
       status: item?.status,
+      note: '',
       urlCv: null,
     });
   }, [form, item]);

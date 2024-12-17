@@ -1,4 +1,3 @@
-import { getScholarShipKey } from '@components/schoolar-list/constant';
 import axios from '@lib/axios';
 import { CrawData, IPagedRequest, IPagedResponse } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -15,7 +14,7 @@ type UseGetProps = {
 export function useGetCrawData(props: UseGetProps) {
   const { filter, request } = props;
   return useInfiniteQuery<IPagedResponse<CrawData>>({
-    queryKey: getScholarShipKey.list(filter),
+    queryKey: ['crawler'],
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,

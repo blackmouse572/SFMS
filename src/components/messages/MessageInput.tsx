@@ -1,3 +1,4 @@
+// import { useMessageContext } from '@components/messages/MessageProvider';
 import Badge from '@components/tailus-ui/Badge';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
@@ -5,15 +6,14 @@ import { Form, FormField, InputForm } from '@components/tailus-ui/form';
 import { InputProps } from '@components/tailus-ui/Input';
 import { Caption } from '@components/tailus-ui/typography';
 import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE } from '@components/upload-cv/UploadCVDialog';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@lib/utils';
 import { IconFile, IconPaperclip, IconSend, IconX } from '@tabler/icons-react';
 import { button } from '@tailus/themer';
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-const ChatSchema = z.object({
+export const ChatSchema = z.object({
   text: z.string().min(3),
   files: z
     .array(z.instanceof(File), {
@@ -35,13 +35,7 @@ type MessageInputProps = {
   sendMessage: (text: string, files: File[]) => void;
 } & InputProps;
 function MessageInput({ sendMessage, className, disabled, ...rest }: MessageInputProps) {
-  const form = useForm<z.infer<typeof ChatSchema>>({
-    resolver: zodResolver(ChatSchema),
-    defaultValues: {
-      text: '',
-    },
-    disabled: disabled,
-  });
+  const form = useFormContext<z.infer<typeof ChatSchema>>();
   const files = form.watch('files');
 
   return (

@@ -3,16 +3,16 @@ import { MessageBubble } from '@components/messages/MessageBubble';
 import MessageInput from '@components/messages/MessageInput';
 import { MessageList } from '@components/messages/MessageList';
 import { useChat } from '@components/messages/useChat';
+import { useOpen } from '@components/messages/useOpenProvider';
 import { Skeleton } from '@components/Skeleton';
 import Button from '@components/tailus-ui/Button';
 import Popover from '@components/tailus-ui/Popover';
 import { Title } from '@components/tailus-ui/typography';
 import { IconArrowDown, IconLoader2, IconMessage2, IconX } from '@tabler/icons-react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 // export type ChatPopoverProps = {};
 export function ChatPopover() {
-  const [isOpen, setIsOpen] = useState(false);
-
+  const { isOpen, setIsOpen } = useOpen();
   const messageListRef = useRef<HTMLDivElement>(null);
 
   const {

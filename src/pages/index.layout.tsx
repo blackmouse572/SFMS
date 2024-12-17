@@ -1,7 +1,7 @@
+import { OpenProvider } from '@components/messages/useOpenProvider';
 import { Skeleton } from '@components/Skeleton';
 import { customErrorMap } from '@lib/zod';
 import { QueryClient } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { z } from 'zod';

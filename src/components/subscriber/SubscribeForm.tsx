@@ -34,8 +34,8 @@ function SubcribeForm({ onSubmit, form, defaultValues }: SubcribeFormProps) {
           <InputForm control={form.control} name="email" label="Email" value={user?.email} disabled />
           <InputForm control={form.control} name="name" label="Tên" value={user?.name} disabled />
         </div>
-        <ListLevel name="level" control={form.control} />
-        <MajorLevel name="major" control={form.control} />
+        <ListLevel name="level.0" control={form.control} />
+        <MajorLevel name="major.0" control={form.control} />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <InputForm name="ielts" control={form.control} label="Điểm IELTS" type="number" min="0" max="9" />
           <InputForm name="GPA" control={form.control} label="Điểm GPA" type="number" min="0" max="4" />

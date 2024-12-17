@@ -15,9 +15,23 @@ import { z } from 'zod';
 export const SubscribeSchema = z.object({
   major: z.array(z.string().min(3).max(255)).nonempty(),
   level: z.array(z.string().min(3).max(255)).nonempty(),
-  ielts: z.coerce.number().min(0).max(9),
-  GPA: z.coerce.number().min(0).max(4),
-  pay: z.coerce.number().min(0),
+  ielts: z.coerce
+    .number({
+      message: 'Vui lòng nhập số',
+    })
+    .min(0)
+    .max(9),
+  GPA: z.coerce
+    .number({
+      message: 'Vui lòng nhập số',
+    })
+    .min(0)
+    .max(4),
+  pay: z.coerce
+    .number({
+      message: 'Vui lòng nhập số',
+    })
+    .min(0),
   value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
   location: z.string().min(3).max(255),
 });
@@ -97,6 +111,8 @@ function SubscribeDialog() {
                 </Button.Root>
               </Dialog.Close>
               <DropdownButton
+                form={'subscribe-form'}
+                type="submit"
                 size="sm"
                 menu={[
                   {

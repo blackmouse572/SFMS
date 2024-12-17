@@ -1,13 +1,14 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import AdvisorContactDialog from '@components/AdvisorContactDialog';
 import MdxPreview from '@components/MdxPreview';
+import QuickChatButton from '@components/QuickChatButton';
 import { Skeleton } from '@components/Skeleton';
 import Badge from '@components/tailus-ui/Badge';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import SeparatorRoot from '@components/tailus-ui/Separator';
-import { Caption, Display, Text } from '@components/tailus-ui/typography';
+import { Caption, Display, Text, Title } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { SchoolarShip } from '@lib/types';
 import { IconImageInPicture } from '@tabler/icons-react';
@@ -70,19 +71,43 @@ function SchoolarshipDetails() {
             </Card>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
-          {data.major.map((major) => (
-            <Badge key={major} variant="outlined" color="primary">
-              #{major}
-            </Badge>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {data.level.map((major) => (
-            <Badge key={major} variant="outlined" intent="secondary">
-              #{major}
-            </Badge>
-          ))}
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-1">
+            {data.major.map((major) => (
+              <Badge key={major} variant="outlined" color="primary">
+                #{major}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {data.level.map((major) => (
+              <Badge key={major} variant="outlined" intent="secondary">
+                #{major}
+              </Badge>
+            ))}
+          </div>
+          <Card variant="soft" className="grid grid-cols-3 md:grid-cols-5 divide-x [&>div]:px-4">
+            <div>
+              <Title size="base">IELTS</Title>
+              <Text>{data.ielts}</Text>
+            </div>
+            <div>
+              <Title size="base">GPA</Title>
+              <Text size="sm">{data.GPA}</Text>
+            </div>
+            <div>
+              <Title size="base">Số lượng</Title>
+              <Text size="sm">{data.quantity}</Text>
+            </div>
+            <div>
+              <Title size="base">Loại học bổng</Title>
+              <Text size="sm">{data.value}</Text>
+            </div>
+            <div>
+              <Title size="base">Phí sinh hoạt </Title>
+              <Text size="sm">{data.pay}/tháng</Text>
+            </div>
+          </Card>
         </div>
         <div>
           <MdxPreview>{data?.description}</MdxPreview>
@@ -95,8 +120,11 @@ function SchoolarshipDetails() {
           <Text size="lg" className="font-bold italic text-primary-800">
             Tư vấn để nhận được học bổng này
           </Text>
-          <div>
+          <div className="space-y-4 [&>button]:w-full">
             <AdvisorContactDialog />
+            <QuickChatButton scholarship={data} size="lg" className="rounded-full w-full">
+              <Button.Label>Chat với tư vấn viên</Button.Label>
+            </QuickChatButton>
           </div>
           <Text>Bước 2 : Khi được tư vấn và xem học bổng có phù hợp với bạn hay không , sau đó hãy tiến hành nộp hồ sơ .</Text>
           <Button.Root href={`/hoc-bong/${data._id}/apply`} variant="soft" size="lg" className="rounded-full">

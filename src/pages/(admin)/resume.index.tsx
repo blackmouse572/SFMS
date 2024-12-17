@@ -47,8 +47,16 @@ function AdminResume() {
   const onStatusUpdate = async (data: UpdateResumeStatusSchema) => {
     toast.promise(updateStatus(data), {
       loading: 'Đang cập nhật trạng thái...',
-      success: () => {
+      success: (res) => {
         setIsUpdateStatusPanelOpen(false);
+        if (data.status === 'Thanh toán lần 2') {
+          console.log(res);
+          const paymentLink = res.data.data.payment.checkoutUrl;
+          // copy to clipboard
+          navigator.clipboard.writeText(paymentLink);
+          toast.info('Xem chi tiết để xem lại link');
+          return `Cập nhật trạng thái thành công. Link thanh toán đã được copy vào clipboard`;
+        }
         return 'Cập nhật trạng thái thành công';
       },
       error: (err) => err.message,

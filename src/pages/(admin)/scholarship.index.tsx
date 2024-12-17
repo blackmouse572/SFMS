@@ -95,12 +95,15 @@ function AdminScholarship() {
         accessorKey: 'major',
         header: 'Chủ đề',
         cell: (info) => {
-          const subjects = info.getValue() as string[];
+          const item = info.getValue() as string[] | string;
+          if (typeof item === 'string') {
+            return <Badge size="sm">{item}</Badge>;
+          }
           return (
             <div className="flex flex-wrap gap-1">
-              {subjects.map((s, i) => (
+              {item?.map((l, i) => (
                 <Badge size="sm" key={i}>
-                  {s}
+                  {l}
                 </Badge>
               ))}
             </div>
@@ -111,10 +114,13 @@ function AdminScholarship() {
         accessorKey: 'level',
         header: 'Cấp',
         cell: (info) => {
-          const levels = info.getValue() as string[];
+          const item = info.getValue() as string[] | string;
+          if (typeof item === 'string') {
+            return <Badge size="sm">{item}</Badge>;
+          }
           return (
             <div className="flex flex-wrap gap-1">
-              {levels.map((l, i) => (
+              {item?.map((l, i) => (
                 <Badge size="sm" key={i}>
                   {l}
                 </Badge>

@@ -2,6 +2,7 @@ import AdvisorContactDialog from '@components/AdvisorContactDialog';
 import { FocusCard } from '@components/FocusCard';
 import { Navbar } from '@components/MainNavbar';
 import { ChatPopover } from '@components/messages';
+import { OpenProvider } from '@components/messages/useOpenProvider';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { Skeleton } from '@components/Skeleton';
 import Card from '@components/tailus-ui/Card';
@@ -133,7 +134,7 @@ function App() {
           </div>
         </section>
         <ConnetSchoolSection className="" />
-        {isAuth && <ChatPopover />}
+        <OpenProvider>{isAuth && <ChatPopover />}</OpenProvider>
       </div>
     </main>
   );
