@@ -10,6 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text, Title } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
+import { useAuth } from '@lib/auth';
 import { SchoolarShip } from '@lib/types';
 import { IconImageInPicture } from '@tabler/icons-react';
 import _ from 'lodash';
@@ -19,6 +20,7 @@ import { Await, Link, useLoaderData, useParams } from 'react-router-dom';
 function SchoolarshipDetails() {
   const { id } = useParams();
   if (!id) throw new Error('id is required');
+  const { isAuthenticated } = useAuth();
   const { data, related } = useLoaderData() as {
     data: SchoolarShip;
     related: [majorRelated: Promise<SchoolarShip[]>, levelRelated: Promise<SchoolarShip[]>, continentRelated: Promise<SchoolarShip[]>];
@@ -121,13 +123,12 @@ function SchoolarshipDetails() {
             Tư vấn để nhận được học bổng này
           </Text>
           <div className="space-y-4 [&>button]:w-full">
-            <AdvisorContactDialog />
             <QuickChatButton scholarship={data} size="lg" className="rounded-full w-full">
               <Button.Label>Chat với tư vấn viên</Button.Label>
             </QuickChatButton>
           </div>
           <Text>Bước 2 : Khi được tư vấn và xem học bổng có phù hợp với bạn hay không , sau đó hãy tiến hành nộp hồ sơ .</Text>
-          <Button.Root href={`/hoc-bong/${data._id}/apply`} variant="soft" size="lg" className="rounded-full">
+          <Button.Root href={isAuthenticated ? `/hoc-bong/${data._id}/apply` : '/login'} variant="soft" size="lg" className="rounded-full">
             <Button.Label>Nộp hồ sơ ngay</Button.Label>
           </Button.Root>
         </Card>

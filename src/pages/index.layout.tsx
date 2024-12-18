@@ -1,4 +1,4 @@
-import { OpenProvider } from '@components/messages/useOpenProvider';
+import MessagePopoverProvider from '@components/messages/MessagePopoverProvider';
 import { Skeleton } from '@components/Skeleton';
 import { customErrorMap } from '@lib/zod';
 import { QueryClient } from '@tanstack/react-query';
@@ -30,7 +30,9 @@ function IndexLayout() {
         </React.Suspense>
       )}
       <Suspense fallback={<Loading />}>
-        <Outlet />
+        <MessagePopoverProvider>
+          <Outlet />
+        </MessagePopoverProvider>
       </Suspense>
     </main>
   );

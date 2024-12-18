@@ -148,6 +148,14 @@ function AdminResume() {
         },
       },
       {
+        accessorKey: 'user',
+        header: 'Staff',
+        cell: (row) => {
+          const scholarship = row.getValue() as { name: string };
+          return <Text size="sm">{scholarship?.name}</Text>;
+        },
+      },
+      {
         accessorKey: 'orderCode',
         header: 'Mã đơn hàng',
         cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,

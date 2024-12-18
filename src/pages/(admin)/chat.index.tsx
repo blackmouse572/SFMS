@@ -4,6 +4,7 @@ import { ChatPanel } from '@components/messages-list/ChatPanel';
 import { useGetConversation } from '@components/messages-list/useGetConversations';
 import { Skeleton } from '@components/Skeleton';
 import Card from '@components/tailus-ui/Card';
+import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
@@ -57,7 +58,7 @@ function AdminChat() {
         {items.map((item) => (
           <Card
             variant="soft"
-            className="flex gap-2 data-[selected='true']:bg-soft-bg hover:bg-soft-bg bg-transparent transition-[background]"
+            className="flex gap-2 data-[selected='true']:bg-soft-bg hover:bg-soft-bg bg-transparent transition-[background] rounded-none cursor-default"
             onClick={() => setSelectedItem(item._id)}
             key={item._id}
             data-selected={selectedConversation?._id === item._id}
@@ -69,10 +70,15 @@ function AdminChat() {
               indicator={{
                 intent: item.status === false ? 'danger' : 'success',
               }}
+              className="flex-shrink-0"
             />
             <div>
               <Text weight={'medium'}>{item.user.email}</Text>
-              <Caption>{item.messages?.[0]?.text}</Caption>
+              <div className="space-y-2">
+                <Caption>{item.messages?.[0]?.text}</Caption>
+                <SeparatorRoot />
+                <Caption size="xs">Staff: {item.staff.email}</Caption>
+              </div>
             </div>
           </Card>
         ))}

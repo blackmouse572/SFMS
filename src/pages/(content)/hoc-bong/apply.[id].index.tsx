@@ -7,7 +7,7 @@ import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text, Title } from '@components/tailus-ui/typography';
 import UploadCVForm from '@components/upload-cv/UploadCvForm';
 import { SchoolarShip } from '@lib/types';
-import { WHY_DATA, FEATURE_DATA, STEP_DATA, REVIEW_DATA, FAQ_DATA, PROFIT_DATA } from '@pages/(content)/hoc-bong/constant';
+import { FAQ_DATA, FEATURE_DATA, PROFIT_DATA, REVIEW_DATA, STEP_DATA, WHY_DATA } from '@pages/(content)/hoc-bong/constant';
 import { IconBulb, IconCircleCheckFilled, IconSparkles, IconStarFilled } from '@tabler/icons-react';
 import { useLoaderData } from 'react-router-dom';
 function ApplyScholarship() {
@@ -163,7 +163,7 @@ function ApplyScholarship() {
         <Card fancy className="flex-1 flex flex-col gap-4">
           <div className="">
             <div className="flex flex-col items-center gap-4 text-center">
-              <Title>Phí hoàn thành hồ sơ</Title>
+              <Title>Phí hoàn thành hồ sơ lần 1</Title>
               <Title>300.000 VND</Title>
               <Caption>
                 <span className="line-through">1.000.000 VND</span>

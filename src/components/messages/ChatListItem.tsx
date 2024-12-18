@@ -9,7 +9,7 @@ export function ChatListItem(props: ChatListItemProps) {
   const { item, ...rest } = props;
   return (
     <div className="flex gap-2 items-center p-3 cursor-default hover:bg-soft-bg transition-[background]" {...rest}>
-      <AdminAvatar size="sm" src={item.avatar} />
+      <AdminAvatar size="sm" src={item.avatar} className="flex-shrink-0" />
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <Text weight={'semibold'}>{item.name}</Text>

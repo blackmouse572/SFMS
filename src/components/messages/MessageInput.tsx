@@ -36,7 +36,7 @@ type MessageInputProps = {
 } & InputProps;
 function MessageInput({ sendMessage, className, disabled, ...rest }: MessageInputProps) {
   const form = useFormContext<z.infer<typeof ChatSchema>>();
-  const files = form.watch('files');
+  const files = form?.watch('files');
 
   return (
     <Form {...form}>

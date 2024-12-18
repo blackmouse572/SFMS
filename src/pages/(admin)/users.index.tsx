@@ -4,6 +4,7 @@ import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { Caption, Text } from '@components/tailus-ui/typography';
 import UserDetailsPanel from '@components/user-details/UserDetailPanel';
 import { useUserList } from '@components/user-list';
+import { UpdateUserRolePanel } from '@components/user-list/UpdateUserRolePanel';
 import { useDeleteUser } from '@components/user-list/useDeleteUser';
 import { UserFilter, UserTableFilter } from '@components/user-list/UserTableFilter';
 import { AdminAvatar } from '@components/user-nav';
@@ -25,6 +26,7 @@ function AdminUsers() {
     ]);
   });
   const [filter, setFilter] = useState<UserFilter>();
+  const [isUpdateRolePanelOpen, setIsUpdateRolePanelOpen] = useState(false);
   const { data, isFetchingNextPage, fetchNextPage, isLoading } = useUserList({
     filter: {
       ...filter,
@@ -74,6 +76,13 @@ function AdminUsers() {
               intent: 'danger',
               variant: 'soft',
               onClick: () => onDeleteUser(selectedItems?.[0]?._id),
+            },
+            {
+              label: 'Chuyển quyền',
+              icon: <IconTrash />,
+              size: 'sm',
+              variant: 'soft',
+              onClick: () => setIsUpdateRolePanelOpen(true),
             },
           ]
         : [],
@@ -163,6 +172,7 @@ function AdminUsers() {
         isFilterActive={isFilterActive}
         totalItems={data?.pages?.[0].data.meta.total}
       />
+      <UpdateUserRolePanel open={isUpdateRolePanelOpen} onOpenChange={setIsUpdateRolePanelOpen} defaultValues={selectedItems?.[0]} />
       <UserTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <UserDetailsPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} user={selectedItems?.[0]} />
       <DataTable

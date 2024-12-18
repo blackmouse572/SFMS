@@ -14,16 +14,14 @@ function ContentLayout() {
     <BreadcrumbProvider>
       <OpenProvider>
         <SecondaryNavbar />
-        <MessagePopoverProvider>
-          <Navbar className="border-b" />
-          <div className="min-h-screen container mx-auto pt-4">
-            <MDX>
-              <AdminBreadcrumb />
-              <Outlet />
-            </MDX>
-          </div>
-          {isAuth && <ChatPopover />}
-        </MessagePopoverProvider>
+        <Navbar className="border-b" />
+        <div className="min-h-screen container mx-auto pt-4">
+          <MDX>
+            <AdminBreadcrumb />
+            <Outlet />
+          </MDX>
+        </div>
+        {isAuth && <ChatPopover />}
         <Footer />
       </OpenProvider>
     </BreadcrumbProvider>

@@ -9,7 +9,7 @@ export interface User {
   age: number;
   isActive: boolean;
   isDeleted: boolean;
-  role: Role | string;
+  role: Role;
   createdAt: string;
   updatedAt?: string;
   createdBy?: CreatedBy;
@@ -142,15 +142,22 @@ export interface CreatedBy {
   email: string;
 }
 
+// đã thanh toán lần 1
+// hợp đồng thanh toán
+// sửa hồ sơ
+// hoàn chỉnh hồ sơ
+// hồ sơ thất bại
+// thanh toán lần 2
+// hồ sơ thành công
+
 export const ResumeStatus = {
-  'Đã thanh toán': 'Đã thanh toán',
-  'Giao staff xử lý': 'Giao staff xử lý',
+  'Đã thanh toán lần 1': 'Đã thanh toán lần 1',
+  'Hợp đồng thanh toán': 'Hợp đồng thanh toán',
   'Sửa hồ sơ': 'Sửa hồ sơ',
   'Hoàn chỉnh hồ sơ': 'Hoàn chỉnh hồ sơ',
+  'Hồ sơ thất bại': 'Hồ sơ thất bại',
   'Thanh toán lần 2': 'Thanh toán lần 2',
-  'Đang chờ thanh toán': 'Đang chờ thanh toán',
-  'Chờ kết quả': 'Chờ kết quả',
-  'Đã hoàn tất': 'Đã hoàn tất',
+  'Hồ sơ thành công': 'Hồ sơ thành công',
 };
 
 export type ResumeStatus = keyof typeof ResumeStatus;
@@ -166,6 +173,10 @@ export interface Resume {
   scholarship: Pick<SchoolarShip, '_id' | 'name'>;
   history: History[];
   orderCode: string;
+  user: {
+    name: string;
+    _id: string;
+  };
   isDeleted: boolean;
   deletedAt?: string;
   createdAt: string;

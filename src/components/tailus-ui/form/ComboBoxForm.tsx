@@ -74,7 +74,7 @@ export function ComboBoxForm({
               </Button.Root>
             </Popover.Trigger>
             <Popover.Portal>
-              <Popover.Content fancy className={cn('max-w-xs z-[13] p-0 relative w-[320px]', popover?.content)}>
+              <Popover.Content fancy className={cn('w-[var(--radix-popover-trigger-width)] z-[13] p-0 relative', popover?.content)}>
                 <Command
                   className="w-full"
                   shouldFilter={false}
