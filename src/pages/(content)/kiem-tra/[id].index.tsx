@@ -6,7 +6,7 @@ import { RadioGroupForm } from '@components/tailus-ui/form/RadioGroup';
 import { Caption, Display, List, Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Quiz } from '@lib/types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLoaderData, useParams } from 'react-router-dom';
 
@@ -93,10 +93,10 @@ function QuizDetailPage() {
           <Card variant="soft" className="flex divide-x-2 items-center">
             <div className="px-5 w-1/3">
               <Text>Điểm số:</Text>
-              <Display>{score}</Display>
+              <Display>{score.toExponential(0)}</Display>
             </div>
             <List className="px-5 flex-1 h-full my-0" inside type="none">
-              <li>Số câu đúng: {data.question.length * (score / 100)}</li>
+              <li>Số câu đúng: {(data.question.length * (score / 100)).toExponential(0)}</li>
               <li>Tổng số câu: {data.question.length}</li>
             </List>
             <div className="px-5 flex flex-col items-stretch justify-between gap-3">

@@ -13,8 +13,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const SubscribeSchema = z.object({
-  major: z.array(z.string().min(3).max(255)).nonempty(),
-  level: z.array(z.string().min(3).max(255)).nonempty(),
+  major: z.array(z.string().min(1).max(255)).nonempty(),
+  level: z.array(z.string().min(1).max(255)).nonempty(),
   ielts: z.coerce
     .number({
       message: 'Vui lòng nhập số',
@@ -33,7 +33,7 @@ export const SubscribeSchema = z.object({
     })
     .min(0),
   value: z.enum(['Học bổng toàn phần', 'Học bổng bán phần']),
-  location: z.string().min(3).max(255),
+  location: z.string().min(1).max(255),
 });
 export type SubcribeSchema = z.infer<typeof SubscribeSchema>;
 
