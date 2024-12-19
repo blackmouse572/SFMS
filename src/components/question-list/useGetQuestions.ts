@@ -1,5 +1,5 @@
+import { getQuestionKey } from '@components/question-list/constant';
 import { Filter } from '@components/question-list/QuestionTableFilter';
-import { getStudyKey } from '@components/study-list/constant';
 import axios from '@lib/axios';
 import { IPagedRequest, IPagedResponse, Question } from '@lib/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ type UseGet = {
 export function useGetQuestion(props: UseGet) {
   const { filter, request } = props;
   return useInfiniteQuery<IPagedResponse<Question>>({
-    queryKey: getStudyKey.list(filter ?? {}),
+    queryKey: getQuestionKey.list(filter ?? {}),
     queryFn: ({ pageParam }) => {
       const paramsObj = {
         ...initialRequest,

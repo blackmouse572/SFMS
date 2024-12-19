@@ -12,9 +12,10 @@ import { z } from 'zod';
 
 export const CreateQuestionSchema = z.object({
   _id: z.string().optional(),
-  question: z.string().min(10).max(1000),
-  answer: z.string().min(10).max(1000),
-  option: z.array(z.string().min(10).max(1000)).nonempty(),
+  question: z.string().min(3).max(1000),
+  answer: z.string().min(3).max(1000),
+  option: z.array(z.string().min(3).max(1000)).nonempty(),
+  quiz: z.coerce.number().min(0),
 });
 export type CreateQuestionSchema = z.infer<typeof CreateQuestionSchema>;
 
@@ -53,6 +54,7 @@ export function CreateQuestionPanel(props: CreateQuestionPanelProps) {
                 <InputForm control={form.control} name="option.2" label="Lựa chọn 3" />
                 <InputForm control={form.control} name="option.3" label="Lựa chọn 4" />
               </div>
+              <InputForm control={form.control} name="quiz" label="Bài kiểm tra" type="number" />
             </form>
           </SheetBody>
           <SheetFooter>
