@@ -26,7 +26,7 @@ function AdminChat() {
   const selectedConversation = items.find((item) => item._id === selectedItem);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && items.length > 0) {
       setSelectedItem(items[0]._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
