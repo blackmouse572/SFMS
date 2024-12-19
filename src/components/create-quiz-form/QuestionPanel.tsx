@@ -13,22 +13,31 @@ type QuestionPanelProps = {
   options?: Question[];
   isLoading?: boolean;
   onSearch?: (search: string) => void;
+  onQuizSearch?: (search: string) => void;
 };
 
-export function QuestionPanel({ onAdd, options, isLoading, onSearch }: QuestionPanelProps) {
+export function QuestionPanel({ onAdd, options, isLoading, onQuizSearch, onSearch }: QuestionPanelProps) {
   const onSubmit = (data: Question) => {
     onAdd(data);
   };
   const [search, setSearch] = useState('');
+  const [quizSearch, setQuizSearch] = useState('');
+
   const debouncedSearchTerm = useDebounce(search, 200);
+  const debouncedQuizSearchTerm = useDebounce(quizSearch, 200);
 
   useEffect(() => {
     onSearch?.(debouncedSearchTerm);
   }, [debouncedSearchTerm, onSearch]);
 
+  useEffect(() => {
+    onQuizSearch?.(debouncedQuizSearchTerm);
+  }, [debouncedQuizSearchTerm, onQuizSearch]);
+
   return (
     <Card variant="soft" className="space-y-4">
       <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm câu hỏi" />
+      <Input value={quizSearch} onChange={(e) => setQuizSearch(e.target.value)} placeholder="Tìm bài kiểm tra" type="number" />
       <div className="space-y-4">
         {isLoading && (
           <>

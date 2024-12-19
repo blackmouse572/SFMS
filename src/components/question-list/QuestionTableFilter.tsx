@@ -1,9 +1,11 @@
+import { useGetQuizzes } from '@components/quiz-list/useGetQuiz';
 import Button from '@components/tailus-ui/Button';
 import { Form, InputForm } from '@components/tailus-ui/form';
-import Select from '@components/tailus-ui/Select';
+import { ComboBoxForm } from '@components/tailus-ui/form/ComboBoxForm';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { DialogProps } from '@radix-ui/react-dialog';
-import { IconCheck, IconFilter } from '@tabler/icons-react';
+import { IconFilter } from '@tabler/icons-react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -15,6 +17,7 @@ export const FilterSchema = z
   .object({
     question: z.string(),
     answer: z.string(),
+    quiz: z.string(),
   })
   .partial();
 
@@ -26,6 +29,7 @@ export function QuestionTableFilter(props: TableFilterProps) {
     defaultValues: {
       question: '',
       answer: '',
+      quiz: '',
     },
   });
 
@@ -55,6 +59,7 @@ export function QuestionTableFilter(props: TableFilterProps) {
             <SheetBody className="flex-1 space-y-4">
               <InputForm control={form.control} name="question" label="Câu hỏi" />
               <InputForm control={form.control} name="answer" label="Câu trả lời" />
+              <InputForm control={form.control} name="quiz" label="Bài kiểm tra" type="number" />
             </SheetBody>
             <SheetFooter className="">
               <Button.Root type="reset" intent="gray" variant="outlined" onClick={onReset}>
@@ -70,3 +75,22 @@ export function QuestionTableFilter(props: TableFilterProps) {
     </Sheet>
   );
 }
+
+type StaffSelectProps = {
+  control: any;
+  name: string;
+  label: string;
+  required?: boolean;
+};
+const QuizSelect = ({ control, name, label, required }: StaffSelectProps) => {
+  const [search, setSearch] = useState('');
+  const { data: infiniteData, isLoading } = useGetQuizzes({
+    filter: { name: search },
+  });
+  const data = infiniteData?.pages.flatMap((page) => page.data.result);
+  const transformedData = useMemo(() => {
+    return data?.map((d) => ({ id: d._id, text: d.title }));
+  }, [data]);
+
+  return <ComboBoxForm options={transformedData} control={control} name={name} label={label} onSearch={(value) => setSearch(value)} debounce={500} />;
+};

@@ -268,6 +268,7 @@ export interface Question {
   option: string[];
   createdBy: CreatedBy;
   isDeleted: boolean;
+  quiz: number;
   deletedAt?: string;
   createdAt: string;
   updatedAt?: string;

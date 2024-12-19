@@ -58,6 +58,11 @@ export default function AdminQuestion() {
         cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
       },
       {
+        accessorKey: 'quiz',
+        header: 'Bài kiểm tra',
+        cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
+      },
+      {
         accessorKey: 'createdBy',
         accessorFn: (row) => ({
           ...row.createdBy,

@@ -26,10 +26,11 @@ type CreateQuizFormProps = {
 function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
   const form = useForm<CreateQuizSchema>({ resolver: zodResolver(CreateQuizSchema), defaultValues });
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState({ question: '', quiz: '' });
   const { isLoading, data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetQuestion({
     filter: {
-      question: search,
+      question: search.question,
+      quiz: search.quiz,
     },
   });
   const [questions, setQuestions] = useState<Question[]>(defaultValues?.question ?? []);
@@ -104,7 +105,8 @@ function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
         <QuestionPanel
           options={items}
           isLoading={isLoading}
-          onSearch={setSearch}
+          onSearch={(e) => setSearch({ ...search, question: e })}
+          onQuizSearch={(e) => setSearch({ ...search, quiz: e })}
           onAdd={(question) => {
             append(question._id);
             setQuestions((prev) => [...prev, question]);

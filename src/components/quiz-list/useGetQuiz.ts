@@ -21,6 +21,7 @@ export function useGetQuizzes(props: UseGet) {
       const paramsObj = {
         ...initialRequest,
         current: pageParam,
+        name: filter?.name && new RegExp(filter.name, 'i'),
         type: filter?.type && new RegExp(filter.type, 'i'),
         populate: 'question',
         fields: 'question.question,question.option,question.answer',

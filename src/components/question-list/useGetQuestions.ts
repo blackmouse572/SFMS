@@ -23,6 +23,7 @@ export function useGetQuestion(props: UseGet) {
         current: pageParam,
         question: filter?.question && new RegExp(filter.question, 'i'),
         answer: filter?.answer && new RegExp(filter.answer, 'i'),
+        quiz: filter?.quiz,
       };
       const qs = queryString.stringify(paramsObj, {
         skipEmptyString: true,
