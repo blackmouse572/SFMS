@@ -120,7 +120,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
                 </SelectForm>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <InputForm control={form.control} name="GPA" label="Điểm GPA" type="number" min="0" max="4" />
+                <InputForm control={form.control} name="GPA" step=".01" label="Điểm GPA" type="number" min="0" max="4" />
                 <SelectForm control={form.control} name="value" label="Loại học bổng" required>
                   {SchoolarShipValueOptions.map((country) => (
                     <SelectItem entry={country} key={country.value} />
@@ -129,7 +129,7 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <InputForm control={form.control} name="pay" type="number" label="Mức phí" />
-                <InputForm control={form.control} name="ielts" type="number" label="Điểm ielts" min="0" max="9" />
+                <InputForm control={form.control} name="ielts" step=".01" type="number" label="Điểm ielts" min="0" max="9" />
               </div>
               <FormField
                 control={form.control}

@@ -56,9 +56,9 @@ function SearchBar(props: SearchBarProps) {
           <ListLevel name="level" control={form.control} />
           <LocationLevel name="location" control={form.control} />
           <MajorLevel name="major" control={form.control} />
-          <InputForm control={form.control} name="ielts" label="Điểm IELTS" type="number" min="0" max="9" />
+          <InputForm control={form.control} name="ielts" step=".01" label="Điểm IELTS" type="number" min="0" max="9" />
           <InputForm control={form.control} name="pay" label="Sinh hoạt phí mà bạn chi trả trong 1 tháng ($)" type="number" />
-          <InputForm control={form.control} name="GPA" label="Điểm GPA" type="number" min="0" max="4" />
+          <InputForm control={form.control} name="GPA" step=".01" label="Điểm GPA" type="number" min="0" max="4" />
           <SelectForm control={form.control} name="value" label="Loại học bổng">
             {SchoolarShipValueOptions.map((country) => (
               <SelectItem key={country.value} value={country.value}>
