@@ -1,5 +1,6 @@
 import { LEVEL_OPTIONS, VALUE_OPTIONS } from '@components/advisory-list/constant';
 import { useCreateAdvisory } from '@components/advisory/useCreateAdvisory';
+import { useDeleteAdvisory } from '@components/advisory/useDeleteAdvisory';
 import { ContinentOptions } from '@components/schoolar-list/constant';
 import Button from '@components/tailus-ui/Button';
 import Dialog from '@components/tailus-ui/Dialog';

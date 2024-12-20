@@ -5,6 +5,7 @@ import { useUpdateAdvisoryStatus } from '@components/advisory-details/useUpdateA
 import { AdvisoryTableFilter, Filter } from '@components/advisory-list/AdvisoryTableFilter';
 import StatusBadge from '@components/advisory-list/StatusBadge';
 import { useGetAdvisories } from '@components/advisory-list/useGetAdvisories';
+import { useDeleteAdvisory } from '@components/advisory/useDeleteAdvisory';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import Badge from '@components/tailus-ui/Badge';
@@ -30,6 +31,7 @@ function AdminAdvisory() {
   const [filter, setFilter] = useState<Filter>();
   const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetAdvisories({ filter });
   const { mutateAsync: updateStatus } = useUpdateAdvisoryStatus();
+  const { mutateAsync: deleteAdvisory } = useDeleteAdvisory();
 
   const columns = useMemo<ColumnDef<Advisory>[]>(
     () => [
@@ -152,6 +154,20 @@ function AdminAdvisory() {
     });
   };
 
+  const handleDeleteAdvisory = async () => {
+    const id = selectedScholar[0]?._id;
+    if (!id) return;
+
+    toast.promise(deleteAdvisory(id), {
+      loading: 'Đang xóa hồ sơ...',
+      success: 'Xóa hồ sơ thành công',
+      error: 'Xóa hồ sơ thất bại',
+      finally: () => {
+        setSelectedScholar([]);
+      },
+    });
+  };
+
   const actions = useMemo<TopbarAction[][]>(() => {
     return [
       [],
@@ -171,11 +187,18 @@ function AdminAdvisory() {
               intent: 'secondary',
               onClick: () => setIsUpdateStatusPanelOpen(true),
             },
+            {
+              label: 'Xóa',
+              size: 'sm',
+              variant: 'soft',
+              intent: 'danger',
+              onClick: handleDeleteAdvisory,
+            },
           ]
         : [],
       selectedScholar.length > 0 ? [] : [],
     ];
-  }, [selectedScholar.length]);
+  }, [handleDeleteAdvisory, selectedScholar.length]);
 
   return (
     <div className="space-y-2 mt-8">

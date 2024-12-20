@@ -4,7 +4,6 @@ import { Navbar } from '@components/MainNavbar';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { AdminBreadcrumb, BreadcrumbProvider } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import { ChatPopover } from '@components/messages';
-import MessagePopoverProvider from '@components/messages/MessagePopoverProvider';
 import { OpenProvider } from '@components/messages/useOpenProvider';
 import { useIsAuthenticated } from '@lib/auth';
 import { Outlet } from 'react-router-dom';

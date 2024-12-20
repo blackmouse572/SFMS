@@ -86,8 +86,9 @@ export const router = createBrowserRouter([
                 Component: lazy(() => import('@pages/(content)/kiem-tra/[id].index')),
                 loader: async ({ params }) => {
                   const id = params.id;
+                  if (!id) return null;
                   const { getQuizDetails } = await import('@pages/(content)/kiem-tra/[id].loader');
-                  return getQuizDetails(id!);
+                  return getQuizDetails(id);
                 },
                 path: '/kiem-tra/:id',
               },

@@ -26,6 +26,7 @@ function UploadCVForm({ scholarship, className, ...props }: UploadCVDialogProps)
       return window.open(url, '_blank');
     }
     const result = await upLoadResume(data).catch((err) => {
+      // neu co loi, set loi cho form
       form.setError('urlCv', {
         type: 'validate',
         message: err.message,
@@ -33,6 +34,7 @@ function UploadCVForm({ scholarship, className, ...props }: UploadCVDialogProps)
     });
     if (result) {
       const url = result.payment.checkoutUrl;
+      // Mo link
       return window.open(url, '_blank');
     }
   };

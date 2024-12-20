@@ -85,7 +85,7 @@ export interface SchoolarShip {
 
 export const AdvisoryStatus = {
   'Đang Chờ Tư Vấn': 'Đang Chờ Tư Vấn',
-  'Đang Tư Vấn': 'Đã Tư Vấn',
+  'Đang Tư Vấn': 'Đang Tư Vấn',
   'Hoàn Thành Tư Vấn': 'Hoàn Thành Tư Vấn',
 };
 export type AdvisoryStatus = keyof typeof AdvisoryStatus;

@@ -24,7 +24,7 @@ function ResumeDetailPanel(props: ResumeDetailPanel) {
     enabled: !!item && rest.open,
   });
   const { data: paymentLink } = useGetResumePayment(item?._id ?? '', {
-    enabled: !!item && rest.open && (data?.status === 'Thanh toán lần 2' || data?.status === 'Đang chờ thanh toán'),
+    enabled: !!item && rest.open && (data?.status === 'Thanh toán lần 2' || data?.status === 'Hợp đồng thanh toán'),
   });
   const table = useMemo(() => {
     if (!data) return [];

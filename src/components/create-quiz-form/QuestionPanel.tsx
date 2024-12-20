@@ -36,7 +36,6 @@ export function QuestionPanel({ onAdd, options, isLoading, onQuizSearch, onSearc
 
   return (
     <Card variant="soft" className="space-y-4">
-      <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm câu hỏi" />
       <Input value={quizSearch} onChange={(e) => setQuizSearch(e.target.value)} placeholder="Tìm bài kiểm tra" type="number" />
       <div className="space-y-4">
         {isLoading && (

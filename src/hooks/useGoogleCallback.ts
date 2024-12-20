@@ -20,7 +20,7 @@ function useGoogleCallback() {
         user: data,
       });
       toast.success(`Chào mừng ${data.name}`);
-      go('/');
+      // go('/');
     }
   }, [go, login, token, user]);
 }
