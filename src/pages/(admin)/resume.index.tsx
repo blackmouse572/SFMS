@@ -10,6 +10,7 @@ import { ResumeTableFilter, useDeleteResume, useResumeList } from '@components/r
 import Button from '@components/tailus-ui/Button';
 import { Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
+import { useUser } from '@lib/auth';
 import { Resume, SchoolarShip } from '@lib/types';
 import { DownloadIcon } from '@radix-ui/react-icons';
 import { IconAbacus, IconEye, IconTransfer } from '@tabler/icons-react';
@@ -35,7 +36,14 @@ function AdminResume() {
   const [tranferPanelOpen, setTranferPanelOpen] = useState(false);
   const [filter, setFilter] = useState<Record<string, any>>();
 
-  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useResumeList({ filter });
+  const user = useUser();
+  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useResumeList({
+    filter: {
+      ...filter,
+      provider: user?.provider,
+    },
+  });
+
   const { mutateAsync: updateStatus } = useUpdateResumeStatus();
   const { mutateAsync: deleteResume } = useDeleteResume();
 

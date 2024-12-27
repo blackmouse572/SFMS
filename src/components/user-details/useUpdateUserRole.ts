@@ -6,10 +6,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export function useUpdateUserRole() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ user, role }: { user: User; role: string }) => {
-      return axios.patch(`/users`, {
+    mutationFn: ({ user, role, provider }: { user: User; role: string; provider?: string }) => {
+      return axios.patch(`/users/${user._id}`, {
         ...user,
         role,
+        provider,
       });
     },
     onSuccess: () => {

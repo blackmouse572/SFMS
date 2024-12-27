@@ -14,6 +14,7 @@ export interface User {
   updatedAt?: string;
   createdBy?: CreatedBy;
   permissions: Permission[];
+  provider: string;
 }
 
 export interface Role {
@@ -151,11 +152,11 @@ export interface CreatedBy {
 // hồ sơ thành công
 
 export const ResumeStatus = {
-  'Đã thanh toán lần 1': 'Đã thanh toán lần 1',
-  'Hợp đồng thanh toán': 'Hợp đồng thanh toán',
   'Sửa hồ sơ': 'Sửa hồ sơ',
+  'Hợp đồng thanh toán': 'Hợp đồng thanh toán',
   'Hoàn chỉnh hồ sơ': 'Hoàn chỉnh hồ sơ',
-  'Hồ sơ thất bại': 'Hồ sơ thất bại',
+  'Hồ sơ đã đậu': 'Hồ sơ đã đậu',
+  'Hồ sơ chưa đậu': 'Hồ sơ chưa đậu',
   'Thanh toán lần 2': 'Thanh toán lần 2',
   'Hồ sơ thành công': 'Hồ sơ thành công',
 };
@@ -294,4 +295,18 @@ export interface News {
   label: string;
   heroImage: string;
   createdAt: Date;
+}
+export interface Provider {
+  _id: string;
+  name: string;
+  address: string[];
+  description: string;
+  logo: string;
+  background: string;
+  createdBy: CreatedBy;
+  isDeleted: boolean;
+  deletedAt: null;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
 }

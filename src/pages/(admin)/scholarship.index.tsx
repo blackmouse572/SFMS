@@ -12,6 +12,7 @@ import Badge from '@components/tailus-ui/Badge';
 import { Caption, Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
 import { useEffectOnce } from '@hooks/useEffectOnce';
+import { useUser } from '@lib/auth';
 import { SchoolarShip } from '@lib/types';
 import { cn } from '@lib/utils';
 import { IconEye, IconPencil, IconPlus, IconPointFilled, IconTrash } from '@tabler/icons-react';
@@ -31,7 +32,13 @@ function AdminScholarship() {
     ]);
   });
   const [filter, setFilter] = useState<Filter>();
-  const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({ filter });
+  const user = useUser();
+  const { isLoading, data, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetSchoolarShip({
+    filter: {
+      ...filter,
+      provider: user?.provider,
+    },
+  });
   const { mutateAsync: create } = useCreateScholarShip();
   const { mutateAsync: deleteById } = useDeleteScholarship();
   const { mutateAsync: edit } = useEditScholarship();

@@ -24,6 +24,7 @@ import {
   IconHelpHexagon,
   IconMessage2Bolt,
   IconMessage2Question,
+  IconPlug,
   IconSchool,
   IconSpider,
   IconTooltip,
@@ -84,6 +85,12 @@ const items: SidebarItem[] = [
         href: '/admin/advisory',
         icon: <IconTooltip />,
         // apiPath: '/api/v1/advisory',
+      },
+      {
+        title: 'Quản lý nhà cung cấp',
+        href: '/admin/providers',
+        icon: <IconPlug />,
+        apiPath: '/api/v1/providers',
       },
     ],
   },
@@ -170,13 +177,14 @@ const CollapsibleItem = ({ item }: { item: SidebarItem }) => {
     </SidebarMenuItem>
   );
 };
-const filterItemsFunc = (items: SidebarItem[], permissions: Permission[]) => {
+const filterItemsFunc = (items: SidebarItem[], permissions: Permission[], isProvider = false) => {
   return items.map((item) => {
     if (item.children) {
       return {
         ...item,
         children: item.children.filter((child) => {
           if (child.apiPath === undefined) return true;
+          if (child.href?.includes('crawler') && isProvider) return false;
           return permissions.some((p) => p.apiPath === child.apiPath);
         }),
       };
@@ -187,7 +195,7 @@ const filterItemsFunc = (items: SidebarItem[], permissions: Permission[]) => {
 function AdminSidebar() {
   const user = useUser() as User;
   const filterItems = useMemo(() => {
-    return filterItemsFunc(items, user?.permissions ?? []);
+    return filterItemsFunc(items, user?.permissions ?? [], !!user.provider);
   }, [user]);
   return (
     <Sidebar>

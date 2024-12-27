@@ -3,12 +3,14 @@ import { FocusCard } from '@components/FocusCard';
 import { Navbar } from '@components/MainNavbar';
 import { ChatPopover } from '@components/messages';
 import { OpenProvider } from '@components/messages/useOpenProvider';
+import { useProviderList } from '@components/provider-list';
 import { SecondaryNavbar } from '@components/SecondaryNavbar';
 import { Skeleton } from '@components/Skeleton';
 import Card from '@components/tailus-ui/Card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@components/tailus-ui/Carosel';
 import InfiniteScroll from '@components/tailus-ui/InfiniteScroll';
 import SeparatorRoot from '@components/tailus-ui/Separator';
+import { AdminAvatar } from '@components/user-nav';
 import { useIsAuthenticated } from '@lib/auth';
 import axios from '@lib/axios';
 import { IPagedResponse, News } from '@lib/types';
@@ -18,7 +20,6 @@ import { IconAward, IconBriefcase, IconBulb, IconSchool, IconSparkles, IconStarF
 import { Caption, Display, Text, Title } from '@tailus-ui/typography';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { Link } from 'react-router-dom';
 
 function App() {
@@ -259,18 +260,38 @@ const advisorItems = [
 
 function AdvisorSection(props: React.HTMLAttributes<HTMLDivElement>) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { isLoading, data } = useProviderList({ filter: { limit: 6 } });
+  const items = data?.pages?.map((p) => p.data.result).flat() ?? [];
   return (
     <section id="header" {...props} className={cn('mt-8 space-y-4')}>
       <Display size="4xl" className="text-center">
         Du học các nước
       </Display>
       <div className="grid grid-cols-2 md:grid-cols-3 divide-x-2 gap-4 p-5">
-        {advisorItems.map((card, index) => (
-          <FocusCard key={card.title} card={card} index={index} hovered={hovered} setHovered={setHovered}>
+        {isLoading &&
+          Array.from({ length: 6 }).map((_, index) => (
+            <Card>
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </Card>
+          ))}
+        {items?.map((card, index) => (
+          <FocusCard
+            style={{
+              backgroundImage: `url(${card.background})`,
+            }}
+            key={card.name}
+            card={card}
+            index={index}
+            hovered={hovered}
+            setHovered={setHovered}
+          >
             <div className="flex items-center justify-center gap-4 translate-y-[120px] group-hover:translate-y-0 transition-all duration-300 ease-in">
-              <ReactCountryFlag className="!size-8" countryCode={card.countryCode} svg />
+              {/* <ReactCountryFlag className="!size-8" countryCode={card.countryCode} svg /> */}
+              <AdminAvatar size="lg" src={card.logo} />
               <Text size="xl" className="text-center text-white">
-                {card.title}
+                {card.name}
               </Text>
             </div>
           </FocusCard>

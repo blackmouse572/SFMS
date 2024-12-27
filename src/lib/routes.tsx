@@ -205,6 +205,10 @@ export const router = createBrowserRouter([
             path: '/admin/crawler',
           },
           {
+            Component: lazy(() => import('@pages/(admin)/provider.index')),
+            path: '/admin/providers',
+          },
+          {
             path: '/admin/quiz',
             children: [
               {

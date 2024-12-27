@@ -24,6 +24,7 @@ export function useGetSchoolarShip(props: UseGetSchoolarShip) {
         level: filter?.level && new RegExp(filter.level, 'i'),
         location: filter?.location && new RegExp(filter.location, 'i'),
         continent: filter?.continent && new RegExp(filter.continent, 'i'),
+        provider: filter?.provider,
         value: filter?.value && new RegExp(filter.value, 'i'),
         'GPA<': filter?.gpa && filter.gpa,
         'ielts<': filter?.ielts && filter.ielts,

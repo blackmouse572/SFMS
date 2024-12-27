@@ -7,6 +7,8 @@ export const FocusCard = React.memo(
     index,
     hovered,
     setHovered,
+
+    style,
     children,
   }: {
     card: any;
@@ -14,14 +16,16 @@ export const FocusCard = React.memo(
     hovered: number | null;
     setHovered: React.Dispatch<React.SetStateAction<number | null>>;
     children?: React.ReactNode;
+    style?: React.CSSProperties;
   }) => (
     <div
       onMouseEnter={() => setHovered(index)}
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        'rounded-card relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-96 w-full transition-all duration-300 ease-out group',
+        'rounded-card relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-96 w-full transition-all duration-300 ease-out group bg-no-repeat bg-center bg-cover',
         hovered !== null && hovered !== index && 'blur-sm brightness-75'
       )}
+      style={style}
     >
       <div className="absolute inset-0">
         <img src={card.src} alt={card.title} className="object-cover h-full w-full" />
