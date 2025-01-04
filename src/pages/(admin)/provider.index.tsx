@@ -134,15 +134,18 @@ function AdminProviders() {
 
   const actions = useMemo<TopbarAction[][]>(() => {
     return [
-      [
-        {
-          label: 'Thêm mới',
-          size: 'sm',
-          variant: 'soft',
-          icon: <IconPlus />,
-          onClick: () => setIsCreatePanelOpen(true),
-        },
-      ],
+      // If user is a provider, hide the create button
+      user?.provider
+        ? []
+        : [
+            {
+              label: 'Thêm mới',
+              size: 'sm',
+              variant: 'soft',
+              icon: <IconPlus />,
+              onClick: () => setIsCreatePanelOpen(true),
+            },
+          ],
       selectedItem.length > 0
         ? [
             {
@@ -170,7 +173,7 @@ function AdminProviders() {
         : [],
       selectedItem.length > 0 ? [] : [],
     ];
-  }, [handleDeleteAdvisory, selectedItem.length]);
+  }, [handleDeleteAdvisory, selectedItem.length, user?.provider]);
 
   return (
     <div className="space-y-2 mt-8">
