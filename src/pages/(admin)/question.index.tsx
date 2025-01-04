@@ -55,7 +55,7 @@ export default function AdminQuestion() {
       {
         accessorKey: 'answer',
         header: 'Câu trả lời',
-        cell: (info) => <Text size="sm">{info.getValue() as string}</Text>,
+        cell: (info) => <Text size="sm">{(info.getValue() as string[]).join(', ')}</Text>,
       },
       {
         accessorKey: 'quiz',

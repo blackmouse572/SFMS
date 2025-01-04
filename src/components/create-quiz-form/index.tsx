@@ -24,7 +24,7 @@ type CreateQuizFormProps = {
   onSubmit: (data: CreateQuizSchema) => void;
 };
 function CreateQuizForm({ defaultValues, onSubmit }: CreateQuizFormProps) {
-  const form = useForm<CreateQuizSchema>({ resolver: zodResolver(CreateQuizSchema), defaultValues });
+  const form = useForm<CreateQuizSchema>({ resolver: zodResolver(CreateQuizSchema), defaultValues: defaultValues as any });
 
   const [search, setSearch] = useState({ question: '', quiz: '' });
   const { isLoading, data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetQuestion({

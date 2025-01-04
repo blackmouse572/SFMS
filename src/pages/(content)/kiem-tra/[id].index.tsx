@@ -2,7 +2,7 @@ import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import Button from '@components/tailus-ui/Button';
 import Card from '@components/tailus-ui/Card';
 import { Form } from '@components/tailus-ui/form';
-import { RadioGroupForm } from '@components/tailus-ui/form/RadioGroup';
+import { CheckboxGroupForm } from '@components/tailus-ui/form/CheckboxGroupForm';
 import { Caption, Display, List, Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { Quiz } from '@lib/types';
@@ -32,12 +32,12 @@ function QuizDetailPage() {
     ]);
   });
 
-  const form = useForm<{ _id: string; answer: string }[]>({
-    defaultValues: data.question.map((q) => ({ _id: q._id, answer: '' })),
+  const form = useForm<{ _id: string; answer: string[] }[]>({
+    defaultValues: data.question.map((q) => ({ _id: q._id, answer: [] })),
     disabled: score != undefined,
   });
 
-  const handleSubmit = (payload: Record<number, { _id: string; answer: string }>) => {
+  const handleSubmit = (payload: Record<number, { _id: string; answer: string[] }>) => {
     const answers = Object.values(payload);
     const eachQuestionScore = 100 / data.question.length;
     const wrongAnswerIndexes: number[] = [];
@@ -45,9 +45,11 @@ function QuizDetailPage() {
     const score = answers.reduce((acc, { _id, answer }) => {
       const question = data.question.find((q) => q._id === _id);
       if (!question) return acc;
-      if (question.answer === answer) {
-        return acc + eachQuestionScore;
-      }
+      // take the intersection of the answer and the correct answer
+      const correctAnswer = question.answer;
+      const correct = answer.filter((a) => correctAnswer.includes(a));
+      const correctRate = correct.length / correctAnswer.length;
+      acc += correctRate * eachQuestionScore;
       wrongAnswerIndexes.push(data.question.indexOf(question));
       return acc;
     }, 0);
@@ -78,7 +80,7 @@ function QuizDetailPage() {
           {data.question.map((q, i) => (
             <li key={q._id} className="space-y-4">
               <input type="hidden" {...form.register(`${i}._id` as const)} value={q._id} />
-              <RadioGroupForm
+              <CheckboxGroupForm
                 key={'radio' + i + score + q._id}
                 control={form.control}
                 name={`${i}.answer`}

@@ -265,7 +265,7 @@ export interface Quiz {
 export interface Question {
   _id: string;
   question: string;
-  answer: string;
+  answer: string[];
   option: string[];
   createdBy: CreatedBy;
   isDeleted: boolean;

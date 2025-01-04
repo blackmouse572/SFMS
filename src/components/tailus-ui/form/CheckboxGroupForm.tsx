@@ -9,56 +9,62 @@ export interface CheckboxGroupProps extends CheckboxProps {
   name: string;
   label: string;
   values: { key?: string; value: string }[];
+  rules?: any;
 }
 
-const CheckboxGroupForm = React.forwardRef<HTMLButtonElement, CheckboxGroupProps>(({ className, control, name, label, values, ...props }, ref) => {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={() => (
-        <FormItem className={cn('', className)}>
-          <FormLabel className="pt-0">{label}</FormLabel>
-          <div className="grid grid-cols-2 gap-2">
-            {values.map((item) => (
-              <FormField
-                key={item.key}
-                control={control}
-                defaultValue={[]}
-                name={name}
-                render={({ field }) => {
-                  return (
-                    <FormItem key={item.key} className="flex items-center gap-1">
-                      <FormControl>
-                        <Checkbox.Root
-                          {...field}
-                          intent="primary"
-                          checked={field.value?.includes(item.key ?? item.value)}
-                          onCheckedChange={(checked) => {
-                            return checked
-                              ? field.onChange([...field.value, item.key ?? item.value])
-                              : field.onChange(field.value?.filter((value: string) => value !== (item.key ?? item.value)));
-                          }}
-                        >
-                          <Checkbox.Indicator>
-                            <IconCheck className="size-3.5" />
-                          </Checkbox.Indicator>
-                        </Checkbox.Root>
-                      </FormControl>
-                      <FormLabel className="text-sm font-normal">{item.value}</FormLabel>
-                    </FormItem>
-                  );
-                }}
-              />
-            ))}
-          </div>
+const CheckboxGroupForm = React.forwardRef<HTMLButtonElement, CheckboxGroupProps>(
+  ({ className, control, name, label, values, rules, ...props }, ref) => {
+    return (
+      <FormField
+        control={control}
+        name={name}
+        rules={rules}
+        key={name}
+        render={() => (
+          <FormItem className={cn('', className)}>
+            <FormLabel className="pt-0">{label}</FormLabel>
+            <div className="grid grid-cols-2 gap-2">
+              {values.map((item) => (
+                <FormField
+                  key={item.key}
+                  control={control}
+                  defaultValue={[]}
+                  name={name}
+                  render={({ field }) => {
+                    return (
+                      <FormItem key={item.key} className="flex items-center gap-1">
+                        <FormControl>
+                          <Checkbox.Root
+                            {...field}
+                            {...props}
+                            intent="primary"
+                            checked={field.value?.includes(item.key ?? item.value)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.key ?? item.value])
+                                : field.onChange(field.value?.filter((value: string) => value !== (item.key ?? item.value)));
+                            }}
+                          >
+                            <Checkbox.Indicator>
+                              <IconCheck className="size-3.5" />
+                            </Checkbox.Indicator>
+                          </Checkbox.Root>
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">{item.value}</FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
+            </div>
 
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-});
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  }
+);
 CheckboxGroupForm.displayName = 'CheckboxForm';
 
 export { CheckboxGroupForm };

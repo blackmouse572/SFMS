@@ -1,22 +1,34 @@
-import Button from '@components/tailus-ui/Button';
-import { Form, InputForm } from '@components/tailus-ui/form';
+import Button, { Label } from '@components/tailus-ui/Button';
+import { Form, FormControl, FormField, FormItem, FormMessage, InputForm } from '@components/tailus-ui/form';
 import Select from '@components/tailus-ui/Select';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
+import Textarea from '@components/tailus-ui/Textare';
+import { Tooltip } from '@components/tailus-ui/Tooltip';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
-import { IconCheck } from '@tabler/icons-react';
+import { IconCheck, IconInfoCircleFilled } from '@tabler/icons-react';
 import { DialogProps as VariantProps } from '@tailus/themer';
 import { useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-export const CreateQuestionSchema = z.object({
-  _id: z.string().optional(),
-  question: z.string().min(3).max(1000),
-  answer: z.string().min(3).max(1000),
-  option: z.array(z.string().min(3).max(1000)).nonempty(),
-  quiz: z.coerce.number().min(0),
-});
+export const CreateQuestionSchema = z
+  .object({
+    _id: z.string().optional(),
+    question: z.string().min(3).max(1000),
+    answer: z.array(z.string().min(3).max(1000)).min(1),
+    option: z.array(z.string().min(3).max(1000)).min(1),
+    quiz: z.coerce.number().min(0),
+  })
+  .refine(
+    ({ answer, option }) => {
+      return answer.every((a) => option.includes(a));
+    },
+    {
+      message: 'Câu trả lời phải nằm trong lựa chọn',
+      path: ['answer'],
+    }
+  );
 export type CreateQuestionSchema = z.infer<typeof CreateQuestionSchema>;
 
 type CreateQuestionPanelProps = {
@@ -47,13 +59,59 @@ export function CreateQuestionPanel(props: CreateQuestionPanelProps) {
           <SheetBody className="space-y-2 flex-1">
             <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
               <InputForm control={form.control} name="question" label="Câu hỏi" />
-              <InputForm control={form.control} name="answer" label="Đáp án" />
-              <div className="grid grid-cols-2 gap-4">
-                <InputForm control={form.control} name="option.0" label="Lựa chọn 1" />
-                <InputForm control={form.control} name="option.1" label="Lựa chọn 2" />
-                <InputForm control={form.control} name="option.2" label="Lựa chọn 3" />
-                <InputForm control={form.control} name="option.3" label="Lựa chọn 4" />
-              </div>
+              <FormField
+                control={form.control}
+                name="answer"
+                defaultValue={[]}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-1">
+                      <Tooltip tooltip={'Câu trả lời phải nằm trong lựa chọn'}>
+                        <IconInfoCircleFilled className="size-5 text-primary-500" />
+                      </Tooltip>
+                      <Label>Câu trả lời</Label>
+                    </div>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        floating
+                        placeholder={`answer 1\nanswer 2\nanswer 3`}
+                        value={field.value.join('\n')}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.split('\n'));
+                        }}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="option"
+                defaultValue={[]}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-1">
+                      <Label>Lựa chọn</Label>
+                    </div>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        floating
+                        placeholder={`answer 1\nanswer 2\nanswer 3`}
+                        value={field.value.join('\n')}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.split('\n'));
+                        }}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <InputForm control={form.control} name="quiz" label="Bài kiểm tra" type="number" />
             </form>
           </SheetBody>
