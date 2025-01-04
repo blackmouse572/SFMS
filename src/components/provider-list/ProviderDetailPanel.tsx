@@ -8,6 +8,7 @@ import { AdminAvatar } from '@components/user-nav';
 import { Provider } from '@lib/types';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { useMemo } from 'react';
+import Markdown from 'react-markdown';
 
 type ProviderDetailPanel = {
   item?: Pick<Provider, '_id'>;
@@ -26,10 +27,7 @@ function ProviderDetailPanel(props: ProviderDetailPanel) {
         label: 'Tên',
         value: data.name,
       },
-      {
-        label: 'Mô tả',
-        value: data.description,
-      },
+
       {
         label: 'Địa chỉ',
         value: data.address.map((item) => <li key={item}>{item}</li>),
@@ -96,6 +94,10 @@ function ProviderDetailPanel(props: ProviderDetailPanel) {
             <div className="space-y-2">
               <Label>Ảnh nền</Label>
               <img src={data?.background} alt="background" className="w-20 h-20 object-cover rounded-lg border" />
+            </div>
+            <div className="space-y-2">
+              <Label>Mô tả</Label>
+              <Markdown>{data?.description}</Markdown>
             </div>
           </div>
         </SheetBody>

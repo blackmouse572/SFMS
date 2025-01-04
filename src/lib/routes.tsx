@@ -122,6 +122,20 @@ export const router = createBrowserRouter([
             ],
           },
           {
+            path: '/nha-cung-cap',
+            children: [
+              {
+                path: '/nha-cung-cap/:id',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { getProviderById } = await import('@pages/(content)/nha-cung-cap/[id].loader');
+                  return getProviderById(id!);
+                },
+                Component: lazy(() => import('@pages/(content)/nha-cung-cap/[id].index')),
+              },
+            ],
+          },
+          {
             path: '/payment',
             children: [
               {

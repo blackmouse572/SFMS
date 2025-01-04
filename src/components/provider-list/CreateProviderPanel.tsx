@@ -1,6 +1,6 @@
 import Button from '@components/tailus-ui/Button';
+import Editor from '@components/tailus-ui/editor/editor';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, InputForm } from '@components/tailus-ui/form';
-import { TextAreaForm } from '@components/tailus-ui/form/TextareForm';
 import Label from '@components/tailus-ui/Label';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import Textarea from '@components/tailus-ui/Textare';
@@ -110,9 +110,19 @@ export function CreateProviderPanel(props: CreateScholarPanelProps) {
           <SheetBody className="space-y-2 flex-1">
             <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
               <InputForm control={form.control} className={''} name="name" label="Tên" required />
-              <TextAreaForm control={form.control} name="description" label="Mô tả" required />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor={field.name}>Mô tả</FormLabel>
+                    <Editor onUploadImg={handleUploadImage} content={field.value} onChange={field.onChange} />
+                  </FormItem>
+                )}
+              />
               <ImageForm key={'bg'} control={form.control} name="background" label="Ảnh nền" required />
               <ImageForm key={'logo'} control={form.control} name="logo" label="Logo" required />
+
               <FormField
                 control={form.control}
                 name="address"
