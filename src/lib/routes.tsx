@@ -191,6 +191,10 @@ export const router = createBrowserRouter([
         path: '/admin',
         children: [
           {
+            Component: lazy(() => import('@pages/(admin)/index')),
+            index: true,
+          },
+          {
             Component: lazy(() => import('@pages/(admin)/scholarship.index')),
             path: '/admin/scholarship',
           },

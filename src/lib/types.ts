@@ -310,3 +310,34 @@ export interface Provider {
   updatedAt: Date;
   __v: number;
 }
+export interface DashboardData {
+  transactions: Transactions;
+  resumes: Resumes;
+}
+
+export interface Resumes {
+  total: number;
+  completed: number;
+  pending: number;
+}
+
+export interface Transactions {
+  total: {
+    total: number;
+  }[];
+  thisMonth: MonthSummary[];
+  lastMonth: MonthSummary[];
+}
+
+export interface MonthSummary {
+  total: number;
+  month: number;
+}
+
+export interface DashboardColumnData {
+  _id: {
+    year: number;
+    month: number;
+  };
+  total: number;
+}
