@@ -216,6 +216,31 @@ function AdminSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {(user.provider || user.role.name.toLowerCase() === 'super_admin' || user.role.name.toLowerCase() === 'staff') && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Nhà Cung Cấp</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <Link to="/admin/provider/scholarship">
+                    <SidebarMenuButton variant="outline" isActive={location.pathname === '/admin/provider/scholarship'}>
+                      <IconSchool />
+                      <span>Quản lý học bổng</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <Link to="/admin/provider/resume">
+                    <SidebarMenuButton variant="outline" isActive={location.pathname === '/admin/provider/resume'}>
+                      <IconFileInvoice />
+                      <span>Quản lý hồ sơ</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="border-t">
         <UserDropdown

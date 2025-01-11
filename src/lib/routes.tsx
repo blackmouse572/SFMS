@@ -252,6 +252,19 @@ export const router = createBrowserRouter([
             Component: lazy(() => import('@pages/(admin)/question.index')),
             path: '/admin/question',
           },
+          {
+            path: '/admin/provider',
+            children: [
+              {
+                Component: lazy(() => import('@pages/(admin)/(provider)/scholar-prov.index')),
+                path: '/admin/provider/scholarship',
+              },
+              {
+                Component: lazy(() => import('@pages/(admin)/(provider)/resume-prov.index')),
+                path: '/admin/provider/resume',
+              },
+            ],
+          },
         ],
       },
     ],

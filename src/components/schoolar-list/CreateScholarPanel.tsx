@@ -106,7 +106,14 @@ function CreateScholarPanel(props: CreateScholarPanelProps) {
             <SheetTitle>{defaultValues?._id ? 'Cập nhật học bổng' : 'Tạo mới học bổng'}</SheetTitle>
           </SheetHeader>
           <SheetBody className="space-y-2 flex-1">
-            <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
+            <form
+              className="space-y-4"
+              onSubmit={form.handleSubmit(
+                (v) => onSubmit(v, form),
+                (e) => console.error(e)
+              )}
+              id="createform"
+            >
               <div className="grid grid-cols-[minmax(200px,_1fr)_100px] gap-2">
                 <InputForm control={form.control} className={''} name="name" label="Tên học bổng" required />
                 <InputForm control={form.control} name="quantity" required label="Số lượng" />

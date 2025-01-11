@@ -26,11 +26,10 @@ function ProviderPage() {
       <header style={{ backgroundImage: `url(${data.background})` }} className="bg-center bg-cover bg-no-repeat h-[400px] relative">
         <div className="absolute inset-0 bg-black bg-opacity-50" />
         <div className="container mx-auto px-4 py-8 relative z-10 h-full flex flex-col justify-end">
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <img src={data.logo} alt={data.name} className="w-20 h-20 rounded-full border-4 border-white" />
             <div>
               <h1 className="text-white text-4xl font-bold">{data.name}</h1>
-              <p className="text-white text-lg">{data.address.join(', ')}</p>
             </div>
           </div>
         </div>
