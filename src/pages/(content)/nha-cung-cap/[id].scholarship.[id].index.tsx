@@ -10,33 +10,43 @@ import SeparatorRoot from '@components/tailus-ui/Separator';
 import { Caption, Display, Text, Title } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { useAuth } from '@lib/auth';
-import { SchoolarShip } from '@lib/types';
+import { Provider, SchoolarShip } from '@lib/types';
 import { IconImageInPicture } from '@tabler/icons-react';
 import _ from 'lodash';
 import React from 'react';
 import { Await, Link, useLoaderData, useParams } from 'react-router-dom';
 
-function SchoolarshipDetails() {
+function HocBongProvDetail() {
   const { id } = useParams();
   if (!id) throw new Error('id is required');
   const { isAuthenticated } = useAuth();
-  const { data, related } = useLoaderData() as {
+  const { data, related, provider } = useLoaderData() as {
     data: SchoolarShip;
     related: [majorRelated: Promise<SchoolarShip[]>, levelRelated: Promise<SchoolarShip[]>, continentRelated: Promise<SchoolarShip[]>];
+    provider: Provider;
   };
   const { setItems } = useBreadcrumb();
   useEffectOnce(() => {
     setItems([
       {
+        title: 'Nhà cung cấp',
+        href: '/nha-cung-cap',
+      },
+      {
+        title: provider.name,
+        href: `/nha-cung-cap/${provider._id}`,
+      },
+      {
         title: 'Học bổng',
-        href: '/hoc-bong',
+        href: `/nha-cung-cap/${provider._id}/scholarship`,
       },
       {
         title: data.name,
-        href: `/hoc-bong/${data._id}`,
+        href: `/nha-cung-cap/${provider._id}/scholarship/${data._id}`,
       },
     ]);
   });
+
   return (
     <div className="grid grid-cols-[1fr_0.3fr] gap-16">
       <section className="space-y-8 py-6">
@@ -127,7 +137,12 @@ function SchoolarshipDetails() {
             </QuickChatButton>
           </div>
           <Text>Bước 2 : Khi được tư vấn và xem học bổng có phù hợp với bạn hay không , sau đó hãy tiến hành nộp hồ sơ .</Text>
-          <Button.Root href={isAuthenticated ? `/hoc-bong/${data._id}/apply` : '/login'} variant="soft" size="lg" className="rounded-full">
+          <Button.Root
+            href={isAuthenticated ? `/nha-cung-cap/${provider._id}/hoc-bong/${data._id}/apply` : '/login'}
+            variant="soft"
+            size="lg"
+            className="rounded-full"
+          >
             <Button.Label>Nộp hồ sơ ngay</Button.Label>
           </Button.Root>
         </Card>
@@ -152,6 +167,7 @@ function SchoolarshipDetails() {
                     _.flatten<SchoolarShip>(packageLocation).filter((a) => a._id !== data._id),
                     '_id'
                   );
+
                   return related.map((scholarship: SchoolarShip, i) => (
                     <Card variant="outlined" className="px-0 py-0" key={scholarship._id}>
                       <Link key={scholarship._id} to={`/hoc-bong/${scholarship._id}`}>
@@ -177,4 +193,4 @@ function SchoolarshipDetails() {
   );
 }
 
-export default SchoolarshipDetails;
+export default HocBongProvDetail;

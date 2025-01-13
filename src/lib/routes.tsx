@@ -125,6 +125,10 @@ export const router = createBrowserRouter([
             path: '/nha-cung-cap',
             children: [
               {
+                index: true,
+                Component: lazy(() => import('@pages/(content)/nha-cung-cap')),
+              },
+              {
                 path: '/nha-cung-cap/:id',
                 loader: async ({ params }) => {
                   const id = params.id;
@@ -132,6 +136,51 @@ export const router = createBrowserRouter([
                   return getProviderById(id!);
                 },
                 Component: lazy(() => import('@pages/(content)/nha-cung-cap/[id].index')),
+              },
+              {
+                path: '/nha-cung-cap/:id/hoc-bong',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const { getProviderById } = await import('@pages/(content)/nha-cung-cap/[id].loader');
+                  return getProviderById(id!);
+                },
+                Component: lazy(() => import('@pages/(content)/nha-cung-cap/scholarship.[id].index')),
+              },
+              {
+                path: '/nha-cung-cap/:id/hoc-bong/:scholarshipId',
+                loader: async ({ params }) => {
+                  const id = params.id;
+                  const scholarshipId = params.scholarshipId;
+                  const [{ getProviderById }, { getScholarshipProvById }, { getScholarProvRelatedScholarships }] = await Promise.all([
+                    import('@pages/(content)/nha-cung-cap/[id].loader'),
+                    import('@pages/(content)/nha-cung-cap/scholarship.[id].loader'),
+                    import('@pages/(content)/nha-cung-cap/[id].scholarship.[id].loader'),
+                  ] as const);
+
+                  const [provider, scholarship] = await Promise.all([getProviderById(id!), getScholarshipProvById(scholarshipId!)]);
+
+                  const { major, level } = scholarship;
+                  const majorRelated = getScholarProvRelatedScholarships({ major });
+                  const levelRelated = getScholarProvRelatedScholarships({ level });
+                  const providerRelated = getScholarProvRelatedScholarships({ provider: provider._id });
+
+                  return defer({
+                    provider,
+                    data: scholarship,
+                    related: [majorRelated, levelRelated, providerRelated],
+                  });
+                },
+                Component: lazy(() => import('@pages/(content)/nha-cung-cap/[id].scholarship.[id].index')),
+              },
+              {
+                path: '/nha-cung-cap/:id/hoc-bong/:scholarshipId/apply',
+                Component: lazy(() => import('@pages/(content)/nha-cung-cap/apply.[id].scholarship.[id].index')),
+                loader: async ({ params }) => {
+                  const id = params.scholarshipId;
+                  const { getScholarshipProvById } = await import('@pages/(content)/nha-cung-cap/scholarship.[id].loader');
+
+                  return getScholarshipProvById(id!);
+                },
               },
             ],
           },

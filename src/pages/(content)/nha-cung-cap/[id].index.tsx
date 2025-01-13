@@ -1,4 +1,5 @@
 import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
+import Button from '@components/tailus-ui/Button';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { List, Title } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
@@ -30,6 +31,9 @@ function ProviderPage() {
             <img src={data.logo} alt={data.name} className="w-20 h-20 rounded-full border-4 border-white" />
             <div>
               <h1 className="text-white text-4xl font-bold">{data.name}</h1>
+              <Button.Root size="sm" href={`/nha-cung-cap/${data._id}/hoc-bong`} className="mt-4">
+                <Button.Label>Xem tất cả học bổng</Button.Label>
+              </Button.Root>
             </div>
           </div>
         </div>

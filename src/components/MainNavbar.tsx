@@ -122,6 +122,9 @@ export function Navbar({ className, ...props }: React.ComponentPropsWithoutRef<t
           <Link to="/kiem-tra">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Làm bài kiểm tra</NavigationMenuLink>
           </Link>
+          <Link to="/nha-cung-cap">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Nhà cung cấp</NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>{isAuth && <SubscribeDialog />}</NavigationMenuItem>
       </NavigationMenuList>

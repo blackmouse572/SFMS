@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export function useCreateScholarProvShip() {
   const client = useQueryClient();
   const user = useUser();
+  console.log({ user });
   const { mutateAsync } = useUploadBatchImages();
   return useMutation({
     mutationFn: async (data: CreateScholarSchema) => {
@@ -21,7 +22,7 @@ export function useCreateScholarProvShip() {
       return axios.post('/scholar-prov', {
         ...data,
         image: images,
-        provider: user?._id,
+        provider: user?.provider,
       });
     },
     onSuccess: () => {

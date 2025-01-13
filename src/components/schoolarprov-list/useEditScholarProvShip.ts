@@ -21,7 +21,7 @@ export function useEditScholarProvShip() {
 
       return axios.patch(`/scholar-prov/${data._id}`, {
         ...data,
-        provider: user?._id,
+        provider: user?.provider,
         image: images,
       });
     },

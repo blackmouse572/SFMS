@@ -1,4 +1,3 @@
-import { getScholarShipKey } from '@components/schoolar-list/constant';
 import { getScholarProvShipKey } from '@components/schoolarprov-list/constant';
 import axios from '@lib/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
