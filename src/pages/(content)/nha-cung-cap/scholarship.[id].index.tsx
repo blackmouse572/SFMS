@@ -3,12 +3,12 @@ import DebounceInput from '@components/DebounceInput';
 import { SchoolarProvList } from '@components/schoolarprov-list/ScholarProvList';
 import { Display } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { IResponse, Provider } from '@lib/types';
+import { Provider } from '@lib/types';
 import { useLoaderData, useParams, useSearchParams } from 'react-router-dom';
 
 function HongBongNhaCungCapPage() {
   const { id } = useParams();
-  const { data } = useLoaderData() as IResponse<Provider>;
+  const data = useLoaderData() as Provider;
   const [search] = useSearchParams();
   const { setItems } = useBreadcrumb();
   const [filter, setFilter] = useSearchParams({

@@ -1,6 +1,6 @@
 import { getResumeProvKey } from '@components/resume-prov-list';
 import axios from '@lib/axios';
-import { IResponse, Resume } from '@lib/types';
+import { IResponse, ResumeProv } from '@lib/types';
 import { useQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
 
@@ -21,7 +21,7 @@ export function useGetResumeProvDetails(id: string, option: Options = {}) {
         }
       );
       console.log('details');
-      return axios.get<IResponse<Resume>>(`/resume-prov/${id}?${qs}`).then((d) => d.data.data);
+      return axios.get<IResponse<ResumeProv>>(`/resume-prov/${id}?${qs}`).then((d) => d.data.data);
     },
     ...option,
   });

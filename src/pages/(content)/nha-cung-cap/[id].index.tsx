@@ -3,12 +3,12 @@ import Button from '@components/tailus-ui/Button';
 import SeparatorRoot from '@components/tailus-ui/Separator';
 import { List, Title } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
-import { IResponse, Provider } from '@lib/types';
+import { Provider } from '@lib/types';
 import Markdown from 'react-markdown';
 import { useLoaderData } from 'react-router-dom';
 
 function ProviderPage() {
-  const { data } = useLoaderData() as IResponse<Provider>;
+  const data = useLoaderData() as Provider;
   const { setItems } = useBreadcrumb();
   useEffectOnce(() => {
     setItems([

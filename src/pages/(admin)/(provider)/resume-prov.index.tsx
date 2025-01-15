@@ -2,19 +2,20 @@ import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import DataTable from '@components/data-table/DataTable';
 import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { ReassignPanel } from '@components/reassign/ReassignPanel';
-import ResumeDetailPanel from '@components/resume-details/ResumeDetailPanel';
-import { ResumeUpdateStatusPanel, UpdateResumeStatusSchema } from '@components/resume-details/ResumeUpdateStatusPanel';
+import { UpdateResumeStatusSchema } from '@components/resume-details/ResumeUpdateStatusPanel';
 import StatusBadge from '@components/resume-details/StatusBadge';
 import { ResumeTableFilter } from '@components/resume-list';
+import { ResumeProvDetailPanel } from '@components/resume-prov-details/ResumeProvDetails';
+import { ResumeProvUpdateStatusPanel } from '@components/resume-prov-details/ResumeProvUpdateStatus';
 import { useUpdateResumeProvStatus } from '@components/resume-prov-details/useUpdateResumeProvStatus';
 import { useDeleteProvResume, useResumeProvList } from '@components/resume-prov-list';
 import Button from '@components/tailus-ui/Button';
 import { Text } from '@components/tailus-ui/typography';
 import { useEffectOnce } from '@hooks/useEffectOnce';
 import { useUser } from '@lib/auth';
-import { Resume, SchoolarShip } from '@lib/types';
+import { ResumeProv, SchoolarShip } from '@lib/types';
 import { DownloadIcon } from '@radix-ui/react-icons';
-import { IconAbacus, IconEye, IconTransfer } from '@tabler/icons-react';
+import { IconAbacus, IconEye } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -30,7 +31,7 @@ function AdminResumeProvider() {
     ]);
   });
 
-  const [selectedItems, setSelectedItems] = useState<Resume[]>();
+  const [selectedItems, setSelectedItems] = useState<ResumeProv[]>();
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
   const [isUpdateStatusPanelOpen, setIsUpdateStatusPanelOpen] = useState(false);
@@ -96,14 +97,6 @@ function AdminResumeProvider() {
               icon: <IconAbacus />,
             },
             {
-              label: 'Giao staff xử lý',
-              size: 'sm',
-              variant: 'soft',
-              intent: 'success',
-              onClick: () => setTranferPanelOpen(true),
-              icon: <IconTransfer />,
-            },
-            {
               label: 'Xóa',
               size: 'sm',
               variant: 'soft',
@@ -118,7 +111,7 @@ function AdminResumeProvider() {
     [onDelete, selectedItems?.length]
   );
 
-  const columns = useMemo<ColumnDef<Resume>[]>(
+  const columns = useMemo<ColumnDef<ResumeProv>[]>(
     () => [
       {
         accessorKey: 'email',
@@ -136,7 +129,7 @@ function AdminResumeProvider() {
         cell: (row) => <StatusBadge status={row.getValue() as string} />,
       },
       {
-        accessorKey: 'scholarship',
+        accessorKey: 'scholarProv',
         header: 'Học bổng',
         cell: (row) => {
           const scholarship = row.getValue() as Pick<SchoolarShip, '_id' | 'name'>;
@@ -146,19 +139,6 @@ function AdminResumeProvider() {
             </Text>
           );
         },
-      },
-      {
-        accessorKey: 'user',
-        header: 'Staff',
-        cell: (row) => {
-          const scholarship = row.getValue() as { name: string };
-          return <Text size="sm">{scholarship?.name}</Text>;
-        },
-      },
-      {
-        accessorKey: 'orderCode',
-        header: 'Mã đơn hàng',
-        cell: (row) => <Text size="sm">{row.getValue() as string}</Text>,
       },
       {
         accessorKey: 'urlCV',
@@ -196,8 +176,8 @@ function AdminResumeProvider() {
         totalItems={data?.pages?.[0].data.meta.total}
       />
       <ResumeTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
-      <ResumeDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems?.[0]} />
-      <ResumeUpdateStatusPanel
+      <ResumeProvDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedItems?.[0]} />
+      <ResumeProvUpdateStatusPanel
         open={isUpdateStatusPanelOpen}
         onOpenChange={setIsUpdateStatusPanelOpen}
         item={selectedItems?.[0]}

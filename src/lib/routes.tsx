@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
                 path: '/profile/cv',
                 Component: lazy(() => import('@pages/(profile)/cv.profile.index')),
               },
+              {
+                path: '/profile/cv-prov',
+                Component: lazy(() => import('@pages/(profile)/cv-prov.index')),
+              },
             ],
           },
           {

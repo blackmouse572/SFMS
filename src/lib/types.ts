@@ -163,6 +163,18 @@ export const ResumeStatus = {
 
 export type ResumeStatus = keyof typeof ResumeStatus;
 
+export const ResumeProvStatus = {
+  'Đang chờ duyệt': 'Đang chờ duyệt',
+  'Đang xem xét': 'Đang xem xét',
+  'Hồ sơ đã đậu': 'Hồ sơ đã đậu',
+  'Hồ sơ chưa đậu': 'Hồ sơ chưa đậu',
+  'Lịch phỏng vấn': 'Lịch phỏng vấn',
+  'Hồ sơ thất bại': 'Hồ sơ thất bại',
+  'Hồ sơ thành công': 'Hồ sơ thành công',
+};
+
+export type ResumeProvStatus = keyof typeof ResumeProvStatus;
+
 export interface Resume {
   _id: string;
   name: string;
@@ -186,6 +198,8 @@ export interface Resume {
   createdBy: CreatedBy;
   updatedBy: CreatedBy;
 }
+
+export type ResumeProv = Omit<Resume, 'status' | 'scholarship'> & { status: ResumeProvStatus; scholarProv: { _id: string; name: string } };
 
 export interface History {
   status: string;

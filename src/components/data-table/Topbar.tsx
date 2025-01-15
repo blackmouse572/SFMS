@@ -32,7 +32,7 @@ function TopBar<TData>(props: TopBarProps<TData>) {
         {actions?.map((action, i) => action.length > 0 && <div className="px-2 flex gap-2">{action.map((a) => renderItem(a, i))}</div>)}
       </div>
       <div className="mr-auto w-fit flex gap-2 pr-2">
-        {totalItems && (
+        {(totalItems || 0) > 0 && (
           <div className="flex items-center justify-center gap-2">
             <Caption>Tổng số: {totalItems}</Caption>
           </div>

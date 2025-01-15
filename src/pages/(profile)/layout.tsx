@@ -21,7 +21,7 @@ function ProfileLayout() {
         </div>
       </div>
 
-      <LayoutTabs className="max-w-sm" />
+      <LayoutTabs className="max-w-md" />
 
       <Outlet />
     </main>
