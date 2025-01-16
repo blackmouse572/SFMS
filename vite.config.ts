@@ -1,9 +1,18 @@
+import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({ include: /\.(tsx|ts)$/, exclude: /node_modules/ })],
+  plugins: [
+    {
+      enforce: 'pre',
+      ...mdx({
+        providerImportSource: '@mdx-js/react',
+      }),
+    },
+    react({ include: /\.(tsx|ts|mdx|md)$/, exclude: /node_modules/ }),
+  ],
   resolve: {
     alias: {
       '@tailus-ui': path.resolve(__dirname, 'src/components/tailus-ui'),
@@ -13,5 +22,6 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
     },
+    preserveSymlinks: true,
   },
 });
