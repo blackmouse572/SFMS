@@ -78,8 +78,8 @@ export function SendEmailPanel(props: SendEmailPanelProps) {
                 <SelectItem value={'Lịch phỏng vấn'} key={'Lịch phỏng vấn'}>
                   Lịch phỏng vấn
                 </SelectItem>
-                <SelectItem value={'Thất bại'} key={'Thất bại'}>
-                  Thất bại
+                <SelectItem value={'Hồ sơ thành công'} key={'Thất bại'}>
+                  Hồ sơ thành công
                 </SelectItem>
               </SelectForm>
             </form>
