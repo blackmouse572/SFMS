@@ -8522,6 +8522,7 @@ __metadata:
     query-string: "npm:^9.1.1"
     react: "npm:^18.3.1"
     react-country-flag: "npm:^3.1.0"
+    react-day-picker: "npm:^8.10.1"
     react-dom: "npm:^18.3.1"
     react-fast-marquee: "npm:^1.6.5"
     react-hook-form: "npm:^7.53.0"
@@ -8554,6 +8555,16 @@ __metadata:
   peerDependencies:
     react: ">=16"
   checksum: 10c0/6271cde6cf355c66e2b669c74e98596d771534154210bbb84cd84788f46710c7ee14671229cb92203d09aeb4c30206bb882b73d63d95a73f96cdaca09ed2bd0d
+  languageName: node
+  linkType: hard
+
+"react-day-picker@npm:^8.10.1":
+  version: 8.10.1
+  resolution: "react-day-picker@npm:8.10.1"
+  peerDependencies:
+    date-fns: ^2.28.0 || ^3.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/a0ff28c4b61b3882e6a825b19e5679e2fdf3256cf1be8eb0a0c028949815c1ae5a6561474c2c19d231c010c8e0e0b654d3a322610881e0655abca05a2e03d9df
   languageName: node
   linkType: hard
 

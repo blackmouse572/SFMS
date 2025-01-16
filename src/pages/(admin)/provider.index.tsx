@@ -5,6 +5,7 @@ import TopBar, { TopbarAction } from '@components/data-table/Topbar';
 import { ProviderTableFilter, useDeleteProvider, useProviderList } from '@components/provider-list';
 import { CreateProviderPanel } from '@components/provider-list/CreateProviderPanel';
 import ProviderDetailPanel from '@components/provider-list/ProviderDetailPanel';
+import { SendEmailPanel } from '@components/provider-list/SendEmailPanel';
 import { useCreateProvider } from '@components/provider-list/useCreateProvider';
 import { Text } from '@components/tailus-ui/typography';
 import { AdminAvatar } from '@components/user-nav';
@@ -76,6 +77,7 @@ function AdminProviders() {
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [isDetailPanelOpen, setIsDetailPanelOpen] = useState(false);
+  const [isSendEmailPanelOpen, setIsSendEmailPanelOpen] = useState(false);
   const [isUpdateStatusPanelOpen, setIsUpdateStatusPanelOpen] = useState(false);
   const isFilterActive = useMemo(() => {
     if (filter && Object.values(filter).some((v) => v.length > 0)) {
