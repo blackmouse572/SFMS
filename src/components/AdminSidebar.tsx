@@ -197,6 +197,7 @@ function AdminSidebar() {
   const filterItems = useMemo(() => {
     return filterItemsFunc(items, user?.permissions ?? [], !!user.provider);
   }, [user]);
+  const pathname = useLocation().pathname;
   return (
     <Sidebar>
       <SidebarHeader className="flex-row items-center gap-2 p-2">
@@ -223,7 +224,7 @@ function AdminSidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <Link to="/admin/provider/scholarship">
-                    <SidebarMenuButton variant="outline" isActive={location.pathname === '/admin/provider/scholarship'}>
+                    <SidebarMenuButton variant="outline" isActive={pathname.includes('/admin/provider/scholarship')}>
                       <IconSchool />
                       <span>Quản lý học bổng</span>
                     </SidebarMenuButton>
@@ -232,7 +233,7 @@ function AdminSidebar() {
                 {user.provider && (
                   <SidebarMenuItem>
                     <Link to="/admin/provider/resume">
-                      <SidebarMenuButton variant="outline" isActive={location.pathname === '/admin/provider/resume'}>
+                      <SidebarMenuButton variant="outline" isActive={pathname.includes('/admin/provider/resume')}>
                         <IconFileInvoice />
                         <span>Quản lý hồ sơ</span>
                       </SidebarMenuButton>

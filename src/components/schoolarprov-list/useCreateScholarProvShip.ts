@@ -1,4 +1,4 @@
-import { CreateScholarSchema } from '@components/schoolar-list/CreateScholarPanel';
+import { CreateScholarProvSchema } from '@components/schoolar-list/CreateScholarProvPanel';
 import { getScholarProvShipKey } from '@components/schoolarprov-list/constant';
 import { useUploadBatchImages } from '@components/upload/useUploadBatchImages';
 import { useUser } from '@lib/auth';
@@ -8,10 +8,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export function useCreateScholarProvShip() {
   const client = useQueryClient();
   const user = useUser();
-  console.log({ user });
   const { mutateAsync } = useUploadBatchImages();
   return useMutation({
-    mutationFn: async (data: CreateScholarSchema) => {
+    mutationFn: async (data: CreateScholarProvSchema) => {
       const imagesToUpload = data.image.filter((i) => i instanceof File);
       const images = data.image.filter((i) => !(i instanceof File));
       if (imagesToUpload.length > 0) {

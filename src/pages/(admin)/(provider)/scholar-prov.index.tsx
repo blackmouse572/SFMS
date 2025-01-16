@@ -2,7 +2,8 @@ import { useBreadcrumb } from '@components/admin-breadcrumb/AdminBreadcrumb';
 import { TopbarAction } from '@components/data-table';
 import DataTable from '@components/data-table/DataTable';
 import TopBar from '@components/data-table/Topbar';
-import { CreateScholarPanel, CreateScholarSchema, Filter, ScholarDetailPanel, ScholarTableFilter } from '@components/schoolar-list';
+import { Filter, ScholarDetailPanel, ScholarTableFilter } from '@components/schoolar-list';
+import { CreateScholarProvPanel, CreateScholarProvSchema } from '@components/schoolar-list/CreateScholarProvPanel';
 import { useSchoolarProvsShip } from '@components/schoolarprov-list';
 import { useCreateScholarProvShip } from '@components/schoolarprov-list/useCreateScholarProvShip';
 import { useDeleteScholarProvship } from '@components/schoolarprov-list/useDeleteScholarProvship';
@@ -89,15 +90,6 @@ function AdminScholarProv() {
         },
       },
       {
-        accessorKey: 'continent',
-        header: 'Lục địa',
-        cell: (info) => (
-          <Badge size="sm" variant={'outlined'} className="text-nowrap">
-            {info.getValue() as string}
-          </Badge>
-        ),
-      },
-      {
         accessorKey: 'major',
         header: 'Chủ đề',
         cell: (info) => {
@@ -179,7 +171,7 @@ function AdminScholarProv() {
     setSelectedScholar(filtered);
   };
 
-  const onCreate = async (data: CreateScholarSchema, f: UseFormReturn<CreateScholarSchema>) => {
+  const onCreate = async (data: CreateScholarProvSchema, f: UseFormReturn<CreateScholarProvSchema>) => {
     toast.promise(create(data), {
       loading: 'Đang tạo học bổng...',
       success: () => {
@@ -192,7 +184,7 @@ function AdminScholarProv() {
   };
 
   const onEdit = useCallback(
-    async (data: CreateScholarSchema, f: UseFormReturn<CreateScholarSchema>) => {
+    async (data: CreateScholarProvSchema, f: UseFormReturn<CreateScholarProvSchema>) => {
       if (selectedScholar.length === 0) {
         toast.error('Chưa chọn học bổng để cập nhật');
       }
@@ -289,8 +281,8 @@ function AdminScholarProv() {
       />
       <ScholarTableFilter open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen} onSubmit={setFilter} />
       <ScholarDetailPanel open={isDetailPanelOpen} onOpenChange={setIsDetailPanelOpen} item={selectedScholar[0]} />
-      <CreateScholarPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
-      <CreateScholarPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={onEdit} defaultValues={selectedScholar[0] as any} />
+      <CreateScholarProvPanel open={isCreatePanelOpen} onOpenChange={setIsCreatePanelOpen} onSubmit={onCreate} />
+      <CreateScholarProvPanel open={isEditPanelOpen} onOpenChange={setIsEditPanelOpen} onSubmit={onEdit} defaultValues={selectedScholar[0] as any} />
       <DataTable
         data={items}
         columns={columns}

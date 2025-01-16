@@ -116,7 +116,7 @@ export function CreateProviderPanel(props: CreateScholarPanelProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel htmlFor={field.name}>Mô tả</FormLabel>
-                    <Editor onUploadImg={handleUploadImage} content={field.value} onChange={field.onChange} />
+                    <Editor className="min-h-[500px]" onUploadImg={handleUploadImage} content={field.value} onChange={field.onChange} />
                   </FormItem>
                 )}
               />

@@ -52,20 +52,6 @@ function AdminProviders() {
         },
       },
       {
-        accessorFn: (row) => ({
-          bg: row.background.length,
-        }),
-        header: 'Số lượng background',
-        cell: (info) => {
-          const { bg } = info.getValue() as Record<string, number>;
-          return (
-            <div className="flex gap-2 items-center">
-              <Text size="sm">{bg}</Text>
-            </div>
-          );
-        },
-      },
-      {
         accessorKey: 'createdBy',
         accessorFn: (row) => ({
           createdBy: row.createdBy,

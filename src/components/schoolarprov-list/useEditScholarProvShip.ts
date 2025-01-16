@@ -1,4 +1,4 @@
-import { CreateScholarSchema } from '@components/schoolar-list/CreateScholarPanel';
+import { CreateScholarProvSchema } from '@components/schoolar-list/CreateScholarProvPanel';
 import { getScholarProvShipKey } from '@components/schoolarprov-list/constant';
 import { useUploadBatchImages } from '@components/upload/useUploadBatchImages';
 import { useUser } from '@lib/auth';
@@ -11,7 +11,7 @@ export function useEditScholarProvShip() {
   const user = useUser();
   const { mutateAsync } = useUploadBatchImages();
   return useMutation({
-    mutationFn: async ({ data }: { data: CreateScholarSchema; old: SchoolarShip }) => {
+    mutationFn: async ({ data }: { data: CreateScholarProvSchema; old: SchoolarShip }) => {
       const imagesToUpload = data.image.filter((i) => i instanceof File);
       const images = data.image.filter((i) => !(i instanceof File));
       if (imagesToUpload.length > 0) {

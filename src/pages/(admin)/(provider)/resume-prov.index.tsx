@@ -54,10 +54,11 @@ function AdminResumeProvider() {
     setSelectedItems(filtered);
   };
 
-  const onStatusUpdate = async (data: UpdateResumeStatusSchema) => {
+  const onStatusUpdate = async (data: Omit<UpdateResumeStatusSchema, 'urlCv'>) => {
     toast.promise(updateStatus(data), {
       loading: 'Đang cập nhật trạng thái...',
       success: (res) => {
+        setIsUpdateStatusPanelOpen(false);
         return 'Cập nhật trạng thái thành công';
       },
       error: (err) => err.message,
@@ -139,6 +140,16 @@ function AdminResumeProvider() {
             </Text>
           );
         },
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Ngày tạo',
+        cell: (row) => <Text size="sm">{new Date(row.getValue() as string).toLocaleDateString()}</Text>,
+      },
+      {
+        accessorKey: 'updatedAt',
+        header: 'Ngày cập nhật',
+        cell: (row) => <Text size="sm">{new Date(row.getValue() as string).toLocaleDateString()}</Text>,
       },
       {
         accessorKey: 'urlCV',

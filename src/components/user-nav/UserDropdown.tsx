@@ -18,7 +18,7 @@ export const UserDropdown = ({ user, trigger, ...props }: UserDropdownProps) => 
   const logout = useAuth((s) => s.logout);
   const path = useLocation().pathname;
   const handleLogout = () => {
-    logout;
+    logout();
     toast.success('Đăng xuất thành công', {
       description: (
         <Button.Root href="/login" variant="outlined" size="xs" intent="info" className="w-full">
