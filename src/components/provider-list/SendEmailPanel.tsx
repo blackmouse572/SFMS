@@ -1,6 +1,5 @@
 import Button from '@components/tailus-ui/Button';
-import { DateRangeInput } from '@components/tailus-ui/DateRangeInput';
-import { Form, FormControl, FormField, FormItem, FormLabel, SelectForm, SelectItem } from '@components/tailus-ui/form';
+import { Form, FormField, FormItem, FormLabel, InputForm, SelectForm, SelectItem } from '@components/tailus-ui/form';
 import { Sheet, SheetBody, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@components/tailus-ui/Sheet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -12,8 +11,8 @@ import { z } from 'zod';
 
 export const SendEmailPanelSchema = z.object({
   status: z.string().min(1).max(255),
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.string(),
+  endDate: z.string(),
 });
 export type SendEmailSchema = z.infer<typeof SendEmailPanelSchema>;
 
@@ -43,37 +42,8 @@ export function SendEmailPanel(props: SendEmailPanelProps) {
           </SheetHeader>
           <SheetBody className="space-y-2 flex-1">
             <form className="space-y-4" onSubmit={form.handleSubmit((v) => onSubmit(v, form))} id="createform">
-              <FormField
-                control={form.control}
-                name="startDate"
-                defaultValue={new Date()}
-                render={({ field: startField }) => (
-                  <FormField
-                    control={form.control}
-                    name="endDate"
-                    defaultValue={new Date()}
-                    render={({ field: endField }) => (
-                      <FormItem>
-                        <FormLabel>Thời gian</FormLabel>
-                        <FormControl>
-                          <DateRangeInput
-                            className="w-full"
-                            date={{
-                              from: startField.value,
-                              to: endField.value,
-                            }}
-                            key={startField.name}
-                            onDateChange={(date) => {
-                              startField.onChange(date.from);
-                              endField.onChange(date.to);
-                            }}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                )}
-              />
+              <InputForm control={form.control} name="startDate" label="Từ ngày" type="date" />
+              <InputForm control={form.control} name="endDate" label="Đến ngày" type="date" />
               <SelectForm control={form.control} name="status" label="Trạng thái">
                 <SelectItem value={'Lịch phỏng vấn'} key={'Lịch phỏng vấn'}>
                   Lịch phỏng vấn

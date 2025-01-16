@@ -2,6 +2,7 @@ import { SendEmailSchema } from '@components/provider-list/SendEmailPanel';
 import { useUser } from '@lib/auth';
 import axios from '@lib/axios';
 import { useMutation } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 export function useSendEmail() {
   const user = useUser();
@@ -13,8 +14,8 @@ export function useSendEmail() {
           fields: 'scholarProv.name,userId.phone,provider.name',
           status: data.status,
           provider: user?.provider,
-          'updatedAt>': data.startDate,
-          'updatedAt<': data.endDate,
+          'updatedAt>': format(data.startDate, 'yyyy-MM-dd'),
+          'updatedAt<': format(data.endDate, 'yyyy-MM-dd'),
         },
       });
     },
