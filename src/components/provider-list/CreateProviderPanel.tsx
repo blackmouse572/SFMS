@@ -18,10 +18,10 @@ import { z } from 'zod';
 export const CreateProviderSchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(1).max(255),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).max(5000),
   address: z.array(z.string().min(1).max(255)),
   background: z
-    .union([z.string().url(), z.instanceof(File)])
+    .union([z.string(), z.instanceof(File)])
     .refine(
       (file) => {
         if (typeof file === 'string') return true;
@@ -41,7 +41,7 @@ export const CreateProviderSchema = z.object({
       }
     ),
   logo: z
-    .union([z.string().url(), z.instanceof(File)])
+    .union([z.string(), z.instanceof(File)])
     .refine(
       (file) => {
         if (typeof file === 'string') return true;

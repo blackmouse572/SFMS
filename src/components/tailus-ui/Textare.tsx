@@ -15,7 +15,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <textarea
         ref={forwardedRef as React.RefObject<HTMLTextAreaElement>}
-        className={input({ variant, fancy, size, class: twMerge(textarea(), className) })}
+        className={input({ variant, fancy, size, class: twMerge(textarea(), 'min-h-24', className) })}
         {...props}
       />
     );

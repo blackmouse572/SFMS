@@ -265,7 +265,7 @@ function AdvisorSection(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <section id="header" {...props} className={cn('mt-8 space-y-4')}>
       <Display size="4xl" className="text-center">
-        Du học các nước
+        Đối tác cung cấp học bổng
       </Display>
       <div className="grid grid-cols-2 md:grid-cols-3 divide-x-2 gap-4 p-5">
         {isLoading &&

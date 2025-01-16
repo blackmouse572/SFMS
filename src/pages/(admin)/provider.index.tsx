@@ -13,7 +13,7 @@ import { useUser } from '@lib/auth';
 import { Provider } from '@lib/types';
 import { IconEye, IconPlus } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 function AdminProviders() {
@@ -93,7 +93,7 @@ function AdminProviders() {
     setSelectedItem(filtered);
   };
 
-  const handleDeleteAdvisory = async () => {
+  const handleDeleteAdvisory = useCallback(async () => {
     const id = selectedItem[0]?._id;
     if (!id) return;
 
@@ -105,17 +105,28 @@ function AdminProviders() {
         setSelectedItem([]);
       },
     });
-  };
+  }, [selectedItem, deleteAdvisory]);
 
   const handleCreateProvider = async (data: any) => {
-    toast.promise(createAsync(data), {
-      loading: 'Đang tạo hồ sơ...',
-      success: 'Tạo hồ sơ thành công',
-      error: 'Tạo hồ sơ thất bại',
-      finally: () => {
-        setIsCreatePanelOpen(false);
-      },
-    });
+    if (data._id) {
+      toast.promise(createAsync(data), {
+        loading: 'Đang cập nhật hồ sơ...',
+        success: 'Cập nhật hồ sơ thành công',
+        error: 'Cập nhật hồ sơ thất bại',
+        finally: () => {
+          setIsUpdateStatusPanelOpen(false);
+        },
+      });
+    } else {
+      toast.promise(createAsync(data), {
+        loading: 'Đang tạo hồ sơ...',
+        success: 'Tạo hồ sơ thành công',
+        error: 'Tạo hồ sơ thất bại',
+        finally: () => {
+          setIsCreatePanelOpen(false);
+        },
+      });
+    }
   };
 
   const actions = useMemo<TopbarAction[][]>(() => {
