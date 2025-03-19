@@ -36,3 +36,4 @@ dist-ssr
 
 .yarn/install-state.gz
 .yarn/install-state.gz
+config.bat

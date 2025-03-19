@@ -42,11 +42,11 @@ type ItemProps = {
   value: string;
   description?: React.ReactNode;
 };
+
 function Item({ title, value, description }: ItemProps) {
   return (
     <div className="pt-6 sm:pl-6 sm:pt-0">
       <Caption as="span">{title}</Caption>
-
       <div className="mt-2 flex items-center justify-between gap-3">
         <Title as="span">{value}</Title>
         {description}
@@ -54,34 +54,49 @@ function Item({ title, value, description }: ItemProps) {
     </div>
   );
 }
+
 function StatsList() {
   const { isLoading, data } = useGetAdminStatics();
-
+  
   const totalTransactionTrend = useMemo<{ trend: 'up' | 'down'; value: string }>(() => {
-    if (!data)
+    if (!data || !data.transactions || !data.transactions.thisMonth || !data.transactions.lastMonth) {
       return {
         trend: 'up',
-        value: '0',
-      };
-
-    const current = data.transactions.thisMonth[0]?.total || 0;
-    const last = data.transactions.lastMonth[0].total;
-    if (current === 0) {
-      return {
-        trend: 'down',
-        value: '100%',
+        value: '0%',
       };
     }
-
-    const diff = Math.abs(((current - last) / last) * 100);
-
+    
+    const current = data.transactions.thisMonth[0]?.total || 0;
+    // Safely access lastMonth data
+    const last = data.transactions.lastMonth[0]?.total || 0;
+    
+    if (last === 0) {
+      return {
+        trend: current > 0 ? 'up' : 'down',
+        value: current > 0 ? '100%' : '0%',
+      };
+    }
+    
+    const diff = ((current - last) / last) * 100;
     return {
-      trend: diff > 0 ? 'up' : 'down',
-      value: `${diff.toFixed(2)}%`,
+      trend: diff >= 0 ? 'up' : 'down',
+      value: `${Math.abs(diff).toFixed(2)}%`,
     };
   }, [data]);
 
-  if (isLoading)
+  // Calculate completion rate safely
+  const getCompletionRate = () => {
+    if (!data || !data.resumes) return '0%';
+    
+    const completed = data.resumes.completed || 0;
+    const pending = data.resumes.pending || 0;
+    
+    if (completed === 0) return '0%';
+    
+    return ((pending / completed) * 100).toFixed(2) + '%';
+  };
+
+  if (isLoading) {
     return (
       <Layout>
         <Skeleton className="h-20 w-full" />
@@ -90,21 +105,27 @@ function StatsList() {
         <Skeleton className="h-20 w-full" />
       </Layout>
     );
+  }
 
   return (
     <Layout>
-      <Item title="Tổng số hồ sơ" value={data?.resumes.total.toString() ?? '0'} />
+      <Item 
+        title="Tổng số hồ sơ" 
+        value={(data?.resumes?.total || 0).toString()} 
+      />
       <Item
         title="Tỷ lệ hồ sơ thành công"
-        value={`${data?.resumes.completed} / ${data?.resumes.pending}`}
-        description={
-          <Trend trend={totalTransactionTrend.trend} value={((data!.resumes.pending / data!.resumes.completed!) * 100).toFixed(2) + '%'} />
-        }
+        value={`${data?.resumes?.completed || 0} / ${data?.resumes?.pending || 0}`}
+        description={<Trend trend={totalTransactionTrend.trend} value={getCompletionRate()} />}
       />
-      <Item title="Tổng số tiền giao dịch" value={data?.transactions.total[0].total.toString() ?? '0'} description={<Caption>VND</Caption>} />
+      <Item 
+        title="Tổng số tiền giao dịch" 
+        value={(data?.transactions?.total?.[0]?.total || 0).toString()} 
+        description={<Caption>VND</Caption>} 
+      />
       <Item
         title="Giao dịch tháng này"
-        value={data?.transactions.thisMonth[0]?.total?.toString() ?? '0'}
+        value={(data?.transactions?.thisMonth?.[0]?.total || 0).toString()}
         description={<Trend trend={totalTransactionTrend.trend} value={totalTransactionTrend.value} />}
       />
     </Layout>
